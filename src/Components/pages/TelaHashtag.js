@@ -1,12 +1,17 @@
 import styled from "styled-components"
+import { Link, useParams } from "react-router-dom";
 import teste from "../../assets/images/test.png";
 import { useEffect, useState } from "react";
 import axios from 'axios';
+
 
 export default function TelaHashtag() {
   const [data, setData] = useState([])
   const [ranking , setRanking] = useState([])
   const [name, setName] = useState("")
+  const {hastag} = useParams()
+  let rota = ""
+
   
   useEffect(() => {
     const promise = axios.get(`http://localhost:6002/hastag/React`)
@@ -33,6 +38,7 @@ export default function TelaHashtag() {
     })
   }, [])
 
+
   function RenderCard({ picture, name, link, description }) {
     return (
       <CorpoPost>
@@ -46,7 +52,7 @@ export default function TelaHashtag() {
         <p>
          {description}
         </p>
-        <Link>
+        <LinkStyled>
         <div className="infoLink">
             <h5>Como aplicar o Material UI em um projeto React</h5>
             <p>
@@ -59,7 +65,7 @@ export default function TelaHashtag() {
           <div className="imagemLink">
             <img src={teste} alt="Foto de perfil" />
           </div>
-        </Link>
+        </LinkStyled>
       </div>
     </CorpoPost>
     )
@@ -86,22 +92,27 @@ export default function TelaHashtag() {
           )
 
         })}
-        </Posts>
-        </Principal>
-        <Sidebar>
-        <h3>trending</h3>
-        <div>
-        {ranking.map((e, index) => {
-          return (
-          <p># {e.name}</p>
-          )
-        })}
-        </div>
-      </Sidebar> 
-      </Content>
+            </Posts>
+          </Principal>
+          <Sidebar>
+            <h3>trending</h3>
+            <div>
+              {ranking.map((e, index) => {
+                return (
+                  <Hastag
+                    key={index}
+                    to={`/hashtag/${e.name}`}
+                  >
+                    {`# ${e.name}`}
+                  </Hastag>)
+              })}
+            </div>
+          </Sidebar>
+        </Content>
       </Container>
     </>
   )
+
 }
 
 
@@ -118,6 +129,16 @@ const Title =  styled.div`
     font-weight: 700;
   }
 `;
+
+const Hastag = styled(Link)`
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #ffffff;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    margin-top: 1px;
+`
 
 const Content = styled.div`
   display: flex;
@@ -198,7 +219,7 @@ const Principal = styled.div`
   display: flex;
 `;
 
-const Link = styled.div`
+const LinkStyled = styled.div`
  border: 1px solid #4D4D4D;
     border-radius: 16px;
     display: flex;
