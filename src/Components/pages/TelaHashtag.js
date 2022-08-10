@@ -1,26 +1,59 @@
 import styled from "styled-components"
 import teste from "../../assets/images/test.png";
+import { useParams } from "react-router-dom";
+import { useEffect, useState} from "react";
+import axios from 'axios';
 
 export default function TelaHashtag() {
+  const [data, setData] = useState([])
+  const { hastag } = useParams();
+
+  useEffect(() => {
+    const promise = axios.get(`http://localhost:6002/hastag/React`)
+    promise.then((response) => {
+        console.log(response.data)
+        setData(response.data)
+      
+    });
+    promise.catch((erro) => {
+        console.log(erro)
+    })
+}, [])
+
+  function RenderCard({picture,name,link,description}) {
+    return (
+      <CorpoPost>
+        <LeftColumn>
+          <img src={picture} alt="foto do link" />
+          <ion-icon name="heart-outline"></ion-icon>
+          <p> 13 likes</p>
+        </LeftColumn>
+        <rightColumn>
+          <User>{name}</User>
+          <Description>{description}</Description>
+          <Link>
+            <img src={link} alt="foto do link" />
+          </Link>
+        </rightColumn>
+      </CorpoPost>
+    )
+  }
 
   return (
     <>
       <Title> #hashtag</Title>
       <Container>
-        <CorpoPost>
-          <LeftColumn>
-            <img src={teste} alt="foto do link" />
-            <ion-icon name="heart-outline"></ion-icon>
-            <p> 13 likes</p>
-          </LeftColumn>
-          <rightColumn>
-            <User>Juvenal Juvêncio </User>
-            <Description>Muito maneiro esse tutorial de Material UI com React, deem uma olhada!</Description>
-            <Link>
-              <img src="link" alt="foto do link" />
-            </Link>
-          </rightColumn>
-        </CorpoPost>
+        {data.map((e, index) => {
+          return (
+            <RenderCard
+            picture={e.picture}
+              name={e.name}
+              description={e.description}
+              link={e.link}
+            />
+          )
+
+        })}
       </Container>
     </>
   )
@@ -54,11 +87,11 @@ margin-left: 5%;
 const CorpoPost = styled.div`
 display: flex;
 height: 232px;
+width: 100vw;
 padding-left:3%;
 padding-right:3%;
 background-color: #171717;
 padding-top: 1%;
-justify-content: space-around;
 box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
 img {
@@ -91,6 +124,8 @@ img {
 const LeftColumn = styled.div`
 margin-right: 15%;
 margin-left: 5%;
+display: flex;
+flex-direction: column;
 p{
   font-family: 'Lato';
   font-style: normal;
@@ -99,7 +134,7 @@ p{
   line-height: 11px;
   text-align: center;
   color: #FFFFFF;
-  margin-right: calc(40px - 20%);
+  margin-right: calc(30px - 20%);
   margin-top: 12px;
 }
 ion-icon{
@@ -110,7 +145,6 @@ ion-icon{
             cursor: pointer;
         }
     }
-
 `
 
 const RightColumn = styled.div`
@@ -155,5 +189,12 @@ const Link = styled.div`
 height: 150px;
 background-color: #171717;
 border-radius:11px;
-border: 1px solid #4D4D4D
+border: 1px solid #4D4D4D;
+@media(min-width: 563px) { 
+  width:calc(390px - 10%);
+  }
+  @media((min-width: 414px) and (max-width: 538)) { 
+  width:calc(399 - 10%);
+  }//erro na view do card
+
 `
