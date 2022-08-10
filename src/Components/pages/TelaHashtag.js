@@ -1,18 +1,31 @@
 import styled from "styled-components"
 import teste from "../../assets/images/test.png";
-import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from 'axios';
 
 export default function TelaHashtag() {
   const [data, setData] = useState([])
-  const { hastag } = useParams();
-
+  const [ranking , setRanking] = useState([])
+  const [name, setName] = useState("")
+  
   useEffect(() => {
     const promise = axios.get(`http://localhost:6002/hastag/React`)
     promise.then((response) => {
       console.log(response.data)
+      setName(response.data[0].hastag)
       setData(response.data)
+
+    });
+    promise.catch((erro) => {
+      console.log(erro)
+    })
+  }, [])
+
+  useEffect(() => {
+    const promise = axios.get(`http://localhost:6002/hastags`)
+    promise.then((response) => {
+      console.log(response.data)
+      setRanking(response.data)
 
     });
     promise.catch((erro) => {
@@ -57,7 +70,7 @@ export default function TelaHashtag() {
 
       <Container>
       <Title>
-        <h2>#Hastag</h2>
+        <h2>#{name}</h2>
       </Title>
       <Content>
         <Principal>
@@ -78,16 +91,11 @@ export default function TelaHashtag() {
         <Sidebar>
         <h3>trending</h3>
         <div>
-          <p># javascript</p>
-          <p># react</p>
-          <p># react-native</p>
-          <p># material</p>
-          <p># web-dev</p>
-          <p># mobile</p>
-          <p># css</p>
-          <p># html</p>
-          <p># node</p>
-          <p># sql</p>
+        {ranking.map((e, index) => {
+          return (
+          <p># {e.name}</p>
+          )
+        })}
         </div>
       </Sidebar> 
       </Content>
@@ -184,28 +192,7 @@ const Container = styled.div`
   
   
 `
-const User = styled.h2`
-@media(min-width: 556px) {
-    font-family: 'Lato';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 19px;
-    line-height: 23px;
-    color: #FFFFFF;
-    margin-bottom: 1%;
-  }
-`
 
-const Description = styled.p`
-  @media(min-width: 556px) { 
-    font-family: 'Lato';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 17px;
-    line-height: 20px;
-    color: #B7B7B7;
-  }
-`
 const Principal = styled.div`
   width: 66%;
   display: flex;
@@ -263,14 +250,13 @@ const Link = styled.div`
 
 
 const Sidebar = styled.div`
-position: fixed;
   width: 50%;
   margin-top: 8%;
   height: 100%;
   background-color: var(--cor-header);
   border-radius: 15px;
   position: sticky;
-  margin-left: 15%;
+  margin-left: 25%;
   top: 88px;
   h3 {
     display: flex;
