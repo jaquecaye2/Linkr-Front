@@ -1,34 +1,35 @@
-import styled from "styled-components"
+import styled from "styled-components";
+import teste from "../../assets/images/test.png";
 
-export default function Header(){
-    return(
-        <div>
-            <Topo>
-                <h1>Linkr</h1>
-                <h2>oi</h2>
-            </Topo>
-        </div>
-    )
+export default function Header() {
+  return (
+    <HeaderStyle>
+      <h1>linkr</h1>
+      <img src={teste} alt="foto do link" />
+    </HeaderStyle>
+  );
 }
 
-const Topo = styled.div`
-display: flex;
-justify-content: space-between;
-padding-left: 5%;
-padding-right: 5%;
-height: 72px;
-width: 100vw;
-background-color: #151515;
-align-items: center;
-h1{
-    font-size: 45px;
-    font-family: 'Passion One';
-    font-style: normal;
+const HeaderStyle = styled.div`
+  position: fixed;
+  width: 100%;
+  height: 72px;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background-color: var(--cor-header);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  h1 {
+    font-size: 49px;
     font-weight: 700;
-    font-size: 45px;
-    line-height: 50px;
-    letter-spacing: 0.05em;
-    color: #FFFFFF;
-    font-weight: 700
-}
-`
+  }
+  img {
+    width: 53px;
+    height: 53px;
+    object-fit: cover;
+    border-radius: 60px;
+  }
+`;
