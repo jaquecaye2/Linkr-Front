@@ -1,11 +1,13 @@
 import styled from "styled-components";
 import teste from "../../assets/images/test.png";
-
+import SearchBar from "./SearchBar";
 export default function Header() {
   return (
     <HeaderStyle>
       <h1>linkr</h1>
+      <SearchBar />
       <img src={teste} alt="foto do link" />
+ 
     </HeaderStyle>
   );
 }
