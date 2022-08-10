@@ -20,16 +20,37 @@ export default function TelaHashtag() {
     })
   }, [])
 
-/*   function RenderCard({ picture, name, link, description }) {
+  function RenderCard({ picture, name, link, description }) {
     return (
-      <Content>
-      <Principal>
-      <Title> #hashtag</Title>
-      
-      </Principal>
-      </Content>
+      <CorpoPost>
+      <LeftColumn>
+        <img src={teste} alt="Foto de perfil" />
+        <ion-icon name="heart-outline"></ion-icon>
+        <p>13 likes</p>
+      </LeftColumn>
+      <div className="textos">
+        <h5>{name}</h5>
+        <p>
+         {description}
+        </p>
+        <Link>
+        <div className="infoLink">
+            <h5>Como aplicar o Material UI em um projeto React</h5>
+            <p>
+              Hey! I have moved this tutorial to my personal blog. Same
+              content, new location. Sorry about making you click
+              through to another page.
+            </p>
+            <h6>https://medium.com/@pshrmn/a-simple-react-router</h6>
+          </div>
+          <div className="imagemLink">
+            <img src={teste} alt="Foto de perfil" />
+          </div>
+        </Link>
+      </div>
+    </CorpoPost>
     )
-  } */
+  } 
 
   return (
     <>
@@ -41,37 +62,20 @@ export default function TelaHashtag() {
       <Content>
         <Principal>
         <Posts>
-          <CorpoPost>
-            <LeftColumn>
-              <img src={teste} alt="Foto de perfil" />
-              <ion-icon name="heart-outline"></ion-icon>
-              <p>13 likes</p>
-            </LeftColumn>
-            <div className="textos">
-              <h5>Juvenal Juvêncio</h5>
-              <p>
-                Muito maneiro esse tutorial de Material UI com React, deem uma
-                olhada! <span>#react</span> <span>#material</span>
-              </p>
-              <Link>
-              <div className="infoLink">
-                  <h5>Como aplicar o Material UI em um projeto React</h5>
-                  <p>
-                    Hey! I have moved this tutorial to my personal blog. Same
-                    content, new location. Sorry about making you click
-                    through to another page.
-                  </p>
-                  <h6>https://medium.com/@pshrmn/a-simple-react-router</h6>
-                </div>
-                <div className="imagemLink">
-                  <img src={teste} alt="Foto de perfil" />
-                </div>
-              </Link>
-            </div>
-          </CorpoPost>
+        {data.map((e, index) => {
+          return (
+            <RenderCard
+            picture={e.picture}
+              name={e.name}
+              description={e.description}
+              link={e.link}
+            />
+          )
+
+        })}
         </Posts>
         </Principal>
-        <Lateral>
+        <Sidebar>
         <h3>trending</h3>
         <div>
           <p># javascript</p>
@@ -85,7 +89,7 @@ export default function TelaHashtag() {
           <p># node</p>
           <p># sql</p>
         </div>
-      </Lateral> 
+      </Sidebar> 
       </Content>
       </Container>
     </>
@@ -120,6 +124,7 @@ padding-left:3%;
 padding-right:3%;
 background-color: #171717;
 padding-top: 1%;
+overflow-y: hidden;
 box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 img {
     width: 53px;
@@ -257,9 +262,10 @@ const Link = styled.div`
 `
 
 
-const Lateral = styled.div`
+const Sidebar = styled.div`
 position: fixed;
   width: 50%;
+  margin-top: 8%;
   height: 100%;
   background-color: var(--cor-header);
   border-radius: 15px;
