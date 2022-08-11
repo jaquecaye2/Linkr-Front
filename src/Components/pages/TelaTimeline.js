@@ -4,6 +4,7 @@ import styled from "styled-components";
 import React from "react";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
+import { useNavigate } from "react-router-dom";
 
 import perfil from "../../assets/images/perfil.jpeg";
 import loading from "../../assets/images/loading.svg";
@@ -38,9 +39,20 @@ function PostUnico({ post }) {
   );
 }
 
-export default function TelaTimeline() {
-  const API_URL = process.env.REACT_APP_API_URL;
+function Hashtag({hashtag}){
+  const navigate = useNavigate();
 
+  function openHashtag(){
+    navigate(`/hashtag/${hashtag.name}`);
+  }
+
+  return (
+    <p onClick={openHashtag}># {hashtag.name}</p>
+  )
+
+}
+
+export default function TelaTimeline() {
   const { token } = useContext(Context);
 
   const [link, setLink] = React.useState("");
@@ -51,6 +63,7 @@ export default function TelaTimeline() {
   const [carregando, setCarregando] = React.useState(false);
 
   const [posts, setPosts] = React.useState([]);
+  const [hashtags, setHashtags] = React.useState([])
 
   const [promiseCarregada, setPromiseCarregada] = React.useState(false);
 
@@ -73,6 +86,24 @@ export default function TelaTimeline() {
       });
   }
 
+  function renderizaHashtags() {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const promise = axios.get("http://localhost:4005/hastags", config);
+
+    promise
+      .then((response) => {
+        setHashtags(response.data);
+      })
+      .catch((error) => {
+        alert(error.response.data);
+      });
+  }
+  
   function criarPost(event) {
     event.preventDefault();
 
@@ -113,6 +144,7 @@ export default function TelaTimeline() {
 
   React.useEffect(() => {
     renderizarPosts();
+    renderizaHashtags();
   }, []);
 
   return (
@@ -177,16 +209,9 @@ export default function TelaTimeline() {
         <Lateral>
           <h3>trending</h3>
           <div>
-            <p># javascript</p>
-            <p># react</p>
-            <p># react-native</p>
-            <p># material</p>
-            <p># web-dev</p>
-            <p># mobile</p>
-            <p># css</p>
-            <p># html</p>
-            <p># node</p>
-            <p># sql</p>
+          {hashtags.map((hashtag, index) => (
+                <Hashtag key={index} hashtag={hashtag} />
+              ))}
           </div>
         </Lateral>
       </Conteudo>

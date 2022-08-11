@@ -1,11 +1,14 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 import perfil from "../../assets/images/perfil.jpeg"
 
 export default function Header() {
   return (
     <HeaderStyle>
-      <h1>linkr</h1>
+      <Link to="/timeline">
+        <h1>linkr</h1>
+      </Link>
       <img
         src={perfil}
         alt="Foto de perfil"
@@ -26,6 +29,11 @@ const HeaderStyle = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
+
+  a{
+    text-decoration: none;
+    color: var(--cor-branca);
+  }
 
   h1 {
     font-size: 49px;
