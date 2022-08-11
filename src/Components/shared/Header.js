@@ -2,22 +2,24 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 import SearchBar from "./SearchBar";
-import perfil from "../../assets/images/perfil.jpeg"
+import perfil from "../../assets/images/perfil.jpeg";
 
 export default function Header() {
   return (
-    <HeaderStyle>
-      <Link to="/timeline">
-        <h1>linkr</h1>
-      </Link>
-      <div className="barraPesquisar">
+    <>
+      <HeaderStyle>
+        <Link to="/timeline">
+          <h1>linkr</h1>
+        </Link>
+        <div className="barraPesquisar">
+          <SearchBar />
+        </div>
+        <img src={perfil} alt="Foto de perfil" />
+      </HeaderStyle>
+      <BarraPesquisa>
         <SearchBar />
-      </div>
-      <img
-        src={perfil}
-        alt="Foto de perfil"
-      />
-    </HeaderStyle>
+      </BarraPesquisa>
+    </>
   );
 }
 
@@ -34,7 +36,7 @@ const HeaderStyle = styled.div`
   justify-content: space-between;
   padding: 10px 20px;
 
-  a{
+  a {
     text-decoration: none;
     color: var(--cor-branca);
   }
@@ -49,5 +51,24 @@ const HeaderStyle = styled.div`
     height: 53px;
     object-fit: cover;
     border-radius: 60px;
+  }
+
+  @media (max-width: 935px) {
+  }
+
+  @media (max-width: 614px) {
+    .barraPesquisar {
+      display: none;
+    }
+  }
+`;
+
+const BarraPesquisa = styled.div`
+  display: none;
+
+  @media (max-width: 614px) {
+    padding: 15px;
+    margin-top: 72px;
+    display: block;
   }
 `;

@@ -39,17 +39,14 @@ function PostUnico({ post }) {
   );
 }
 
-function Hashtag({hashtag}){
+function Hashtag({ hashtag }) {
   const navigate = useNavigate();
 
-  function openHashtag(){
+  function openHashtag() {
     navigate(`/hashtag/${hashtag.name}`);
   }
 
-  return (
-    <p onClick={openHashtag}># {hashtag.name}</p>
-  )
-
+  return <p onClick={openHashtag}># {hashtag.name}</p>;
 }
 
 export default function TelaTimeline() {
@@ -63,7 +60,7 @@ export default function TelaTimeline() {
   const [carregando, setCarregando] = React.useState(false);
 
   const [posts, setPosts] = React.useState([]);
-  const [hashtags, setHashtags] = React.useState([])
+  const [hashtags, setHashtags] = React.useState([]);
 
   const [promiseCarregada, setPromiseCarregada] = React.useState(false);
 
@@ -103,7 +100,7 @@ export default function TelaTimeline() {
         alert(error.response.data);
       });
   }
-  
+
   function criarPost(event) {
     event.preventDefault();
 
@@ -209,9 +206,9 @@ export default function TelaTimeline() {
         <Lateral>
           <h3>trending</h3>
           <div>
-          {hashtags.map((hashtag, index) => (
-                <Hashtag key={index} hashtag={hashtag} />
-              ))}
+            {hashtags.map((hashtag, index) => (
+              <Hashtag key={index} hashtag={hashtag} />
+            ))}
           </div>
         </Lateral>
       </Conteudo>
@@ -222,6 +219,15 @@ export default function TelaTimeline() {
 const TelaTimelineStyle = styled.div`
   width: 80%;
   margin: 72px auto 0 auto;
+
+  @media (max-width: 935px) {
+    margin: 50px auto;
+  }
+
+  @media (max-width: 614px) {
+    margin: 0 auto;
+    width: 100%;
+  }
 `;
 
 const Titulo = styled.div`
@@ -230,19 +236,36 @@ const Titulo = styled.div`
   align-items: center;
   justify-content: left;
 
+  @media (max-width: 614px) {
+    height: 100px;
+  }
+
   h2 {
     font-size: 43px;
     font-weight: 700;
+
+    @media (max-width: 614px) {
+      font-size: 33px;
+      padding: 0 20px;
+    }
   }
 `;
 
 const Conteudo = styled.div`
   display: flex;
   justify-content: space-between;
+
+  @media (max-width: 935px) {
+    flex-direction: column;
+  }
 `;
 
 const Principal = styled.div`
   width: 66%;
+
+  @media (max-width: 935px) {
+    width: 100%;
+  }
 `;
 
 const CriarPost = styled.div`
@@ -253,12 +276,20 @@ const CriarPost = styled.div`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   margin-bottom: 29px;
 
+  @media (max-width: 614px) {
+    border-radius: 0;
+  }
+
   img {
     width: 53px;
     height: 53px;
     object-fit: cover;
     border-radius: 60px;
     margin-right: 18px;
+
+    @media (max-width: 614px) {
+      display: none;
+    }
   }
 
   div.postInfo {
@@ -269,6 +300,10 @@ const CriarPost = styled.div`
       margin: 20px 0;
       font-size: 20px;
       font-weight: 300;
+
+      @media (max-width: 614px) {
+        text-align: center;
+      }
     }
 
     form {
@@ -366,6 +401,10 @@ const Post = styled.div`
   padding: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   margin-bottom: 16px;
+
+  @media (max-width: 614px) {
+    border-radius: 0;
+  }
 
   div.icones {
     width: 10%;
@@ -482,6 +521,15 @@ const Lateral = styled.div`
   border-radius: 15px;
   position: sticky;
   top: 88px;
+
+  @media (max-width: 935px) {
+    width: 100%;
+    margin-bottom: 50px;
+  }
+
+  @media (max-width: 614px) {
+    border-radius: 0;
+  }
 
   h3 {
     display: flex;
