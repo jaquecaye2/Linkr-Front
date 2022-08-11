@@ -1,11 +1,12 @@
 import styled from "styled-components"
 import { Link,useParams } from "react-router-dom";
 import teste from "../../assets/images/test.png";
+import lapis from "../../assets/images/lapis.svg";
 import { useEffect, useState } from "react";
 import axios from 'axios';
 
 
-export default function TelaUserId() {
+export default function TelaUsuarioId() {
   const [data, setData] = useState([])
   const [nome, setNome] = useState("")
   const [ranking, setRanking] = useState([])
@@ -48,7 +49,10 @@ export default function TelaUserId() {
           <p>13 likes</p>
         </LeftColumn>
         <div className="textos">
-          <h5>{name}</h5>
+          <Modificar>
+            <h5>{name}</h5>
+          <img src={lapis} alt="Foto de perfil" />
+          </Modificar>
           <p>
             {description}
           </p>
@@ -75,9 +79,9 @@ export default function TelaUserId() {
     <>
 
       <Container>
-      <Title>
-        <h2>{nome}'s Posts</h2>
-      </Title>
+        <Title>
+          <h2>{nome}'s Posts</h2>
+        </Title>
       <Content>
         <Principal>
         <Posts>
@@ -309,5 +313,12 @@ const Sidebar = styled.div`
 const Posts = styled.div`
 `;
 
-
+const Modificar = styled.div`
+display: flex;
+justify-content: space-between;
+ img{
+   width: 15.95px;
+   height: 15.98px;
+ }
+`
 
