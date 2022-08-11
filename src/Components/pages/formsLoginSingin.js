@@ -7,7 +7,7 @@ export default function FormsLoginSingin({
      email, setEmail,
      password, setPassword,
      pictureUrl, setPictureUrl,
-     LinkTo, TextRedirect
+     LinkTo, TextRedirect, TextButton
     }){
 
        
@@ -29,7 +29,7 @@ export default function FormsLoginSingin({
             <input placeholder="picture url" type="text" required value={pictureUrl} onChange={e=>setPictureUrl(e.target.value)}/>
             </>
         }
-        <button> enviar</button>
+        <Button><h2>{TextButton}</h2> </Button>
         </Form>
 
         <RedirectRoute >
@@ -49,16 +49,45 @@ const Form = styled.form`
 display: flex;
 flex-direction: column;
 align-items: center;
+width: 100%;
+padding-top: 20%;
+
+
 
 input{
     height: 55px;
-    width:90%;
-    margin-bottom:11px
+    width:84%;
+    border-radius:6px;
+    margin-bottom:11px;
+    
 }
-
-
+input::placeholder{
+  padding-left: 17px;
+  font-size: 22px;
+  color: #9F9F9F;
+  font-weight: 700;
+}
 `
 const RedirectRoute = styled.div`
-
-background-color: red;
+a{
+  color: #FFFFFF;
+  font-size: 20px;
+  font-weight: 300;
+  
+}
 `
+
+const Button = styled.button`
+    height: 65px;
+    width:84%;
+    background-color: #1877F2;
+    border:  none;
+    border-radius: 6px;
+    margin-bottom: 14px;
+    h2{
+      color: #FFFFFF;
+      font-size: 27px;
+    }
+
+`
+
