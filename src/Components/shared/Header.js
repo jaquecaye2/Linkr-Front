@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
+import SearchBar from "./SearchBar";
 import perfil from "../../assets/images/perfil.jpeg"
 
 export default function Header() {
@@ -9,6 +10,9 @@ export default function Header() {
       <Link to="/timeline">
         <h1>linkr</h1>
       </Link>
+      <div className="barraPesquisar">
+        <SearchBar />
+      </div>
       <img
         src={perfil}
         alt="Foto de perfil"
@@ -26,9 +30,9 @@ const HeaderStyle = styled.div`
   z-index: 1;
   background-color: var(--cor-header);
   display: flex;
-  align-items: center;
+  align-items: top;
   justify-content: space-between;
-  padding: 0 20px;
+  padding: 10px 20px;
 
   a{
     text-decoration: none;
