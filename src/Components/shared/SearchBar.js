@@ -24,7 +24,7 @@ function User({ id, name, picture }) {
 }
 
 export default function SearchBar() {
-  const API_URL = process.env.REACT_APP_API_URL;
+  /* const API_URL = process.env.REACT_APP_API_URL; */
   const ZERO = 0;
 
   const [searchValue, setSearchValue] = useState("");

@@ -1,27 +1,28 @@
 import styled from "styled-components"
-import { Link } from "react-router-dom";
+import { Link,useParams } from "react-router-dom";
 import teste from "../../assets/images/test.png";
 import { useEffect, useState } from "react";
 import axios from 'axios';
 
 
-export default function TelaHashtag() {
+export default function TelaUserId() {
   const [data, setData] = useState([])
+  const [nome, setNome] = useState("")
   const [ranking, setRanking] = useState([])
-  const [name, setName] = useState("")
+  const { user_id } = useParams()
 
   useEffect(() => {
-    const promise = axios.get(`http://localhost:6002/hastag/React`)
+    const promise = axios.get(`http://localhost:6002/users/${user_id}`)
     promise.then((response) => {
       console.log(response.data)
-      setName(response.data[0].hastag)
+      setNome(response.data[0].name)
       setData(response.data)
 
     });
     promise.catch((erro) => {
       console.log(erro)
     })
-  }, [])
+  }, [user_id])
 
   useEffect(() => {
     const promise = axios.get(`http://localhost:6002/hastags`)
@@ -40,7 +41,7 @@ export default function TelaHashtag() {
     return (
       <CorpoPost>
         <LeftColumn>
-          <Link to={`users/${id}`}>
+          <Link to={`/users/${id}`}>
             <img src={teste} alt="Foto de perfil" />
           </Link>
           <ion-icon name="heart-outline"></ion-icon>
@@ -75,7 +76,7 @@ export default function TelaHashtag() {
 
       <Container>
       <Title>
-        <h2>#{name}</h2>
+        <h2>{nome}'s Posts</h2>
       </Title>
       <Content>
         <Principal>
@@ -83,7 +84,7 @@ export default function TelaHashtag() {
         {data.map((e, index) => {
           return (
             <RenderCard
-            picture={e.picture}
+             picture={e.picture}
               name={e.name}
               description={e.description}
               link={e.link}
@@ -130,7 +131,7 @@ const Title =  styled.div`
   }
 `;
 
-const Hastag = styled(Link)`
+ const Hastag = styled(Link)`
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 10px;
@@ -138,7 +139,7 @@ const Hastag = styled(Link)`
     text-decoration: none;
     letter-spacing: 0.05em;
     margin-top: 1px;
-`
+` 
 
 const Content = styled.div`
   display: flex;
