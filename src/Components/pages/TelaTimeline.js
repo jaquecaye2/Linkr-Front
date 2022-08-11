@@ -5,13 +5,27 @@ import React from "react";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
+import { ReactTagify } from "react-tagify";
 
 import perfil from "../../assets/images/perfil.jpeg";
 import loading from "../../assets/images/loading.svg";
 
 function PostUnico({ post }) {
+  const navigate = useNavigate();
+
   function openLink() {
     window.open(post.link, "_blank");
+  }
+
+  const tagStyle = {
+    color: "#ffffff",
+    fontWeight: "700",
+  };
+
+  function navigateToHashtag(tag) {
+    const target = tag.replace("#", "");
+
+    navigate(`/hashtag/${target}`);
   }
 
   return (
@@ -23,7 +37,12 @@ function PostUnico({ post }) {
       </div>
       <div className="textos">
         <h5>{post.name}</h5>
-        <p>{post.description}</p>
+        <ReactTagify
+          tagStyle={tagStyle}
+          tagClicked={(tag) => navigateToHashtag(tag)}
+        >
+          {post.description}
+        </ReactTagify>
         <InfoLink onClick={openLink}>
           <div className="infoLink">
             <h5>{post.link_title}</h5>
@@ -59,7 +78,7 @@ export default function TelaTimeline() {
   const [corBackgroundInput, setCorBackgroundInput] = React.useState("#efefef");
   const [carregando, setCarregando] = React.useState(false);
 
-  const [posts, setPosts] = React.useState([]);
+  const [posts, setPosts] = React.useState();
   const [hashtags, setHashtags] = React.useState([]);
 
   const [promiseCarregada, setPromiseCarregada] = React.useState(false);
