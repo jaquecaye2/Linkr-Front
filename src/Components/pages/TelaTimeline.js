@@ -39,6 +39,8 @@ function PostUnico({ post }) {
 }
 
 export default function TelaTimeline() {
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const { token } = useContext(Context);
 
   const [link, setLink] = React.useState("");
