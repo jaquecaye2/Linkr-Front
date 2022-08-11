@@ -1,12 +1,9 @@
-import { useContext } from "react";
-import Context from "../../Context/Context";
 import styled from "styled-components";
 import React from "react";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 
-import perfil from "../../assets/images/perfil.jpeg";
 import loading from "../../assets/images/loading.svg";
 
 function PostUnico({ post }) {
@@ -50,8 +47,6 @@ function Hashtag({ hashtag }) {
 }
 
 export default function TelaTimeline() {
-  const { token } = useContext(Context);
-
   const [link, setLink] = React.useState("");
   const [descricao, setDescricao] = React.useState("");
 
@@ -63,6 +58,10 @@ export default function TelaTimeline() {
   const [hashtags, setHashtags] = React.useState([]);
 
   const [promiseCarregada, setPromiseCarregada] = React.useState(false);
+
+  const token = localStorage.getItem("token");
+  // verificar qual o nome que vem do localStorage
+  const imagemPerfil = localStorage.getItem("imagem");
 
   function renderizarPosts() {
     const config = {
@@ -153,7 +152,7 @@ export default function TelaTimeline() {
         <Principal>
           <CriarPost corBackgroundInput={corBackgroundInput}>
             <div>
-              <img src={perfil} alt="Foto de perfil" />
+              <img src={imagemPerfil} alt="Foto de perfil" />
             </div>
             <div className="postInfo">
               <h4>What are you going to share today?</h4>

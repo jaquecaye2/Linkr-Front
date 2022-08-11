@@ -1,11 +1,21 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import SearchBar from "./SearchBar";
 import perfil from "../../assets/images/perfil.jpeg";
 
 export default function Header() {
-  return (
+  const location = useLocation();
+
+  // verificar qual o nome que vem do localStorage
+  const imagemPerfil = localStorage.getItem("imagem");
+
+  function canRenderHeader() {
+    return !["/", "/sign-up"].includes(location.pathname);
+  }
+
+  return canRenderHeader() ? (
     <>
       <HeaderStyle>
         <Link to="/timeline">
@@ -14,13 +24,13 @@ export default function Header() {
         <div className="barraPesquisar">
           <SearchBar />
         </div>
-        <img src={perfil} alt="Foto de perfil" />
+        <img src={imagemPerfil} alt="Foto de perfil" />
       </HeaderStyle>
       <BarraPesquisa>
         <SearchBar />
       </BarraPesquisa>
     </>
-  );
+  ) : null;
 }
 
 const HeaderStyle = styled.div`
