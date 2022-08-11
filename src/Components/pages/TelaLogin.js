@@ -10,16 +10,28 @@ export default function TelaLogin(){
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
+    const [disabled, setDisabled] = useState(false);
+    const [corBackgroundInput, setCorBackgroundInput] = useState("#1877F2");
+
     let navigate = useNavigate()
-    
+
+    const API_URL = process.env.REACT_APP_API_URL;
+
+   
     async function sendFormes(e){
 
         try{
             
             e.preventDefault()
+
+            setDisabled(true)
+            setCorBackgroundInput("#C0D9D9")
+
             const dataLogin = {email, password}
-            
-            const token = await axios.post('http://localhost:5007/login', dataLogin)
+            const token = await axios.post(`${API_URL}/login`, dataLogin)
+
+            setDisabled(false)
+            setCorBackgroundInput("#1877F2")
 
             localStorage.setItem("token", token.data)
 
@@ -30,7 +42,8 @@ export default function TelaLogin(){
             navigate("/timeline")
             
         }catch(error){
-
+                setDisabled(false)
+                setCorBackgroundInput("#1877F2")
                 alert(error.response.data)
 
         }
@@ -53,7 +66,10 @@ export default function TelaLogin(){
                 password = {password} setPassword = {setPassword}
                 LinkTo={"/sign-up"}
                 TextButton="Log In"
-                TextRedirect="First time? Create an account!"/>
+                TextRedirect="First time? Create an account!"
+                disabled={disabled}
+                corBackgroundInput={corBackgroundInput}
+                />
                 </Authentication>
 
                 

@@ -12,24 +12,33 @@ export default function TelaCadastro(){
     const [password, setPassword] = useState('')
     const [pictureUrl, setPictureUrl] = useState('')
 
+    const [disabled, setDisabled] = useState(false);
+    const [corBackgroundInput, setCorBackgroundInput] = useState("#1877F2");
+
     let navigate = useNavigate()
+
+    const API_URL = process.env.REACT_APP_API_URL;
     
     async function sendFormes(e){
         try{
-
             e.preventDefault()
+
+            setDisabled(true)
+            setCorBackgroundInput("#C0D9D9")
+
             const dataSingin = {name, email, password, pictureUrl}
             
             console.log(dataSingin)
             
-            await axios.post('http://localhost:5007/singin', dataSingin)
+            await axios.post(`${API_URL}/singin`, dataSingin)
             
             navigate("/")
 
         }catch(error){
         
-
-                alert(error.response.data)
+            setDisabled(false)
+            setCorBackgroundInput("#1877F2")
+            alert(error.response.data)
 
         }
     }
@@ -55,6 +64,8 @@ export default function TelaCadastro(){
                     LinkTo={"/"}
                     TextButton="Sign Up"
                     TextRedirect="Switch back to log in"
+                    disabled={disabled}
+                    corBackgroundInput={corBackgroundInput}
                     />
                 </Authentication>
           

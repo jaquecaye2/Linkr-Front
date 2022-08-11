@@ -7,29 +7,29 @@ export default function FormsLoginSingin({
      email, setEmail,
      password, setPassword,
      pictureUrl, setPictureUrl,
-     LinkTo, TextRedirect, TextButton
+     LinkTo, TextRedirect, TextButton,
+     disabled, corBackgroundInput
     }){
 
-       
 
     return(
       <>
         <Form onSubmit={sendFormes}>
-            <input placeholder="e-mail" type="email" required value={email} onChange={e=>setEmail(e.target.value)}/>
+            <input placeholder="e-mail" type="email" required value={email} onChange={e=>setEmail(e.target.value)} disabled={disabled}/>
 
-            <input placeholder="password" type="text" required value={password} onChange={e=>setPassword(e.target.value)}/>
+            <input placeholder="password" type="text" required value={password} onChange={e=>setPassword(e.target.value)} disabled={disabled}/>
 
         {!type ? 
 
         <></>
         :
             <>
-            <input placeholder="usename" type="text" required value={name} onChange={e=>setName(e.target.value)}/>
+            <input placeholder="usename" type="text" required value={name} onChange={e=>setName(e.target.value)} disabled={disabled}/>
 
-            <input placeholder="picture url" type="text" required value={pictureUrl} onChange={e=>setPictureUrl(e.target.value)}/>
+            <input placeholder="picture url" type="text" required value={pictureUrl} onChange={e=>setPictureUrl(e.target.value)} disabled={disabled}/>
             </>
         }
-        <Button><h2>{TextButton}</h2> </Button>
+        <Button disabled={disabled} corBackgroundInput={corBackgroundInput}><h2>{TextButton}</h2>  </Button>
         </Form>
 
         <RedirectRoute >
@@ -44,7 +44,7 @@ export default function FormsLoginSingin({
     )
 }
 
-const Form = styled.form`
+const Form = styled.form `
 
 display: flex;
 flex-direction: column;
@@ -75,12 +75,16 @@ a{
   font-weight: 300;
   
 }
+@media(max-width: 796px) {
+        margin-bottom: 50px;
+        }
 `
 
 const Button = styled.button`
     height: 65px;
     width:84%;
-    background-color: #1877F2;
+    background-color: ${(props) => props.corBackgroundInput};
+    /* background-color: #1877F2; */
     border:  none;
     border-radius: 6px;
     margin-bottom: 14px;
