@@ -1,16 +1,35 @@
-
 import styled from "styled-components";
-import teste from "../../assets/images/test.png";
+import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import SearchBar from "./SearchBar";
+import teste from "../../assets/images/test.png";
+
 export default function Header() {
-  return (
-    <HeaderStyle>
-      <h1>linkr</h1>
-      <SearchBar />
-      <img src={teste} alt="foto do link" />
- 
-    </HeaderStyle>
-  );
+  const location = useLocation();
+
+  // verificar qual o nome que vem do localStorage
+/*   const imagemPerfil = localStorage.getItem("imagem"); */
+
+  function canRenderHeader() {
+    return !["/", "/sign-up"].includes(location.pathname);
+  }
+
+  return canRenderHeader() ? (
+    <>
+      <HeaderStyle>
+        <Link to="/timeline">
+          <h1>linkr</h1>
+        </Link>
+        <div className="barraPesquisar">
+          <SearchBar />
+        </div> 
+        <img src={teste} alt="Foto de perfil" />
+      </HeaderStyle>
+      <BarraPesquisa>
+        <SearchBar />
+      </BarraPesquisa>
+    </>
+  ) : null;
 }
 
 const HeaderStyle = styled.div`
@@ -22,9 +41,13 @@ const HeaderStyle = styled.div`
   z-index: 1;
   background-color: var(--cor-header);
   display: flex;
-  align-items: center;
+  align-items: top;
   justify-content: space-between;
-  padding: 0 20px;
+  padding: 10px 20px;
+  a {
+    text-decoration: none;
+    color: var(--cor-branca);
+  }
   h1 {
     font-size: 49px;
     font-weight: 700;
@@ -35,5 +58,20 @@ const HeaderStyle = styled.div`
     object-fit: cover;
     border-radius: 60px;
   }
+  @media (max-width: 935px) {
+  }
+  @media (max-width: 614px) {
+    .barraPesquisar {
+      display: none;
+    }
+  }
 `;
 
+const BarraPesquisa = styled.div`
+  display: none;
+  @media (max-width: 614px) {
+    padding: 15px;
+    margin-top: 72px;
+    display: block;
+  }
+`;

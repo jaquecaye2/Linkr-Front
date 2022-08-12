@@ -18,9 +18,14 @@ export default function TelaUsuarioId() {
   const [texto, setTexto] = useState(false);
   const TextoRef = useRef("");
   const [ativar, setAtivar] = useState(false);
+  
+  const API_URL = process.env.REACT_APP_API_URL;
+
+  const token = localStorage.getItem("token");
+  console.log(token)
 
   useEffect(() => {
-    const promise = axios.get(`http://localhost:6002/users/${user_id}`)
+    const promise = axios.get(`${API_URL}/users/${user_id}`)
     promise.then((response) => {
       console.log(response.data)
       setNome(response.data[0].name)
@@ -33,7 +38,7 @@ export default function TelaUsuarioId() {
   }, [user_id])
 
   useEffect(() => {
-    const promise = axios.get(`http://localhost:6002/hastags`)
+    const promise = axios.get(`${API_URL}/hastags`)
     promise.then((response) => {
       console.log(response.data)
       setRanking(response.data)
@@ -47,7 +52,7 @@ export default function TelaUsuarioId() {
   async function editarPost() {
     setTexto(true);
     try {
-        await axios.put(`http://localhost:6002/post/${cartaoId}`, {
+        await axios.put(`${API_URL}/post/${cartaoId}`, {
             description: TextoRef.current.value
         });
 
@@ -91,7 +96,7 @@ const handleUserKeyPress = (e) => {
                 TextoRef={TextoRef}
                 setCartaoId={setCartaoId}
                 postId={post_id} />
-              <DeletarIcon postId={post_id} userId={userId} />
+              <DeletarIcon postId={post_id} />
             </div>
           </Modificar>
           {ativar && post_id === cartaoId ?

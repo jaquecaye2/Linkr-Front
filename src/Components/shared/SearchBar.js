@@ -124,6 +124,8 @@ const SearchResultsContainer = styled.div`
   gap: 15px;
   z-index: 1;
   padding: 14px 18px;
+  background-color: #e7e7e7;
+  border-radius: 0 0 8px 8px;
 `;
 
 const UserContainer = styled.div`
@@ -131,6 +133,10 @@ const UserContainer = styled.div`
   align-items: center;
   justify-content: flex-start;
   gap: 12px;
+  :hover{
+    cursor: pointer;
+    filter: brightness(0.9);
+  }
 `;
 
 const UserPicture = styled.img`

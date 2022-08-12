@@ -40,7 +40,7 @@ export default function TelaHashtag() {
     return (
       <CorpoPost>
         <LeftColumn>
-          <Link to={`users/${id}`}>
+          <Link to={`/users/${id}`}>
             <img src={teste} alt="Foto de perfil" />
           </Link>
           <ion-icon name="heart-outline"></ion-icon>

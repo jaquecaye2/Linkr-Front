@@ -16,19 +16,17 @@ export default function TelaLogin(){
     let navigate = useNavigate()
 
     const API_URL = process.env.REACT_APP_API_URL;
-
    
     async function sendFormes(e){
 
         try{
-            
             e.preventDefault()
 
             setDisabled(true)
             setCorBackgroundInput("#C0D9D9")
 
             const dataLogin = {email, password}
-            const datauser = await axios.post(`http://localhost:6002/login`, dataLogin)
+            const datauser = await axios.post(`${API_URL}/login`, dataLogin)
 
             setDisabled(false)
             setCorBackgroundInput("#1877F2")
@@ -42,7 +40,7 @@ export default function TelaLogin(){
              localStorage.setItem("picture", picture)
 
 
-            navigate("/timeline")
+            navigate("/hashtag/:hashtag")
             
         }catch(error){
                 setDisabled(false)
@@ -82,12 +80,10 @@ export default function TelaLogin(){
 }
 
 const Container = styled.div`
-
 display: flex;
 @media(max-width: 796px) {
     flex-direction: column;
   }
-
 `
 const Slogan = styled.div`
 width: 65.68%;
@@ -105,13 +101,11 @@ h1{
         font-size: 76px;
   }
 }
-
 h2{
     
     
     margin-left: 9.24%;
     font-size: 43px;
-
     @media(max-width: 796px) {
         margin-top: 4px;
         margin-left: 0px;
@@ -121,7 +115,6 @@ h2{
     }
 }
 background-color: #151515;
-
 @media(max-width: 796px) {
     width: 100%;
     padding-bottom: 27px;
@@ -134,10 +127,8 @@ display: flex;
 flex-direction: column;
 width: 34%;
 align-items: center;
-
 @media(max-width: 796px) {
     width: 100%;
     height: 64%;
   }
-
 `
