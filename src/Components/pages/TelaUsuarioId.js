@@ -3,8 +3,10 @@ import { Link,useParams } from "react-router-dom";
 import teste from "../../assets/images/test.png";
 import ModificarCartao from "./Icon.js";
 import { useRef } from "react";
+import DeletarIcon from "./DeletarIcon.js"
 import { useEffect, useState } from "react";
 import axios from 'axios';
+
 
 
 export default function TelaUsuarioId() {
@@ -16,9 +18,14 @@ export default function TelaUsuarioId() {
   const [texto, setTexto] = useState(false);
   const TextoRef = useRef("");
   const [ativar, setAtivar] = useState(false);
+  
+  const API_URL = process.env.REACT_APP_API_URL;
+
+  const token = localStorage.getItem("token");
+  console.log(token)
 
   useEffect(() => {
-    const promise = axios.get(`http://localhost:6002/users/${user_id}`)
+    const promise = axios.get(`${API_URL}/users/${user_id}`)
     promise.then((response) => {
       console.log(response.data)
       setNome(response.data[0].name)
@@ -31,7 +38,7 @@ export default function TelaUsuarioId() {
   }, [user_id])
 
   useEffect(() => {
-    const promise = axios.get(`http://localhost:6002/hastags`)
+    const promise = axios.get(`${API_URL}/hastags`)
     promise.then((response) => {
       console.log(response.data)
       setRanking(response.data)
@@ -42,11 +49,10 @@ export default function TelaUsuarioId() {
     })
   }, [])
 
-console.log(cartaoId)
   async function editarPost() {
     setTexto(true);
     try {
-        await axios.put(`http://localhost:6002/post/${cartaoId}`, {
+        await axios.put(`${API_URL}/post/${cartaoId}`, {
             description: TextoRef.current.value
         });
 
@@ -68,12 +74,11 @@ const handleUserKeyPress = (e) => {
 };
 
 
-
-  function RenderCard({ id, picture,post_id, name, link, description }) {
+  function RenderCard({ id, picture,post_id, name, userId, link, description }) {
     return (
       <CorpoPost>
         <LeftColumn>
-          <Link to={`/users/${id}`}>
+          <Link to={`/users/${userId}`}>
             <img src={picture} alt="Foto de perfil" />
           </Link>
           <ion-icon name="heart-outline"></ion-icon>
@@ -82,17 +87,20 @@ const handleUserKeyPress = (e) => {
         <div className="textos">
           <Modificar>
             <h5>{name}</h5>
-            <ModificarCartao 
-              ativar={ativar}
-              setAtivar={setAtivar}
-              texto={texto}
-              setTexto={setTexto}
-              TextoRef={TextoRef}
-              setCartaoId={setCartaoId}
-              postId={post_id} />
+            <div>
+              <ModificarCartao
+                ativar={ativar}
+                setAtivar={setAtivar}
+                texto={texto}
+                setTexto={setTexto}
+                TextoRef={TextoRef}
+                setCartaoId={setCartaoId}
+                postId={post_id} />
+              <DeletarIcon postId={post_id} />
+            </div>
           </Modificar>
           {ativar && post_id === cartaoId ?
-              <Texto
+            <Texto
                 ativar={ativar}
                 type="text"
                 style={{ color: '#4C4C4C' }}
@@ -146,6 +154,7 @@ const handleUserKeyPress = (e) => {
                     link={e.link}
                     post_id={e.post_id}
                     index={index}
+                    userId={e.id}
                   />
                 )
 
@@ -369,9 +378,13 @@ const Posts = styled.div`
 const Modificar = styled.div`
 display: flex;
 justify-content: space-between;
+
  img{
    width: 15.95px;
    height: 15.98px;
+ }
+ div{
+   display: flex;
  }
 `
 const Texto = styled.textarea`
