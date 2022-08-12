@@ -28,7 +28,7 @@ export default function TelaCadastro() {
 
       console.log(dataSingin);
 
-      await axios.post(`${API_URL}/singin`, dataSingin)
+      await axios.post(`${API_URL}/singin`, dataSingin);
 
       navigate("/");
     } catch (error) {
@@ -89,9 +89,11 @@ const Slogan = styled.div`
       font-size: 76px;
     }
   }
+
   h2 {
     margin-left: 9.24%;
     font-size: 43px;
+
     @media (max-width: 796px) {
       margin-top: 4px;
       margin-left: 0px;
@@ -101,6 +103,7 @@ const Slogan = styled.div`
     }
   }
   background-color: #151515;
+
   @media (max-width: 796px) {
     width: 100%;
     padding-bottom: 27px;
@@ -113,6 +116,7 @@ const Authentication = styled.div`
   flex-direction: column;
   width: 34%;
   align-items: center;
+
   @media (max-width: 796px) {
     width: 100%;
     height: 64%;

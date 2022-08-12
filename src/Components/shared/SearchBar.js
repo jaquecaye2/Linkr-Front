@@ -86,6 +86,7 @@ const SearchBarContainer = styled.div`
   max-width: 563px;
   border-radius: 8px;
   background-color: #e7e7e7;
+
   @media (max-width: 375px) {
     margin: 0 15px;
   }
@@ -108,6 +109,7 @@ const SearchInput = styled(DebounceInput)`
   font-size: 18px;
   outline: none;
   border: none;
+
   ::placeholder {
     color: #c6c6c6;
   }
@@ -126,6 +128,7 @@ const SearchResultsContainer = styled.div`
   padding: 14px 18px;
   background-color: #e7e7e7;
   border-radius: 0 0 8px 8px;
+
 `;
 
 const UserContainer = styled.div`
