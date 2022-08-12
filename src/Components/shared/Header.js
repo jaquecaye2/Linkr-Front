@@ -1,3 +1,4 @@
+
 import styled from "styled-components";
 import teste from "../../assets/images/test.png";
 import SearchBar from "./SearchBar";
@@ -35,3 +36,4 @@ const HeaderStyle = styled.div`
     border-radius: 60px;
   }
 `;
+

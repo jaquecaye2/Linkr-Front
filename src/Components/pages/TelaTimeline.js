@@ -11,9 +11,11 @@ export default function TelaTimeline() {
       <Conteudo>
         <Principal>
           <CriarPost>
+            <Link to={"/users/1"}>
             <div>
               <img src={teste} alt="Foto de perfil" />
             </div>
+            </Link>
             <div className="postInfo">
               <h4>What are you going to share today?</h4>
               <form>

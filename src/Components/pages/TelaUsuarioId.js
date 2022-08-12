@@ -3,8 +3,10 @@ import { Link,useParams } from "react-router-dom";
 import teste from "../../assets/images/test.png";
 import ModificarCartao from "./Icon.js";
 import { useRef } from "react";
+import DeletarIcon from "./DeletarIcon.js"
 import { useEffect, useState } from "react";
 import axios from 'axios';
+
 
 
 export default function TelaUsuarioId() {
@@ -42,7 +44,6 @@ export default function TelaUsuarioId() {
     })
   }, [])
 
-console.log(cartaoId)
   async function editarPost() {
     setTexto(true);
     try {
@@ -68,12 +69,11 @@ const handleUserKeyPress = (e) => {
 };
 
 
-
-  function RenderCard({ id, picture,post_id, name, link, description }) {
+  function RenderCard({ id, picture,post_id, name, userId, link, description }) {
     return (
       <CorpoPost>
         <LeftColumn>
-          <Link to={`/users/${id}`}>
+          <Link to={`/users/${userId}`}>
             <img src={picture} alt="Foto de perfil" />
           </Link>
           <ion-icon name="heart-outline"></ion-icon>
@@ -82,17 +82,20 @@ const handleUserKeyPress = (e) => {
         <div className="textos">
           <Modificar>
             <h5>{name}</h5>
-            <ModificarCartao 
-              ativar={ativar}
-              setAtivar={setAtivar}
-              texto={texto}
-              setTexto={setTexto}
-              TextoRef={TextoRef}
-              setCartaoId={setCartaoId}
-              postId={post_id} />
+            <div>
+              <ModificarCartao
+                ativar={ativar}
+                setAtivar={setAtivar}
+                texto={texto}
+                setTexto={setTexto}
+                TextoRef={TextoRef}
+                setCartaoId={setCartaoId}
+                postId={post_id} />
+              <DeletarIcon postId={post_id} userId={userId} />
+            </div>
           </Modificar>
           {ativar && post_id === cartaoId ?
-              <Texto
+            <Texto
                 ativar={ativar}
                 type="text"
                 style={{ color: '#4C4C4C' }}
@@ -146,6 +149,7 @@ const handleUserKeyPress = (e) => {
                     link={e.link}
                     post_id={e.post_id}
                     index={index}
+                    userId={e.id}
                   />
                 )
 
@@ -369,9 +373,13 @@ const Posts = styled.div`
 const Modificar = styled.div`
 display: flex;
 justify-content: space-between;
+
  img{
    width: 15.95px;
    height: 15.98px;
+ }
+ div{
+   display: flex;
  }
 `
 const Texto = styled.textarea`

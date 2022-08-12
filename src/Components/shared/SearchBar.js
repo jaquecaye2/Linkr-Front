@@ -3,10 +3,7 @@ import styled from "styled-components";
 import { IoSearchOutline } from "react-icons/io5";
 import { DebounceInput } from "react-debounce-input";
 import axios from "axios";
-import dotenv from 'dotenv'
 import { useNavigate } from "react-router-dom";
-dotenv.config()
-console.log(dotenv.config())
 
 function RenderIf({ children, isTrue }) {
   return <>{isTrue ? children : null}</>;
@@ -24,7 +21,7 @@ function User({ id, name, picture }) {
 }
 
 export default function SearchBar() {
-  /* const API_URL = process.env.REACT_APP_API_URL; */
+  const API_URL = process.env.REACT_APP_API_URL;
   const ZERO = 0;
 
   const [searchValue, setSearchValue] = useState("");
@@ -48,7 +45,7 @@ export default function SearchBar() {
     }
 
     axios
-      .get(`http://localhost:6002/users?name=${searchValue}`)
+      .get(`${API_URL}/users?name=${searchValue}`)
       .then(({ data }) => setSearchResults(data))
       .catch((error) => {
         if (error.response.status === 404) {
@@ -127,7 +124,6 @@ const SearchResultsContainer = styled.div`
   gap: 15px;
   z-index: 1;
   padding: 14px 18px;
-
 `;
 
 const UserContainer = styled.div`
