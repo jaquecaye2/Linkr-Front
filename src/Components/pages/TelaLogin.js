@@ -16,12 +16,10 @@ export default function TelaLogin(){
     let navigate = useNavigate()
 
     const API_URL = process.env.REACT_APP_API_URL;
-
    
     async function sendFormes(e){
 
         try{
-            
             e.preventDefault()
 
             setDisabled(true)

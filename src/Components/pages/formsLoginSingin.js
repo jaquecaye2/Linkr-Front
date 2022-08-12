@@ -94,4 +94,3 @@ const Button = styled.button`
     }
 
 `
-
