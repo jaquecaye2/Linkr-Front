@@ -1,12 +1,9 @@
-import { useContext } from "react";
-import Context from "../../Context/Context";
 import styled from "styled-components";
 import React from "react";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 
-import perfil from "../../assets/images/perfil.jpeg";
 import loading from "../../assets/images/loading.svg";
 
 function PostUnico({ post }) {
@@ -39,21 +36,17 @@ function PostUnico({ post }) {
   );
 }
 
-function Hashtag({hashtag}){
+function Hashtag({ hashtag }) {
   const navigate = useNavigate();
 
-  function abrirHashtag(){
+  function openHashtag() {
     navigate(`/hashtag/${hashtag.name}`);
   }
 
-  return(
-    <p onClick={abrirHashtag}># {hashtag.name}</p>
-  )
+  return <p onClick={openHashtag}># {hashtag.name}</p>;
 }
 
 export default function TelaTimeline() {
-  const { token } = useContext(Context);
-
   const [link, setLink] = React.useState("");
   const [descricao, setDescricao] = React.useState("");
 
@@ -66,6 +59,11 @@ export default function TelaTimeline() {
 
   const [promiseCarregada, setPromiseCarregada] = React.useState(false);
 
+  const token = localStorage.getItem("token");
+  const imagemPerfil = localStorage.getItem("picture");
+
+  const API_URL = process.env.REACT_APP_API_URL;
+
   function renderizarPosts() {
     const config = {
       headers: {
@@ -73,7 +71,7 @@ export default function TelaTimeline() {
       },
     };
 
-    const promise = axios.get("http://localhost:4005/post", config);
+    const promise = axios.get(`${API_URL}/post`, config);
 
     promise
       .then((response) => {
@@ -85,19 +83,18 @@ export default function TelaTimeline() {
       });
   }
 
-  function renderizarHashtags() {
+  function renderizaHashtags() {
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     };
 
-    const promise = axios.get("http://localhost:4005/hastags", config);
+    const promise = axios.get(`${API_URL}/hastags`, config);
 
     promise
       .then((response) => {
         setHashtags(response.data);
-        console.log(response.data)
       })
       .catch((error) => {
         alert(error.response.data);
@@ -122,7 +119,7 @@ export default function TelaTimeline() {
       description: descricao,
     };
 
-    const promise = axios.post("http://localhost:4005/post", dadosPost, config);
+    const promise = axios.post(`${API_URL}/post`, dadosPost, config);
 
     promise
       .then((response) => {
@@ -144,7 +141,7 @@ export default function TelaTimeline() {
 
   React.useEffect(() => {
     renderizarPosts();
-    renderizarHashtags();
+    renderizaHashtags();
   }, []);
 
   return (
@@ -156,7 +153,7 @@ export default function TelaTimeline() {
         <Principal>
           <CriarPost corBackgroundInput={corBackgroundInput}>
             <div>
-              <img src={perfil} alt="Foto de perfil" />
+              <img src={imagemPerfil} alt="Foto de perfil" />
             </div>
             <div className="postInfo">
               <h4>What are you going to share today?</h4>
@@ -194,7 +191,7 @@ export default function TelaTimeline() {
             </div>
           </CriarPost>
 
-          {!promiseCarregada ? (
+          {!promiseCarregada && posts.length !== 0 ? (
             <Carregando>
               <img src={loading} alt="carregando..." />
             </Carregando>
@@ -210,7 +207,7 @@ export default function TelaTimeline() {
           <h3>trending</h3>
           <div>
             {hashtags.map((hashtag, index) => (
-              <Hashtag key={index} hashtag={hashtag}/>
+              <Hashtag key={index} hashtag={hashtag} />
             ))}
           </div>
         </Lateral>
@@ -222,6 +219,15 @@ export default function TelaTimeline() {
 const TelaTimelineStyle = styled.div`
   width: 80%;
   margin: 72px auto 0 auto;
+
+  @media (max-width: 935px) {
+    margin: 50px auto;
+  }
+
+  @media (max-width: 614px) {
+    margin: 0 auto;
+    width: 100%;
+  }
 `;
 
 const Titulo = styled.div`
@@ -230,19 +236,36 @@ const Titulo = styled.div`
   align-items: center;
   justify-content: left;
 
+  @media (max-width: 614px) {
+    height: 100px;
+  }
+
   h2 {
     font-size: 43px;
     font-weight: 700;
+
+    @media (max-width: 614px) {
+      font-size: 33px;
+      padding: 0 20px;
+    }
   }
 `;
 
 const Conteudo = styled.div`
   display: flex;
   justify-content: space-between;
+
+  @media (max-width: 935px) {
+    flex-direction: column;
+  }
 `;
 
 const Principal = styled.div`
   width: 66%;
+
+  @media (max-width: 935px) {
+    width: 100%;
+  }
 `;
 
 const CriarPost = styled.div`
@@ -253,12 +276,20 @@ const CriarPost = styled.div`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   margin-bottom: 29px;
 
+  @media (max-width: 614px) {
+    border-radius: 0;
+  }
+
   img {
     width: 53px;
     height: 53px;
     object-fit: cover;
     border-radius: 60px;
     margin-right: 18px;
+
+    @media (max-width: 614px) {
+      display: none;
+    }
   }
 
   div.postInfo {
@@ -269,6 +300,10 @@ const CriarPost = styled.div`
       margin: 20px 0;
       font-size: 20px;
       font-weight: 300;
+
+      @media (max-width: 614px) {
+        text-align: center;
+      }
     }
 
     form {
@@ -366,6 +401,10 @@ const Post = styled.div`
   padding: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   margin-bottom: 16px;
+
+  @media (max-width: 614px) {
+    border-radius: 0;
+  }
 
   div.icones {
     width: 10%;
@@ -482,6 +521,15 @@ const Lateral = styled.div`
   border-radius: 15px;
   position: sticky;
   top: 88px;
+
+  @media (max-width: 935px) {
+    width: 100%;
+    margin-bottom: 50px;
+  }
+
+  @media (max-width: 614px) {
+    border-radius: 0;
+  }
 
   h3 {
     display: flex;

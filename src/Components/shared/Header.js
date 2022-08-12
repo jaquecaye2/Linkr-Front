@@ -1,22 +1,32 @@
 import styled from "styled-components";
 import SearchBar from "./SearchBar";
 import { Link } from "react-router-dom";
-
-import perfil from "../../assets/images/perfil.jpeg"
+import { useLocation } from "react-router-dom";
 
 export default function Header() {
-  return (
-    <HeaderStyle>
-      <Link to={"/timeline"}>
-        <h1>linkr</h1>
-      </Link>
-      <SearchBar />
-      <img
-        src={perfil}
-        alt="Foto de perfil"
-      />
-    </HeaderStyle>
-  );
+  const location = useLocation();
+  const imagemPerfil = localStorage.getItem("picture");
+
+  function canRenderHeader() {
+    return !["/", "/sign-up"].includes(location.pathname);
+  }
+
+  return canRenderHeader() ? (
+    <>
+      <HeaderStyle>
+        <Link to="/timeline">
+          <h1>linkr</h1>
+        </Link>
+        <div className="barraPesquisar">
+          <SearchBar />
+        </div>
+        <img src={imagemPerfil} alt="Foto de perfil" />
+      </HeaderStyle>
+      <BarraPesquisa>
+        <SearchBar />
+      </BarraPesquisa>
+    </>
+  ) : null;
 }
 
 const HeaderStyle = styled.div`
@@ -28,9 +38,14 @@ const HeaderStyle = styled.div`
   z-index: 1;
   background-color: var(--cor-header);
   display: flex;
-  align-items: center;
+  align-items: top;
   justify-content: space-between;
-  padding: 0 20px;
+  padding: 10px 20px;
+
+  a {
+    text-decoration: none;
+    color: var(--cor-branca);
+  }
 
   a{
     text-decoration: none;
@@ -47,5 +62,24 @@ const HeaderStyle = styled.div`
     height: 53px;
     object-fit: cover;
     border-radius: 60px;
+  }
+
+  @media (max-width: 935px) {
+  }
+
+  @media (max-width: 614px) {
+    .barraPesquisar {
+      display: none;
+    }
+  }
+`;
+
+const BarraPesquisa = styled.div`
+  display: none;
+
+  @media (max-width: 614px) {
+    padding: 15px;
+    margin-top: 72px;
+    display: block;
   }
 `;
