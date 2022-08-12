@@ -63,6 +63,8 @@ export default function TelaTimeline() {
   // verificar qual o nome que vem do localStorage
   const imagemPerfil = localStorage.getItem("imagem");
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   function renderizarPosts() {
     const config = {
       headers: {
@@ -70,7 +72,7 @@ export default function TelaTimeline() {
       },
     };
 
-    const promise = axios.get("http://localhost:4005/post", config);
+    const promise = axios.get(`${API_URL}/post`, config);
 
     promise
       .then((response) => {
@@ -89,7 +91,7 @@ export default function TelaTimeline() {
       },
     };
 
-    const promise = axios.get("http://localhost:4005/hastags", config);
+    const promise = axios.get(`${API_URL}/hastags`, config);
 
     promise
       .then((response) => {
@@ -118,7 +120,7 @@ export default function TelaTimeline() {
       description: descricao,
     };
 
-    const promise = axios.post("http://localhost:4005/post", dadosPost, config);
+    const promise = axios.post(`${API_URL}/post`, dadosPost, config);
 
     promise
       .then((response) => {
@@ -190,7 +192,7 @@ export default function TelaTimeline() {
             </div>
           </CriarPost>
 
-          {!promiseCarregada ? (
+          {!promiseCarregada && posts.length !== 0 ? (
             <Carregando>
               <img src={loading} alt="carregando..." />
             </Carregando>

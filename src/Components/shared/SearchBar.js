@@ -45,7 +45,7 @@ export default function SearchBar() {
     }
 
     axios
-      .get(`http://localhost:4005/users?name=${searchValue}`)
+      .get(`${API_URL}/users?name=${searchValue}`)
       .then(({ data }) => setSearchResults(data))
       .catch((error) => {
         if (error.response.status === 404) {

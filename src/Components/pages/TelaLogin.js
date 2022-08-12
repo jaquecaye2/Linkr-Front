@@ -23,7 +23,7 @@ export default function TelaLogin() {
       setCorBackgroundInput("#C0D9D9");
 
       const dataLogin = { email, password };
-      const token = await axios.post(`http://localhost:4005/login`, dataLogin);
+      const token = await axios.post(`${API_URL}/login`, dataLogin);
 
       setDisabled(false);
       setCorBackgroundInput("#1877F2");
