@@ -28,15 +28,18 @@ export default function TelaLogin(){
             setCorBackgroundInput("#C0D9D9")
 
             const dataLogin = {email, password}
-            const token = await axios.post(`${API_URL}/login`, dataLogin)
+            const datauser = await axios.post(`${API_URL}/login`, dataLogin)
 
             setDisabled(false)
             setCorBackgroundInput("#1877F2")
 
-            localStorage.setItem("token", token.data)
+            console.log(datauser.data)
 
-            const tokenlocal = localStorage.getItem("token")
-            console.log(tokenlocal)
+            const token = datauser.data.token
+            const picture = datauser.data.picture
+
+             localStorage.setItem("token", token)
+             localStorage.setItem("picture", picture)
 
 
             navigate("/timeline")
