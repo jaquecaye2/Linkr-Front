@@ -1,284 +1,358 @@
-import styled from "styled-components"
-import { Link } from "react-router-dom";
-import teste from "../../assets/images/test.png";
-import { useEffect, useState } from "react";
-import axios from 'axios';
+import { useParams, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { useState, useEffect } from "react";
+import { ReactTagify } from "react-tagify";
 
+import loading from "../../assets/images/loading.svg";
+import axios from "axios";
 
-export default function TelaHashtag() {
-  const [data, setData] = useState([])
-  const [ranking, setRanking] = useState([])
-  const [name, setName] = useState("")
+const API_URL = process.env.REACT_APP_API_URL;
 
-  useEffect(() => {
-    const promise = axios.get(`http://localhost:6002/hastag/React`)
-    promise.then((response) => {
-      console.log(response.data)
-      setName(response.data[0].hastag)
-      setData(response.data)
+function Hashtag({ hashtag }) {
+  const navigate = useNavigate();
 
-    });
-    promise.catch((erro) => {
-      console.log(erro)
-    })
-  }, [])
+  function openHashtag() {
+    navigate(`/hashtag/${hashtag.name}`);
+  }
+
+  return <p onClick={openHashtag}># {hashtag.name}</p>;
+}
+
+function Side() {
+  const [hashtags, setHashtags] = useState([]);
 
   useEffect(() => {
-    const promise = axios.get(`http://localhost:6002/hastags`)
-    promise.then((response) => {
-      console.log(response.data)
-      setRanking(response.data)
+    axios
+      .get(`${API_URL}/hashtags`)
+      .then(({ data }) => {
+        setHashtags(data);
+      })
+      .catch((erro) => {
+        console.log(erro);
+      });
+  }, []);
 
-    });
-    promise.catch((erro) => {
-      console.log(erro)
-    })
-  }, [])
+  return (
+    <SideContainer>
+      <h3>trending</h3>
+      <div>
+        {hashtags.map((hashtag, index) => (
+          <Hashtag key={index} hashtag={hashtag} />
+        ))}
+      </div>
+    </SideContainer>
+  );
+}
 
+function Post({
+  picture,
+  name,
+  user_id,
+  description,
+  link_title,
+  link_description,
+  link,
+  link_image,
+}) {
+  const navigate = useNavigate();
 
-  function RenderCard({ id, picture, name, link, description }) {
-    return (
-      <CorpoPost>
-        <LeftColumn>
-          <Link to={`/users/${id}`}>
-            <img src={teste} alt="Foto de perfil" />
-          </Link>
-          <ion-icon name="heart-outline"></ion-icon>
-          <p>13 likes</p>
-        </LeftColumn>
-        <div className="textos">
-          <h5>{name}</h5>
-          <p>
-            {description}
-          </p>
-          <LinkStyled>
-            <div className="infoLink">
-              <h5>Como aplicar o Material UI em um projeto React</h5>
-              <p>
-                Hey! I have moved this tutorial to my personal blog. Same
-                content, new location. Sorry about making you click
-                through to another page.
-              </p>
-              <h6>https://medium.com/@pshrmn/a-simple-react-router</h6>
-            </div>
-            <div className="imagemLink">
-              <img src={teste} alt="Foto de perfil" />
-            </div>
-          </LinkStyled>
-        </div>
-      </CorpoPost>
-    )
+  const tagStyle = {
+    color: "#ffffff",
+    fontWeight: "700",
+  };
+
+  function openLink() {
+    window.open(link, "_blank");
+  }
+
+  function navigateToHashtag(tag) {
+    const target = tag.replace("#", "");
+
+    navigate(`/hashtag/${target}`);
   }
 
   return (
-    <>
-
-      <Container>
-      <Title>
-        <h2>#{name}</h2>
-      </Title>
-      <Content>
-        <Principal>
-        <Posts>
-        {data.map((e, index) => {
-          return (
-            <RenderCard
-            picture={e.picture}
-              name={e.name}
-              description={e.description}
-              link={e.link}
-              id={e.user_id}
-            />
-          )
-
-        })}
-            </Posts>
-          </Principal>
-          <Sidebar>
-            <h3>trending</h3>
-            <div>
-              {ranking.map((e, index) => {
-                return (
-                  <Hastag
-                    key={index}
-                    to={`/hashtag/${e.name}`}
-                  >
-                    {`# ${e.name}`}
-                  </Hastag>)
-              })}
-            </div>
-          </Sidebar>
-        </Content>
-      </Container>
-    </>
-  )
-
+    <PostContainer>
+      <div className="icones">
+        <img
+          onClick={() => navigate(`/user/${user_id}`)}
+          src={picture}
+          alt="Foto de perfil"
+        />
+        <ion-icon name="heart-outline"></ion-icon>
+        <p>13 likes</p>
+      </div>
+      <div className="textos">
+        <h5 onClick={() => navigate(`/user/${user_id}`)}>{name}</h5>
+        <p>
+          <ReactTagify
+            tagStyle={tagStyle}
+            tagClicked={(tag) => navigateToHashtag(tag)}
+          >
+            {description}
+          </ReactTagify>
+        </p>
+        <InfoLink onClick={openLink}>
+          <div className="infoLink">
+            <h5>{link_title}</h5>
+            <p>{link_description}</p>
+            <h6>{link}</h6>
+          </div>
+          <div className="imagemLink">
+            <img src={link_image} alt="Imagem referente ao link" />
+          </div>
+        </InfoLink>
+      </div>
+    </PostContainer>
+  );
 }
 
+function MainContent() {
+  const { hashtag } = useParams();
 
+  const [isLoading, setIsLoading] = useState(true);
+  const [posts, setPosts] = useState([]);
 
-const Title =  styled.div`
-  margin-top: 10%;
-  margin-right: 52%;
+  useEffect(() => {
+    axios
+      .get(`${API_URL}/hashtag/${hashtag}`)
+      .then(({ data }) => {
+        setPosts(data);
+        setIsLoading(false);
+      })
+      .catch((erro) => {
+        console.log(erro);
+      });
+  }, []);
+
+  return (
+    <Main>
+      {isLoading ? (
+        <LoadingSpinner>
+          <img src={loading} alt="carregando..." />
+        </LoadingSpinner>
+      ) : (
+        <>
+          {posts.map((post, index) => (
+            <Post
+              key={index}
+              name={post.name}
+              picture={post.picture}
+              description={post.description}
+              link={post.link}
+              link_description={post.link_description}
+              link_image={post.link_image}
+              link_title={post.link_title}
+              user_id={post.user_id}
+            />
+          ))}
+        </>
+      )}
+    </Main>
+  );
+}
+
+export default function TelaHashtag() {
+  const { hashtag } = useParams();
+
+  return (
+    <Container>
+      <Title>
+        <h2># {hashtag}</h2>
+      </Title>
+      <Content>
+        <MainContent />
+        <Side />
+      </Content>
+    </Container>
+  );
+}
+
+const Container = styled.div`
+  width: 80%;
+  margin: 72px auto 0 auto;
+  @media (max-width: 935px) {
+    margin: 50px auto;
+  }
+  @media (max-width: 614px) {
+    margin: 0 auto;
+    width: 100%;
+  }
+`;
+
+const Title = styled.div`
   height: 140px;
   display: flex;
   align-items: center;
   justify-content: left;
+  @media (max-width: 614px) {
+    height: 100px;
+  }
   h2 {
     font-size: 43px;
     font-weight: 700;
+    @media (max-width: 614px) {
+      font-size: 33px;
+      padding: 0 20px;
+    }
   }
 `;
-
-const Hastag = styled(Link)`
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #ffffff;
-    text-decoration: none;
-    letter-spacing: 0.05em;
-    margin-top: 1px;
-`
 
 const Content = styled.div`
   display: flex;
-
-`;
-
-const CorpoPost = styled.div`
-display: flex;
-height: 232px;
-width: 100vw;
-padding-left:3%;
-padding-right:3%;
-background-color: #171717;
-padding-top: 1%;
-overflow-y: hidden;
-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-img {
-    width: 53px;
-    height: 53px;
-    object-fit: cover;
-    border-radius: 60px;
-    margin-right: 18px;
-  }
-@media(max-width: 796px) {
-    background-color: #171717;
-    margin-top: 15%;  
-  }
-  @media(min-width: 556px) {
-    background-color: #171717;
-    width: 611px;
-    border-radius: 16px;
-  }
-  @media(min-width: 1024px) {
-   margin-top: 10%;
-  }
-`
-const LeftColumn = styled.div`
-margin-right: 15%;
-margin-left: 5%;
-display: flex;
-flex-direction: column;
-p{
-  font-family: 'Lato';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 9px;
-  line-height: 11px;
-  text-align: center;
-  color: #FFFFFF;
-  margin-right: calc(30px - 20%);
-  margin-top: 12px;
-}
-ion-icon{
-        font-size: 20px;
-       margin-left: calc(30px - 20%);
-       margin-top: 17px;
-        :hover{
-            cursor: pointer;
-        }
-    }
-`
-
-const RightColumn = styled.div`
-`
-
-const Container = styled.div`
- 
-    display: flex;
+  justify-content: space-between;
+  @media (max-width: 935px) {
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  
-  
-`
-
-const Principal = styled.div`
-  width: 66%;
-  display: flex;
+  }
 `;
 
-const LinkStyled = styled.div`
- border: 1px solid #4D4D4D;
-    border-radius: 16px;
+const Main = styled.div`
+  width: 66%;
+  @media (max-width: 935px) {
+    width: 100%;
+  }
+`;
+
+const LoadingSpinner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const PostContainer = styled.div`
+  width: 100%;
+  display: flex;
+  background-color: var(--cor-header);
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  margin-bottom: 16px;
+  @media (max-width: 614px) {
+    border-radius: 0;
+  }
+  div.icones {
+    width: 10%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: baseline;
+    flex-direction: column;
+    margin-right: 18px;
 
-    
-    div.infoLink{
-      width:calc(390px - 10%);
-        height: 100%;
-       
-        h5{
-            color: #CECECE;
-            font-size: 16px;
-            font-weight: 400;
-            margin-bottom: 5px;
-        }
-        p{
-            color: #9B9595;
-            font-size: 11px;
-            font-weight: 400;
-            line-height: 15px;
-            margin-bottom: 10px;
-        }
-        h6{
-            color: #CECECE;
-            font-size: 11px;
-            font-weight: 400;
-        }
-    }
-    div.imagemLink{
-        width: calc(100px- 20%);
-        height: 160px;
-        img{
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 0 16px 16px 0;
-        }
+    img {
+      width: 53px;
+      height: 53px;
+      object-fit: cover;
+      border-radius: 60px;
+      margin-bottom: 15px;
+
+      :hover {
+        cursor: pointer;
+      }
     }
 
-@media(min-width: 563px) { 
-  width:calc(390px - 10%);
+    ion-icon {
+      font-size: 20px;
+      :hover {
+        cursor: pointer;
+      }
+    }
+    p {
+      margin-top: 5px;
+      text-align: center;
+      font-size: 11px;
+    }
   }
-  @media((min-width: 414px) and (max-width: 538)) { 
-  width:calc(399 - 10%);
-  }//erro na view do card
-`
+  div.textos {
+    width: 87%;
+    h5 {
+      font-size: 19px;
+      font-weight: 400;
+      margin-bottom: 5px;
 
+      :hover {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+    }
+    p {
+      margin-bottom: 15px;
 
-const Sidebar = styled.div`
-  width: 50%;
-  margin-top: 8%;
+      span {
+        color: #b7b7b7;
+        font-weight: 400;
+        font-size: 17px;
+        line-height: 20px;
+      }
+    }
+    span {
+      color: #ffffff;
+      font-weight: 700;
+    }
+  }
+`;
+
+const InfoLink = styled.div`
+  width: 100%;
+  height: 200px;
+  border: 1px solid #4d4d4d;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  div.infoLink {
+    width: 70%;
+    height: 100%;
+    padding: 25px 16px;
+    h5 {
+      color: #cecece;
+      font-size: 16px;
+      font-weight: 400;
+      margin-bottom: 5px;
+    }
+    p {
+      color: #9b9595;
+      font-size: 11px;
+      font-weight: 400;
+      line-height: 15px;
+      margin-bottom: 10px;
+      word-break: break-word;
+    }
+    h6 {
+      color: #cecece;
+      font-size: 11px;
+      font-weight: 400;
+      overflow: hidden;
+    }
+    :hover {
+      cursor: pointer;
+    }
+  }
+  div.imagemLink {
+    width: 30%;
+    height: 100%;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 0 16px 16px 0;
+    }
+  }
+`;
+
+const SideContainer = styled.div`
+  width: 30%;
   height: 100%;
   background-color: var(--cor-header);
   border-radius: 15px;
   position: sticky;
-  margin-left: 25%;
   top: 88px;
+  @media (max-width: 935px) {
+    width: 100%;
+    margin-bottom: 50px;
+  }
+  @media (max-width: 614px) {
+    border-radius: 0;
+  }
   h3 {
     display: flex;
     align-items: center;
@@ -301,12 +375,4 @@ const Sidebar = styled.div`
       }
     }
   }
-  @media(max-width: 728px) { 
-  display: none;
-  }
 `;
-const Posts = styled.div`
-`;
-
-
-
