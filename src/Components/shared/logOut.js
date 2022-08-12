@@ -14,6 +14,10 @@ export default function Logout({setShowLogout, setArrow, FiChevronDown}){
 
     }
 
+    function myLinks(){
+        console.log("myLinks")
+    }
+
     function logoutCancel(){
         setArrow(FiChevronDown)
         setShowLogout(false)
@@ -21,9 +25,12 @@ export default function Logout({setShowLogout, setArrow, FiChevronDown}){
 
     return(
         <>
-            <LogOut onClick={logout}>
-                <h2>Logout</h2>
-            </LogOut>
+            
+                <LogOut>
+                    <h2 onClick={logout}>Logout</h2>
+                    <h2 onClick={myLinks}>MyLinks</h2>
+                </LogOut>
+
             <Resto onClick={logoutCancel}>
 
             </Resto>
@@ -36,13 +43,19 @@ position: fixed;
 right: 0;
 margin-top: 72px;
 width: 130px;
-height: 47px;
+height: 90px;
 background-color: #171717;
 display: flex;
 align-items: center;
 justify-content: center;
 border-radius: 0px 0px 0 20px;
 z-index: 2;
+flex-direction: column;
+
+h2{
+    margin: 12px;
+    border-color: red;
+}
 `
 
 const Resto = styled.div`
