@@ -1,7 +1,6 @@
 import styled from "styled-components"
 import { Link,useParams } from "react-router-dom";
 import teste from "../../assets/images/test.png";
-import ModificarCartao from "./Icon.js";
 import { useRef } from "react";
 import { useEffect, useState } from "react";
 import axios from 'axios';
@@ -12,10 +11,7 @@ export default function TelaUsuarioId() {
   const [nome, setNome] = useState("")
   const [ranking, setRanking] = useState([])
   const { user_id } = useParams()
-  const [cartaoId, setCartaoId] = useState("");
-  const [texto, setTexto] = useState(false);
-  const TextoRef = useRef("");
-  const [ativar, setAtivar] = useState(false);
+
 
   useEffect(() => {
     const promise = axios.get(`http://localhost:6002/users/${user_id}`)
@@ -42,31 +38,6 @@ export default function TelaUsuarioId() {
     })
   }, [])
 
-console.log(cartaoId)
-  async function editarPost() {
-    setTexto(true);
-    try {
-        await axios.put(`http://localhost:6002/post/${cartaoId}`, {
-            description: TextoRef.current.value
-        });
-
-        console.log(TextoRef.current.value);
-        setAtivar(false);
-    } catch (e) {
-      console.log(e)
-        alert("Não foi possível salvar as alterações!");
-        setTexto(false);
-    }
-}
-
-
-const handleUserKeyPress = (e) => {
-  if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      editarPost();
-  }
-};
-
 
 
   function RenderCard({ id, picture,post_id, name, link, description }) {
@@ -80,33 +51,9 @@ const handleUserKeyPress = (e) => {
           <p>13 likes</p>
         </LeftColumn>
         <div className="textos">
-          <Modificar>
-            <h5>{name}</h5>
-            <ModificarCartao 
-              ativar={ativar}
-              setAtivar={setAtivar}
-              texto={texto}
-              setTexto={setTexto}
-              TextoRef={TextoRef}
-              setCartaoId={setCartaoId}
-              postId={post_id} />
-          </Modificar>
-          {ativar && post_id === cartaoId ?
-              <Texto
-                ativar={ativar}
-                type="text"
-                style={{ color: '#4C4C4C' }}
-                onKeyPress={handleUserKeyPress}
-                readOnly={texto}
-                ref={TextoRef}
-                defaultValue={description}>
-              </Texto>
-        :
-        <p>
-                {description}
-              </p>
-          }
-
+          <p>
+            {description}
+          </p>
           <LinkStyled>
             <div className="infoLink">
               <h5>Como aplicar o Material UI em um projeto React</h5>
