@@ -20,7 +20,7 @@ function DeletarIcon({ postId}) {
     async function deletePost() {
         setLoading(true);
         try {
-            await axios.delete(`http://localhost:6002/post/delete/${post_id}`);
+            await axios.delete(`http://localhost:6002/post/${post_id}`);
             setLoading(false);
             modalDinamico();
         } catch (e) {
