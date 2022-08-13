@@ -10,7 +10,6 @@ Modal.setAppElement(".root");
 
 
 function DeletarIcon({ postId, token}) {
-    const post_id = parseInt(postId)
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -21,15 +20,15 @@ function DeletarIcon({ postId, token}) {
     }
 
     async function deletePost() {
-        const config = {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          };
-
         setLoading(true);
         try {
-            await axios.delete(`${API_URL}/post/${post_id}`, config);
+            const config = {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              };
+    
+            await axios.delete(`${API_URL}/post/${postId}`, config);
             setLoading(false);
             modalDinamico();
         } catch (e) {

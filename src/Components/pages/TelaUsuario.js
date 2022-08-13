@@ -49,26 +49,27 @@ function Side() {
 }
 
 function MainContent() {
-    const { userId } = useParams();
+    const { id } = useParams();
     const TextoRef = useRef("");
     const [texto, setTexto] = useState(false);
     const [ativar, setAtivar] = useState(false);
     const [cartaoId, setCartaoId] = useState("");
     const navigate = useNavigate()
-    const id = localStorage.getItem("id");
+    const userId = localStorage.getItem("userId");
     const token = localStorage.getItem("token");
     const [isLoading, setIsLoading] = useState(true);
     const [posts, setPosts] = useState([]);
 
     async function editarPost() {
-        const config = {
+      setTexto(true);
+
+        try {
+          const config = {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           };
 
-        setTexto(true);
-        try {
             await axios.put(`${API_URL}/post/${cartaoId}`, {
                 description: TextoRef.current.value,
                 config
@@ -95,10 +96,6 @@ function MainContent() {
         fontWeight: "700",
     };
 
-    function openLink({link}) {
-        window.open(link, "_blank");
-    }
-
     function navigateToHashtag(tag) {
         const target = tag.replace("#", "");
 
@@ -107,7 +104,7 @@ function MainContent() {
 
     useEffect(() => {
         axios
-            .get(`${API_URL}/users/${userId}`)
+            .get(`${API_URL}/users/${id}`)
             .then(({ data }) => {
                 console.log(data)
                 setPosts(data);
@@ -118,7 +115,7 @@ function MainContent() {
             });
     }, []);
 
-    if(id === parseInt(userId)){
+    if( userId === parseInt(id)){
        
         return (
             <Main>
@@ -193,7 +190,7 @@ function MainContent() {
         </Main>
         );
     }
-    if(id !== parseInt(userId)){
+    if(userId !== parseInt(id)){
         return(
         <Main>
         {isLoading ? (
@@ -229,7 +226,7 @@ function MainContent() {
                                 {post.description}
                             </ReactTagify>
                         </p>
-                        <InfoLink onClick={openLink(post.link)}>
+                        <InfoLink >
                             <div className="infoLink">
                                 <h5>{post.link_title}</h5>
                                 <p>{post.link_description}</p>
