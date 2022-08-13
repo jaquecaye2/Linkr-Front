@@ -46,7 +46,7 @@ function Side() {
             </div>
         </SideContainer>
     );
-}
+} //
 
 function MainContent() {
     const { id } = useParams();
