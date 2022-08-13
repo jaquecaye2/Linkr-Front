@@ -6,7 +6,7 @@ import axios from "axios";
 import React from "react";
 
 export default function Logout({ setShowLogout, setArrow, FiChevronDown }) {
-    const {updateUser, setUpdateUSer} = useContext(Context)
+  const { updateUser, setUpdateUSer } = useContext(Context);
 
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = React.useState(true);
@@ -16,15 +16,17 @@ export default function Logout({ setShowLogout, setArrow, FiChevronDown }) {
     setArrow(FiChevronDown);
     setShowLogout(false);
     localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("picture");
+    localStorage.removeItem("name");
     navigate("/");
   }
 
   function myLinks() {
     console.log("myLinks");
     const id = localStorage.getItem("userId");
-    setUpdateUSer(id)
+    setUpdateUSer(id);
     navigate(`/user/${id}`);
-
   }
 
   function logoutCancel() {
@@ -47,7 +49,7 @@ export default function Logout({ setShowLogout, setArrow, FiChevronDown }) {
 const LogOut = styled.div`
   position: fixed;
   right: 0;
-  margin-top: 72px;
+  margin-top: 60px;
   width: 130px;
   height: 90px;
   background-color: #171717;

@@ -8,17 +8,15 @@ import { FiChevronDown } from "react-icons/fi";
 import { FiChevronUp } from "react-icons/fi";
 
 export default function Header() {
-  const [arrow, setArrow] = useState(FiChevronDown)
-  const [showLogout, setShowLogout]= useState(false)
+  const [arrow, setArrow] = useState(FiChevronDown);
+  const [showLogout, setShowLogout] = useState(false);
 
   const location = useLocation();
   const imagemPerfil = localStorage.getItem("picture");
-   
 
-  function logout(){
-    setArrow(FiChevronUp)
-    setShowLogout(true)
-
+  function logout() {
+    setArrow(FiChevronUp);
+    setShowLogout(true);
   }
 
   function canRenderHeader() {
@@ -27,26 +25,26 @@ export default function Header() {
 
   return canRenderHeader() ? (
     <>
-      <HeaderStyle onClick={logout}>
+      <HeaderStyle>
         <Link to="/timeline">
           <h1>linkr</h1>
         </Link>
         <div className="barraPesquisar">
           <SearchBar />
         </div>
-        <ImageLogout>
-              {arrow} 
-              <img
-                src={imagemPerfil}
-                alt="Foto de perfil"
-                />
-          </ImageLogout>
-        {showLogout?
-        <Logout 
-        setArrow={setArrow}
-        setShowLogout={setShowLogout} FiChevronDown={FiChevronDown}/>
-        :<></>
-        }
+        <ImageLogout onClick={logout}>
+          {arrow}
+          <img src={imagemPerfil} alt="Foto de perfil" />
+        </ImageLogout>
+        {showLogout ? (
+          <Logout
+            setArrow={setArrow}
+            setShowLogout={setShowLogout}
+            FiChevronDown={FiChevronDown}
+          />
+        ) : (
+          <></>
+        )}
       </HeaderStyle>
       <BarraPesquisa>
         <SearchBar />
@@ -73,7 +71,7 @@ const HeaderStyle = styled.div`
     color: var(--cor-branca);
   }
 
-  a{
+  a {
     text-decoration: none;
     color: var(--cor-branca);
   }
@@ -111,15 +109,15 @@ const BarraPesquisa = styled.div`
 `;
 
 const ImageLogout = styled.div`
-display: flex;
-align-items: center;
-justify-content: center;
-img {
-  width: 53px;
-  height: 53px;
-  object-fit: cover;
-  border-radius: 60px;
-  margin-left: 5px;
-}
-font-size: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  img {
+    width: 53px;
+    height: 53px;
+    object-fit: cover;
+    border-radius: 60px;
+    margin-left: 5px;
+  }
+  font-size: 30px;
 `;
