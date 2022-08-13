@@ -71,8 +71,8 @@ function MainContent() {
           };
 
             await axios.put(`${API_URL}/post/${cartaoId}`, {
-                description: TextoRef.current.value,
-                config
+              config,
+                description: TextoRef.current.value
             });
     
             console.log(TextoRef.current.value);
