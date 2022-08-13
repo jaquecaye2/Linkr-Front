@@ -1,11 +1,25 @@
 import styled from "styled-components";
 import SearchBar from "./SearchBar";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import Logout from "./logout";
+import { FiChevronDown } from "react-icons/fi";
+import { FiChevronUp } from "react-icons/fi";
 
 export default function Header() {
+  const [arrow, setArrow] = useState(FiChevronDown)
+  const [showLogout, setShowLogout]= useState(false)
+
   const location = useLocation();
   const imagemPerfil = localStorage.getItem("picture");
+   
+
+  function logout(){
+    setArrow(FiChevronUp)
+    setShowLogout(true)
+
+  }
 
   function canRenderHeader() {
     return !["/", "/sign-up"].includes(location.pathname);
@@ -13,14 +27,26 @@ export default function Header() {
 
   return canRenderHeader() ? (
     <>
-      <HeaderStyle>
+      <HeaderStyle onClick={logout}>
         <Link to="/timeline">
           <h1>linkr</h1>
         </Link>
         <div className="barraPesquisar">
           <SearchBar />
         </div>
-        <img src={imagemPerfil} alt="Foto de perfil" />
+        <ImageLogout>
+              {arrow} 
+              <img
+                src={imagemPerfil}
+                alt="Foto de perfil"
+                />
+          </ImageLogout>
+        {showLogout?
+        <Logout 
+        setArrow={setArrow}
+        setShowLogout={setShowLogout} FiChevronDown={FiChevronDown}/>
+        :<></>
+        }
       </HeaderStyle>
       <BarraPesquisa>
         <SearchBar />
@@ -82,4 +108,18 @@ const BarraPesquisa = styled.div`
     margin-top: 72px;
     display: block;
   }
+`;
+
+const ImageLogout = styled.div`
+display: flex;
+align-items: center;
+justify-content: center;
+img {
+  width: 53px;
+  height: 53px;
+  object-fit: cover;
+  border-radius: 60px;
+  margin-left: 5px;
+}
+font-size: 30px;
 `;
