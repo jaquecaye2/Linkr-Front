@@ -3,20 +3,178 @@ import React from "react";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
+import ReactTooltip from "react-tooltip";
 
 import loading from "../../assets/images/loading.svg";
 
-function PostUnico({ post }) {
+function PostUnico({ post, token, postsCurtidos, name }) {
+  const API_URL = process.env.REACT_APP_API_URL;
+
+  const [tipoCoracao, setTipoCoracao] = React.useState("heart-outline");
+  const [corCoracao, setCorCoracao] = React.useState("black");
+
+  const [quantLikes, setquantLikes] = React.useState(0);
+  let namesLike = []
+  const [mensagem, setMensagem] = React.useState("")
+
   function openLink() {
     window.open(post.link, "_blank");
   }
+
+  function likePost() {
+    if (tipoCoracao === "heart-outline") {
+      setTipoCoracao("heart");
+      setCorCoracao("danger");
+    }
+    if (tipoCoracao === "heart") {
+      setTipoCoracao("heart-outline");
+      setCorCoracao("black");
+    }
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    let dadosPost = {};
+
+    if (tipoCoracao === "heart-outline") {
+      dadosPost = {
+        id: post.id,
+        type: "like",
+      };
+    } else {
+      dadosPost = {
+        id: post.id,
+        type: "deslike",
+      };
+    }
+
+    const promise = axios.post(`${API_URL}/like`, dadosPost, config);
+
+    promise
+      .then((response) => {
+        console.log(response.data);
+        showQuantLikes()
+      })
+      .catch((error) => {
+        alert(error.response.data);
+      });
+  }
+
+  function showQuantLikes() {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const dadosPost = {
+      id: post.id,
+    };
+
+    const promise = axios.post(`${API_URL}/likes`, dadosPost, config);
+
+    promise
+      .then((response) => {
+        setquantLikes(response.data.length);
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  }
+
+  function nameLiked(){
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const dadosPost = {
+      id: post.id,
+    };
+
+    const promise = axios.post(`${API_URL}/likes`, dadosPost, config);
+
+    promise
+      .then((response) => {
+        for (let i = 0; i < response.data.length; i++){
+          let elemento = response.data
+          namesLike.push(elemento[i].name)
+        }
+        mensagemMostrada()
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  }
+
+  function limparNomes(){
+    namesLike = []
+  }
+
+  function mensagemMostrada(){
+    if (namesLike.length === 0){
+      setMensagem("Seja o primeiro a curtir")
+    } else {
+      let posicao = 0
+      let curti = false
+
+      for (let i = 0; i < namesLike.length; i++){
+        if (namesLike[i] === name){
+          curti = true
+          posicao = i
+        }
+      }
+
+      if (namesLike.length === 1 && curti === true) {
+        setMensagem("Curtido por você")
+      } else if (namesLike.length === 1 && curti === false){
+        setMensagem(`Curtido por ${namesLike[0]}`)
+      } else if (namesLike.length === 2 && curti === false){
+        setMensagem(`Curtido por ${namesLike[0]} e ${namesLike[1]}`)
+      } else if (namesLike.length === 2 && curti === true){
+        for (let i = 0; i < namesLike.length; i++){
+          if (namesLike[i] !== posicao){
+            setMensagem(`Curtido por você e ${namesLike[i]}`)
+          }
+        }
+      } else if (namesLike.length > 2 && curti === false){
+        setMensagem(`Curtido por ${namesLike[0]}, ${namesLike[1]} e outras ${namesLike.length - 2} pessoas`)
+      } else if (namesLike.length > 2 && curti === true){
+        setMensagem(`Curtido por você e outras ${namesLike.length - 1} pessoas`)
+      }
+    }
+  }
+
+  React.useEffect(() => {
+    for (let i = 0; i < postsCurtidos.length; i++) {
+      if (postsCurtidos[i].post_id === post.id) {
+        setTipoCoracao("heart");
+        setCorCoracao("danger");
+      }
+    }
+  }, [postsCurtidos]);
+
+  React.useEffect(() => {
+    showQuantLikes();
+  }, []);
 
   return (
     <Post>
       <div className="icones">
         <img src={post.picture} alt="Foto de perfil" />
-        <ion-icon name="heart-outline"></ion-icon>
-        <p>13 likes</p>
+        <ion-icon
+          name={tipoCoracao}
+          color={corCoracao}
+          onClick={likePost}
+        ></ion-icon>
+        <p data-tip={mensagem} data-for="likes" onMouseOver={nameLiked} onMouseOut={limparNomes}>
+          {quantLikes} likes
+        </p>
+        <ReactTooltip id="likes" place="bottom" effect="solid"/>
       </div>
       <div className="textos">
         <h5>{post.name}</h5>
@@ -56,11 +214,13 @@ export default function TelaTimeline() {
 
   const [posts, setPosts] = React.useState([]);
   const [hashtags, setHashtags] = React.useState([]);
+  const [postsCurtidos, setPostsCurtidos] = React.useState([]);
 
   const [promiseCarregada, setPromiseCarregada] = React.useState(false);
 
   const token = localStorage.getItem("token");
   const imagemPerfil = localStorage.getItem("picture");
+  const name = localStorage.getItem("name");
 
   const API_URL = process.env.REACT_APP_API_URL;
 
@@ -139,9 +299,28 @@ export default function TelaTimeline() {
       });
   }
 
+  function buscarPostsCurtidos() {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const promise = axios.get(`${API_URL}/like`, config);
+
+    promise
+      .then((response) => {
+        setPostsCurtidos(response.data);
+      })
+      .catch((error) => {
+        alert(error.response.data);
+      });
+  }
+
   React.useEffect(() => {
     renderizarPosts();
     renderizaHashtags();
+    buscarPostsCurtidos();
   }, []);
 
   return (
@@ -198,7 +377,13 @@ export default function TelaTimeline() {
           ) : (
             <Posts>
               {posts.map((post, index) => (
-                <PostUnico key={index} post={post} />
+                <PostUnico
+                  key={index}
+                  post={post}
+                  token={token}
+                  name={name}
+                  postsCurtidos={postsCurtidos}
+                />
               ))}
             </Posts>
           )}
