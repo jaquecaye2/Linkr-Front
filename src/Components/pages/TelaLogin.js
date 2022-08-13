@@ -33,10 +33,12 @@ export default function TelaLogin() {
       const token = datauser.data.token;
       const picture = datauser.data.picture;
       const name = datauser.data.name
+      const id = datauser.data.id
 
       localStorage.setItem("token", token);
       localStorage.setItem("picture", picture);
       localStorage.setItem("name", name);
+      localStorage.setItem("id", id);
 
       navigate("/timeline");
     } catch (error) {

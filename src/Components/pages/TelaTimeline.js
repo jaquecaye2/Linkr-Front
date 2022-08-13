@@ -51,7 +51,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
       };
     }
 
-    const promise = axios.post(`${API_URL}/like`, dadosPost, config);
+    const promise = axios.post(`http://localhost:6002/like`, dadosPost, config);
 
     promise
       .then((response) => {
@@ -69,12 +69,12 @@ function PostUnico({ post, token, postsCurtidos, name }) {
         Authorization: `Bearer ${token}`,
       },
     };
-
+console.log(token)
     const dadosPost = {
       id: post.id,
     };
 
-    const promise = axios.post(`${API_URL}/likes`, dadosPost, config);
+    const promise = axios.post(`http://localhost:6002/likes`, dadosPost, config);
 
     promise
       .then((response) => {
@@ -96,7 +96,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
       id: post.id,
     };
 
-    const promise = axios.post(`${API_URL}/likes`, dadosPost, config);
+    const promise = axios.post(`http://localhost:6002/likes`, dadosPost, config);
 
     promise
       .then((response) => {
@@ -231,7 +231,7 @@ export default function TelaTimeline() {
       },
     };
 
-    const promise = axios.get(`${API_URL}/post`, config);
+    const promise = axios.get(`http://localhost:6002/post`, config);
 
     promise
       .then((response) => {
@@ -250,7 +250,7 @@ export default function TelaTimeline() {
       },
     };
 
-    const promise = axios.get(`${API_URL}/hastags`, config);
+    const promise = axios.get(`http://localhost:6002/hastags`, config);
 
     promise
       .then((response) => {
@@ -279,7 +279,7 @@ export default function TelaTimeline() {
       description: descricao,
     };
 
-    const promise = axios.post(`${API_URL}/post`, dadosPost, config);
+    const promise = axios.post(`http://localhost:6002/post`, dadosPost, config);
 
     promise
       .then((response) => {
@@ -306,7 +306,7 @@ export default function TelaTimeline() {
       },
     };
 
-    const promise = axios.get(`${API_URL}/like`, config);
+    const promise = axios.get(`http://localhost:6002/like`, config);
 
     promise
       .then((response) => {

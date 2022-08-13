@@ -22,9 +22,9 @@ export default function App() {
           <Routes>
             <Route path="/" element={<TelaLogin />} />
             <Route path="/sign-up" element={<TelaCadastro />} />
-            <Route path="/timeline" element={<TelaTimeline />} />
+            <Route path="/timeline" element={<TelaUsuario />} />
             <Route path="/hashtag/:hashtag" element={<TelaHashtag />} />
-            <Route path="/user/:id" element={<TelaUsuario />} />
+            <Route path="/user/:userId" element={<TelaUsuario />} />
           </Routes>
         </BrowserRouter>
       </Context.Provider>
