@@ -16,6 +16,8 @@ export default function Logout({setShowLogout, setArrow, FiChevronDown}){
 
     function myLinks(){
         console.log("myLinks")
+        const id =  localStorage.getItem("userId")
+        navigate(`/userId/${id}`)
     }
 
     function logoutCancel(){
