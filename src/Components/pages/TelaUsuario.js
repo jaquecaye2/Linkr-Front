@@ -73,11 +73,9 @@ function MainContent() {
         },
       };
 
-
       await axios.put(`${API_URL}/post/${cartaoId}`, {
-        config,
         description: TextoRef.current.value,
-      });
+      }, config,);
 
       console.log(TextoRef.current.value);
       setAtivar(false);
@@ -105,7 +103,7 @@ function MainContent() {
     navigate(`/hashtag/${target}`);
   }
 
-  useEffect(() => {
+  function renderizarPosts(){
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -122,6 +120,10 @@ function MainContent() {
       .catch((erro) => {
         console.log(erro);
       });
+  }
+
+  useEffect(() => {
+    renderizarPosts()
   }, [updateUser]);
 
   if (userId === id) {
@@ -153,7 +155,7 @@ function MainContent() {
                         setCartaoId={setCartaoId}
                         postId={post.post_id}
                       />
-                      <DeletarIcon token={token} postId={post.post_id} />
+                      <DeletarIcon token={token} postId={post.post_id} renderizarPosts={renderizarPosts} />
                     </div>
                   </Modificar>
                   {ativar && post.post_id === cartaoId ? (
