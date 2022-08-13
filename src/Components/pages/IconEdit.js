@@ -2,7 +2,7 @@ import { useEffect  } from "react";
 import { TiPencil } from "react-icons/ti";
 import styled from "styled-components";
 
-function  IconEdit({ativar, setAtivar, TextoRef, setCartaoId, postId}) {
+function  IconEdit({ativar, setAtivar, TextoRef, setCartaoId, postId,render}) {
     function getTextArea() {
         setAtivar(!ativar);
         setCartaoId(postId)
@@ -23,7 +23,7 @@ function  IconEdit({ativar, setAtivar, TextoRef, setCartaoId, postId}) {
             TextoRef.current.focus();
           console.log(TextoRef.current.value);
         }
-    }, [ativar]);
+    }, []);
 
     return (
         <Icon>

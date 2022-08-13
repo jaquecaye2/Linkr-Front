@@ -14,8 +14,8 @@ function PostUnico({ post, token, postsCurtidos, name }) {
   const [corCoracao, setCorCoracao] = React.useState("black");
 
   const [quantLikes, setquantLikes] = React.useState(0);
-  let namesLike = []
-  const [mensagem, setMensagem] = React.useState("")
+  let namesLike = [];
+  const [mensagem, setMensagem] = React.useState("");
 
   function openLink() {
     window.open(post.link, "_blank");
@@ -56,7 +56,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
     promise
       .then((response) => {
         console.log(response.data);
-        showQuantLikes()
+        showQuantLikes();
       })
       .catch((error) => {
         alert(error.response.data);
@@ -69,12 +69,16 @@ function PostUnico({ post, token, postsCurtidos, name }) {
         Authorization: `Bearer ${token}`,
       },
     };
-console.log(token)
+    console.log(token);
     const dadosPost = {
       id: post.id,
     };
 
-    const promise = axios.post(`http://localhost:6002/likes`, dadosPost, config);
+    const promise = axios.post(
+      `http://localhost:6002/likes`,
+      dadosPost,
+      config
+    );
 
     promise
       .then((response) => {
@@ -85,7 +89,7 @@ console.log(token)
       });
   }
 
-  function nameLiked(){
+  function nameLiked() {
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -96,55 +100,65 @@ console.log(token)
       id: post.id,
     };
 
-    const promise = axios.post(`http://localhost:6002/likes`, dadosPost, config);
+    const promise = axios.post(
+      `http://localhost:6002/likes`,
+      dadosPost,
+      config
+    );
 
     promise
       .then((response) => {
-        for (let i = 0; i < response.data.length; i++){
-          let elemento = response.data
-          namesLike.push(elemento[i].name)
+        for (let i = 0; i < response.data.length; i++) {
+          let elemento = response.data;
+          namesLike.push(elemento[i].name);
         }
-        mensagemMostrada()
+        mensagemMostrada();
       })
       .catch((error) => {
         alert(error);
       });
   }
 
-  function limparNomes(){
-    namesLike = []
+  function limparNomes() {
+    namesLike = [];
   }
 
-  function mensagemMostrada(){
-    if (namesLike.length === 0){
-      setMensagem("Seja o primeiro a curtir")
+  function mensagemMostrada() {
+    if (namesLike.length === 0) {
+      setMensagem("Seja o primeiro a curtir");
     } else {
-      let posicao = 0
-      let curti = false
+      let posicao = 0;
+      let curti = false;
 
-      for (let i = 0; i < namesLike.length; i++){
-        if (namesLike[i] === name){
-          curti = true
-          posicao = i
+      for (let i = 0; i < namesLike.length; i++) {
+        if (namesLike[i] === name) {
+          curti = true;
+          posicao = i;
         }
       }
 
       if (namesLike.length === 1 && curti === true) {
-        setMensagem("Curtido por você")
-      } else if (namesLike.length === 1 && curti === false){
-        setMensagem(`Curtido por ${namesLike[0]}`)
-      } else if (namesLike.length === 2 && curti === false){
-        setMensagem(`Curtido por ${namesLike[0]} e ${namesLike[1]}`)
-      } else if (namesLike.length === 2 && curti === true){
-        for (let i = 0; i < namesLike.length; i++){
-          if (namesLike[i] !== posicao){
-            setMensagem(`Curtido por você e ${namesLike[i]}`)
+        setMensagem("Curtido por você");
+      } else if (namesLike.length === 1 && curti === false) {
+        setMensagem(`Curtido por ${namesLike[0]}`);
+      } else if (namesLike.length === 2 && curti === false) {
+        setMensagem(`Curtido por ${namesLike[0]} e ${namesLike[1]}`);
+      } else if (namesLike.length === 2 && curti === true) {
+        for (let i = 0; i < namesLike.length; i++) {
+          if (namesLike[i] !== posicao) {
+            setMensagem(`Curtido por você e ${namesLike[i]}`);
           }
         }
-      } else if (namesLike.length > 2 && curti === false){
-        setMensagem(`Curtido por ${namesLike[0]}, ${namesLike[1]} e outras ${namesLike.length - 2} pessoas`)
-      } else if (namesLike.length > 2 && curti === true){
-        setMensagem(`Curtido por você e outras ${namesLike.length - 1} pessoas`)
+      } else if (namesLike.length > 2 && curti === false) {
+        setMensagem(
+          `Curtido por ${namesLike[0]}, ${namesLike[1]} e outras ${
+            namesLike.length - 2
+          } pessoas`
+        );
+      } else if (namesLike.length > 2 && curti === true) {
+        setMensagem(
+          `Curtido por você e outras ${namesLike.length - 1} pessoas`
+        );
       }
     }
   }
@@ -171,10 +185,15 @@ console.log(token)
           color={corCoracao}
           onClick={likePost}
         ></ion-icon>
-        <p data-tip={mensagem} data-for="likes" onMouseOver={nameLiked} onMouseOut={limparNomes}>
+        <p
+          data-tip={mensagem}
+          data-for="likes"
+          onMouseOver={nameLiked}
+          onMouseOut={limparNomes}
+        >
           {quantLikes} likes
         </p>
-        <ReactTooltip id="likes" place="bottom" effect="solid"/>
+        <ReactTooltip id="likes" place="bottom" effect="solid" />
       </div>
       <div className="textos">
         <h5>{post.name}</h5>

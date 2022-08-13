@@ -9,7 +9,7 @@ import { ThreeDots } from "react-loader-spinner";
 Modal.setAppElement(".root");
 
 
-function DeletarIcon({ postId, token}) {
+function DeletarIcon({ postId, token, renderizarPosts}) {
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -31,6 +31,7 @@ function DeletarIcon({ postId, token}) {
             await axios.delete(`${API_URL}/post/${postId}`, config);
             setLoading(false);
             modalDinamico();
+            renderizarPosts();
         } catch (e) {
             console.log(e);
             modalDinamico();
