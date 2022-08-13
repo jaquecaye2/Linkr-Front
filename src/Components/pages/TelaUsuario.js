@@ -123,7 +123,7 @@ function MainContent() {
       });
   }, [updateUser]);
 
-  if (userId === parseInt(id)) {
+  if (userId === id) {
     return (
       <Main>
         {isLoading ? (
@@ -197,7 +197,7 @@ function MainContent() {
       </Main>
     );
   }
-  if (userId !== parseInt(id)) {
+  if (userId !== id) {
     return (
       <Main>
         {isLoading ? (
@@ -220,7 +220,6 @@ function MainContent() {
                 <div className="textos">
                   <Modificar>
                     <h5>{post.name}</h5>
-                    <div>id lixo</div>
                   </Modificar>
                   <p>
                     <ReactTagify
