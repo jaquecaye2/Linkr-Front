@@ -23,7 +23,7 @@ function Side() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:6002/hashtags`)
+      .get(`http://localhost:6002/hastags`)
       .then(({ data }) => {
         setHashtags(data);
       })
@@ -115,7 +115,7 @@ function MainContent() {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/hashtag/${hashtag}`)
+      .get(`${API_URL}/hastag/${hashtag}`)
       .then(({ data }) => {
         setPosts(data);
         setIsLoading(false);
