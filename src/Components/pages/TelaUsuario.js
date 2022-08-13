@@ -73,6 +73,7 @@ function MainContent() {
         },
       };
 
+
       await axios.put(`${API_URL}/post/${cartaoId}`, {
         config,
         description: TextoRef.current.value,
@@ -152,7 +153,7 @@ function MainContent() {
                         setCartaoId={setCartaoId}
                         postId={post.post_id}
                       />
-                      <DeletarIcon token={token} postId={post.postId} />
+                      <DeletarIcon token={token} postId={post.post_id} />
                     </div>
                   </Modificar>
                   {ativar && post.post_id === cartaoId ? (

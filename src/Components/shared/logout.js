@@ -2,15 +2,12 @@ import { useContext } from "react";
 import Context from "../../Context/Context";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import React from "react";
 
 export default function Logout({ setShowLogout, setArrow, FiChevronDown }) {
   const { updateUser, setUpdateUSer } = useContext(Context);
 
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [posts, setPosts] = React.useState([]);
 
   function logout() {
     setArrow(FiChevronDown);
