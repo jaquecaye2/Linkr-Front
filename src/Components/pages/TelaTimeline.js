@@ -322,6 +322,7 @@ export default function TelaTimeline() {
         setLink("");
         setDescricao("");
         renderizarPosts();
+        renderizaHashtags()
       })
       .catch((error) => {
         alert("Houve um erro ao publicar seu link");

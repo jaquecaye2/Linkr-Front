@@ -310,6 +310,7 @@ function MainContent() {
       });
   }
 
+
   useEffect(() => {
     buscarPostsCurtidos()
   }, []);
@@ -326,7 +327,7 @@ function MainContent() {
       .catch((erro) => {
         console.log(erro);
       });
-  }, []);
+  }, [hashtag]);
 
   return (
     <Main>
