@@ -4,7 +4,8 @@ import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
-
+import { useContext  } from "react";
+import userContext from "../../Context/userContext";
 import loading from "../../assets/images/loading.svg";
 
 function PostUnico({ post, token, postsCurtidos, name }) {
@@ -176,10 +177,19 @@ function PostUnico({ post, token, postsCurtidos, name }) {
     showQuantLikes();
   }, []);
 
+
+function navegar(name,userId){
+  console.log(name,userId)
+  navigate(`/user/${userId}`, {
+    state: {
+       user:name      
+      }
+  })
+}
   return (
     <Post>
       <div className="icones">
-        <img src={post.picture} alt="Foto de perfil" onClick={() => navigate(`/user/${post.user_id}`)}/>
+        <img src={post.picture} alt="Foto de perfil" onClick={() => navegar(post.name,post.user_id)}/>
         <ion-icon
           name={tipoCoracao}
           color={corCoracao}

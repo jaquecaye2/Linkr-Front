@@ -6,11 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { ReactTagify } from "react-tagify";
 import loading from "../../assets/images/loading.svg";
+import userContext from "../../Context/userContext";
 import { useRef } from "react";
 import axios from "axios";
 import DeletarIcon from "./DeleteIcon.js";
 import IconEdit from "./IconEdit.js";
-import ReactTooltip from "react-tooltip";
+import {useLocation} from 'react-router-dom';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -51,7 +52,7 @@ function Side() {
 }
 
 
-function MainContent({setUserName}) {
+function MainContent() {
   const {updateUser, setUpdateUSer} = useContext(Context)
   const { id } = useParams();
   setUpdateUSer(id)
@@ -63,7 +64,6 @@ function MainContent({setUserName}) {
   const [render , setRender] = useState(false)
   const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
-  const name = localStorage.getItem("name");
   const [isLoading, setIsLoading] = useState(true);
   const [posts, setPosts] = useState([]);
 
@@ -121,7 +121,6 @@ function MainContent({setUserName}) {
       .get(`${API_URL}/users/${id}`, config)
       .then(({ data }) => {
         console.log(data);
-         setUserName(data[0].name)
         setPosts(data);
         setRender(data.length)
         setIsLoading(false);
@@ -274,14 +273,14 @@ function MainContent({setUserName}) {
 }
 
 export default function TelaUsuario() {
-   const [userName , setUserName] = useState("") 
+  const {state} = useLocation();
   return (
     <Container>
       <Title>
-        <h2>{userName}</h2>
+        <h2>{state.user}</h2>
       </Title>
       <Content>
-        <MainContent setUserName={setUserName}  />
+        <MainContent  />
         <Side />
       </Content>
     </Container>
@@ -525,7 +524,4 @@ h1{
       margin-bottom: 10px;
      
 }
-
-
-
 `
