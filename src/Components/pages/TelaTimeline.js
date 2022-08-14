@@ -4,7 +4,7 @@ import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
-import { useContext  } from "react";
+import { useContext } from "react";
 import userContext from "../../Context/userContext";
 import loading from "../../assets/images/loading.svg";
 
@@ -13,7 +13,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
 
   const [tipoCoracao, setTipoCoracao] = React.useState("heart-outline");
   const [corCoracao, setCorCoracao] = React.useState("black");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [quantLikes, setquantLikes] = React.useState(0);
   let namesLike = [];
   const [mensagem, setMensagem] = React.useState("");
@@ -177,19 +177,22 @@ function PostUnico({ post, token, postsCurtidos, name }) {
     showQuantLikes();
   }, []);
 
-
-function navegar(name,userId){
-  console.log(name,userId)
-  navigate(`/user/${userId}`, {
-    state: {
-       user:name      
-      }
-  })
-}
+  function navegar(name, userId) {
+    console.log(name, userId);
+    navigate(`/user/${userId}`, {
+      state: {
+        user: name,
+      },
+    });
+  }
   return (
     <Post>
       <div className="icones">
-        <img src={post.picture} alt="Foto de perfil" onClick={() => navegar(post.name,post.user_id)}/>
+        <img
+          src={post.picture}
+          alt="Foto de perfil"
+          onClick={() => navegar(post.name, post.user_id)}
+        />
         <ion-icon
           name={tipoCoracao}
           color={corCoracao}
@@ -264,7 +267,7 @@ export default function TelaTimeline() {
 
     promise
       .then((response) => {
-        console.log(response.data)
+        console.log(response.data);
         setPosts(response.data);
         setPromiseCarregada(true);
       })
@@ -400,21 +403,25 @@ export default function TelaTimeline() {
             </div>
           </CriarPost>
 
-          {!promiseCarregada && posts.length !== 0 ? (
+          {!promiseCarregada ? (
             <Carregando>
               <img src={loading} alt="carregando..." />
             </Carregando>
           ) : (
             <Posts>
-              {posts.map((post, index) => (
-                <PostUnico
-                  key={index}
-                  post={post}
-                  token={token}
-                  name={name}
-                  postsCurtidos={postsCurtidos}
-                />
-              ))}
+              {posts.length === 0 ? (
+                <p>Não há posts cadastrados</p>
+              ) : (
+                posts.map((post, index) => (
+                  <PostUnico
+                    key={index}
+                    post={post}
+                    token={token}
+                    name={name}
+                    postsCurtidos={postsCurtidos}
+                  />
+                ))
+              )}
             </Posts>
           )}
         </Principal>
