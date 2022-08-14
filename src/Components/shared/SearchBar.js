@@ -12,8 +12,19 @@ function RenderIf({ children, isTrue }) {
 function User({ id, name, picture }) {
   const navigate = useNavigate();
 
+  console.log(id)
+  console.log(name)
+
+  function navegar() {
+    navigate(`/user/${id}`, {
+      state: {
+        user: name,
+      },
+    });
+  }
+
   return (
-    <UserContainer onClick={() => navigate(`/user/${id}`)}>
+    <UserContainer onClick={navegar}>
       <UserPicture src={picture} alt={`${name} picture`} />
       <UserName>{name}</UserName>
     </UserContainer>
