@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import React from "react";
 import Context from "../Context/Context";
+import userContext from "../Context/userContext";
 
 import Header from "./shared/Header.js"
 
@@ -12,10 +13,13 @@ import TelaUsuario from "./pages/TelaUsuario.js"
 
 export default function App() {
   const [updateUser, setUpdateUSer] = React.useState("");
+  const [userName, setUserName] = React.useState("");
+  
   
   return (
     <>
       <Context.Provider value={{ updateUser, setUpdateUSer }}>
+        <userContext value={{ userName, setUserName }}>
         <BrowserRouter>
           <Header />
           <Routes>
@@ -26,6 +30,7 @@ export default function App() {
             <Route path="/user/:id" element={<TelaUsuario />} />
           </Routes>
         </BrowserRouter>
+        </userContext>
       </Context.Provider>
     </>
   );

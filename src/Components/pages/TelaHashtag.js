@@ -2,7 +2,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import { ReactTagify } from "react-tagify";
-
 import loading from "../../assets/images/loading.svg";
 import axios from "axios";
 
@@ -70,7 +69,6 @@ function Post({
 
     navigate(`/hashtag/${target}`);
   }
-
   return (
     <PostContainer>
       <div className="icones">

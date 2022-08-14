@@ -10,6 +10,7 @@ import { useRef } from "react";
 import axios from "axios";
 import DeletarIcon from "./DeleteIcon.js";
 import IconEdit from "./IconEdit.js";
+import ReactTooltip from "react-tooltip";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -62,6 +63,7 @@ function MainContent({setUserName}) {
   const [render , setRender] = useState(false)
   const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
+  const name = localStorage.getItem("name");
   const [isLoading, setIsLoading] = useState(true);
   const [posts, setPosts] = useState([]);
 
@@ -82,6 +84,7 @@ function MainContent({setUserName}) {
 
       console.log(TextoRef.current.value);
       setAtivar(false);
+      renderizarPosts()
     } catch (e) {
       console.log(e);
       alert("Não foi possível salvar as alterações!");
@@ -96,9 +99,6 @@ function MainContent({setUserName}) {
     }
   };
 
-  useEffect(() => {
-    renderizarPosts()
-  }, [!render]);
 
   const tagStyle = {
     color: "#ffffff",
@@ -121,8 +121,9 @@ function MainContent({setUserName}) {
       .get(`${API_URL}/users/${id}`, config)
       .then(({ data }) => {
         console.log(data);
-        setUserName(data[0].name)
+         setUserName(data[0].name)
         setPosts(data);
+        setRender(data.length)
         setIsLoading(false);
       })
       .catch((erro) => {
@@ -135,6 +136,7 @@ function MainContent({setUserName}) {
   }, [updateUser]);
 
   if (userId === id) {
+ 
     return (
       <Main>
         {isLoading ? (
@@ -164,7 +166,7 @@ function MainContent({setUserName}) {
                         postId={post.post_id}
                         render={render}
                       />
-                      <DeletarIcon token={token} postId={post.post_id} renderizarPosts={renderizarPosts} />
+                      <DeletarIcon token={token} postId={post.post_id} renderizarPosts={renderizarPosts} render={render}/>
                     </div>
                   </Modificar>
                   {ativar && post.post_id === cartaoId ? (
@@ -272,14 +274,14 @@ function MainContent({setUserName}) {
 }
 
 export default function TelaUsuario() {
-  const [userName , setUserName] = useState("")
+   const [userName , setUserName] = useState("") 
   return (
     <Container>
       <Title>
         <h2>{userName}</h2>
       </Title>
       <Content>
-        <MainContent setUserName={setUserName} />
+        <MainContent setUserName={setUserName}  />
         <Side />
       </Content>
     </Container>

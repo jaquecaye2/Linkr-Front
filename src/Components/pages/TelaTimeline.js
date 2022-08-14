@@ -12,7 +12,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
 
   const [tipoCoracao, setTipoCoracao] = React.useState("heart-outline");
   const [corCoracao, setCorCoracao] = React.useState("black");
-
+  const navigate = useNavigate()
   const [quantLikes, setquantLikes] = React.useState(0);
   let namesLike = [];
   const [mensagem, setMensagem] = React.useState("");
@@ -179,7 +179,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
   return (
     <Post>
       <div className="icones">
-        <img src={post.picture} alt="Foto de perfil" />
+        <img src={post.picture} alt="Foto de perfil" onClick={() => navigate(`/user/${post.user_id}`)}/>
         <ion-icon
           name={tipoCoracao}
           color={corCoracao}
@@ -196,7 +196,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
         <ReactTooltip id="likes" place="bottom" effect="solid" />
       </div>
       <div className="textos">
-        <h5>{post.name}</h5>
+        <h5 onClick={() => navigate(`/user/${post.user_id}`)}>{post.name}</h5>
         <p>{post.description}</p>
         <InfoLink onClick={openLink}>
           <div className="infoLink">
@@ -254,6 +254,7 @@ export default function TelaTimeline() {
 
     promise
       .then((response) => {
+        console.log(response.data)
         setPosts(response.data);
         setPromiseCarregada(true);
       })
@@ -423,11 +424,9 @@ export default function TelaTimeline() {
 const TelaTimelineStyle = styled.div`
   width: 80%;
   margin: 72px auto 0 auto;
-
   @media (max-width: 935px) {
     margin: 50px auto;
   }
-
   @media (max-width: 614px) {
     margin: 0 auto;
     width: 100%;
@@ -439,15 +438,12 @@ const Titulo = styled.div`
   display: flex;
   align-items: center;
   justify-content: left;
-
   @media (max-width: 614px) {
     height: 100px;
   }
-
   h2 {
     font-size: 43px;
     font-weight: 700;
-
     @media (max-width: 614px) {
       font-size: 33px;
       padding: 0 20px;
@@ -458,7 +454,6 @@ const Titulo = styled.div`
 const Conteudo = styled.div`
   display: flex;
   justify-content: space-between;
-
   @media (max-width: 935px) {
     flex-direction: column;
   }
@@ -466,7 +461,6 @@ const Conteudo = styled.div`
 
 const Principal = styled.div`
   width: 66%;
-
   @media (max-width: 935px) {
     width: 100%;
   }
@@ -479,48 +473,39 @@ const CriarPost = styled.div`
   padding: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   margin-bottom: 29px;
-
   @media (max-width: 614px) {
     border-radius: 0;
   }
-
   img {
     width: 53px;
     height: 53px;
     object-fit: cover;
     border-radius: 60px;
     margin-right: 18px;
-
     @media (max-width: 614px) {
       display: none;
     }
   }
-
   div.postInfo {
     width: 100%;
-
     h4 {
       color: #707070;
       margin: 20px 0;
       font-size: 20px;
       font-weight: 300;
-
       @media (max-width: 614px) {
         text-align: center;
       }
     }
-
     form {
       display: flex;
       align-items: baseline;
       justify-content: left;
       flex-direction: column;
-
       input {
         font-family: inherit;
         font-size: inherit;
       }
-
       input {
         height: 30px;
         border: none;
@@ -531,18 +516,15 @@ const CriarPost = styled.div`
         width: 100%;
         font-size: 15px;
         font-weight: 300;
-
         ::placeholder {
           color: #949494;
         }
       }
-
       textarea {
         font-family: inherit;
         font-size: inherit;
         resize: none;
       }
-
       textarea {
         height: 66px;
         width: 100%;
@@ -553,18 +535,15 @@ const CriarPost = styled.div`
         margin-bottom: 5px;
         font-size: 15px;
         font-weight: 300;
-
         ::placeholder {
           color: #949494;
         }
       }
-
       div {
         width: 100%;
         display: flex;
         align-items: center;
         justify-content: right;
-
         button {
           background-color: #1877f2;
           border: none;
@@ -577,7 +556,6 @@ const CriarPost = styled.div`
           display: flex;
           align-items: center;
           justify-content: center;
-
           :hover {
             filter: brightness(0.7);
             cursor: pointer;
@@ -605,11 +583,9 @@ const Post = styled.div`
   padding: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   margin-bottom: 16px;
-
   @media (max-width: 614px) {
     border-radius: 0;
   }
-
   div.icones {
     width: 10%;
     display: flex;
@@ -617,7 +593,6 @@ const Post = styled.div`
     justify-content: baseline;
     flex-direction: column;
     margin-right: 18px;
-
     img {
       width: 53px;
       height: 53px;
@@ -625,38 +600,31 @@ const Post = styled.div`
       border-radius: 60px;
       margin-bottom: 15px;
     }
-
     ion-icon {
       font-size: 20px;
-
       :hover {
         cursor: pointer;
       }
     }
-
     p {
       margin-top: 5px;
       text-align: center;
       font-size: 11px;
     }
   }
-
   div.textos {
     width: 87%;
-
     h5 {
       font-size: 19px;
       font-weight: 400;
       margin-bottom: 5px;
     }
-
     p {
       color: #b7b7b7;
       font-size: 17px;
       line-height: 20px;
       margin-bottom: 15px;
     }
-
     span {
       color: #ffffff;
       font-weight: 700;
@@ -672,19 +640,16 @@ const InfoLink = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   div.infoLink {
     width: 70%;
     height: 100%;
     padding: 25px 16px;
-
     h5 {
       color: #cecece;
       font-size: 16px;
       font-weight: 400;
       margin-bottom: 5px;
     }
-
     p {
       color: #9b9595;
       font-size: 11px;
@@ -692,23 +657,19 @@ const InfoLink = styled.div`
       line-height: 15px;
       margin-bottom: 10px;
     }
-
     h6 {
       color: #cecece;
       font-size: 11px;
       font-weight: 400;
       overflow: hidden;
     }
-
     :hover {
       cursor: pointer;
     }
   }
-
   div.imagemLink {
     width: 30%;
     height: 100%;
-
     img {
       width: 100%;
       height: 100%;
@@ -725,16 +686,13 @@ const Lateral = styled.div`
   border-radius: 15px;
   position: sticky;
   top: 88px;
-
   @media (max-width: 935px) {
     width: 100%;
     margin-bottom: 50px;
   }
-
   @media (max-width: 614px) {
     border-radius: 0;
   }
-
   h3 {
     display: flex;
     align-items: center;
@@ -745,15 +703,12 @@ const Lateral = styled.div`
     font-size: 27px;
     font-weight: 700;
   }
-
   div {
     padding: 16px;
-
     p {
       font-size: 19px;
       line-height: 30px;
       font-weight: 700;
-
       :hover {
         cursor: pointer;
         filter: brightness(0.6);
