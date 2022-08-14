@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { ReactTagify } from "react-tagify";
 import loading from "../../assets/images/loading.svg";
 import axios from "axios";
+import ReactTooltip from "react-tooltip";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -52,8 +53,17 @@ function Post({
   link_description,
   link,
   link_image,
+  post_id,
+  token,
+  postsCurtidos
 }) {
   const navigate = useNavigate();
+
+  const [tipoCoracao, setTipoCoracao] = useState("heart-outline");
+  const [corCoracao, setCorCoracao] = useState("black");
+  const [quantLikes, setquantLikes] = useState(0);
+  let namesLike = [];
+  const [mensagem, setMensagem] = useState("");
 
   const tagStyle = {
     color: "#ffffff",
@@ -69,6 +79,162 @@ function Post({
 
     navigate(`/hashtag/${target}`);
   }
+
+  function likePost() {
+    if (tipoCoracao === "heart-outline") {
+      setTipoCoracao("heart");
+      setCorCoracao("danger");
+    }
+    if (tipoCoracao === "heart") {
+      setTipoCoracao("heart-outline");
+      setCorCoracao("black");
+    }
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    let dadosPost = {};
+
+    if (tipoCoracao === "heart-outline") {
+      dadosPost = {
+        id: post_id,
+        type: "like",
+      };
+    } else {
+      dadosPost = {
+        id: post_id,
+        type: "deslike",
+      };
+    }
+
+    const promise = axios.post(`http://localhost:6002/like`, dadosPost, config);
+
+    promise
+      .then((response) => {
+        console.log(response.data);
+        showQuantLikes();
+      })
+      .catch((error) => {
+        alert(error.response.data);
+      });
+  }
+
+  function showQuantLikes() {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const dadosPost = {
+      id: post_id,
+    };
+
+    const promise = axios.post(
+      `http://localhost:6002/likes`,
+      dadosPost,
+      config
+    );
+
+    promise
+      .then((response) => {
+        setquantLikes(response.data.length);
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  }
+
+  function nameLiked() {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const dadosPost = {
+      id: post_id,
+    };
+
+    const promise = axios.post(
+      `http://localhost:6002/likes`,
+      dadosPost,
+      config
+    );
+
+    promise
+      .then((response) => {
+        for (let i = 0; i < response.data.length; i++) {
+          let elemento = response.data;
+          namesLike.push(elemento[i].name);
+        }
+        mensagemMostrada();
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  }
+
+  function limparNomes() {
+    namesLike = [];
+  }
+
+  function mensagemMostrada() {
+    if (namesLike.length === 0) {
+      setMensagem("Seja o primeiro a curtir");
+    } else {
+      let posicao = 0;
+      let curti = false;
+
+      for (let i = 0; i < namesLike.length; i++) {
+        if (namesLike[i] === name) {
+          curti = true;
+          posicao = i;
+        }
+      }
+
+      if (namesLike.length === 1 && curti === true) {
+        setMensagem("Curtido por você");
+      } else if (namesLike.length === 1 && curti === false) {
+        setMensagem(`Curtido por ${namesLike[0]}`);
+      } else if (namesLike.length === 2 && curti === false) {
+        setMensagem(`Curtido por ${namesLike[0]} e ${namesLike[1]}`);
+      } else if (namesLike.length === 2 && curti === true) {
+        for (let i = 0; i < namesLike.length; i++) {
+          if (namesLike[i] !== posicao) {
+            setMensagem(`Curtido por você e ${namesLike[i]}`);
+          }
+        }
+      } else if (namesLike.length > 2 && curti === false) {
+        setMensagem(
+          `Curtido por ${namesLike[0]}, ${namesLike[1]} e outras ${
+            namesLike.length - 2
+          } pessoas`
+        );
+      } else if (namesLike.length > 2 && curti === true) {
+        setMensagem(
+          `Curtido por você e outras ${namesLike.length - 1} pessoas`
+        );
+      }
+    }
+  }
+
+  useEffect(() => {
+    for (let i = 0; i < postsCurtidos.length; i++) {
+      if (postsCurtidos[i].post_id === post_id) {
+        setTipoCoracao("heart");
+        setCorCoracao("danger");
+      }
+    }
+  }, [postsCurtidos]);
+
+  useEffect(() => {
+    showQuantLikes();
+  }, []);
+
   return (
     <PostContainer>
       <div className="icones">
@@ -77,8 +243,20 @@ function Post({
           src={picture}
           alt="Foto de perfil"
         />
-        <ion-icon name="heart-outline"></ion-icon>
-        <p>13 likes</p>
+        <ion-icon
+          name={tipoCoracao}
+          color={corCoracao}
+          onClick={likePost}
+        ></ion-icon>
+        <p
+          data-tip={mensagem}
+          data-for="likes"
+          onMouseOver={nameLiked}
+          onMouseOut={limparNomes}
+        >
+          {quantLikes} likes
+        </p>
+        <ReactTooltip id="likes" place="bottom" effect="solid" />
       </div>
       <div className="textos">
         <h5 onClick={() => navigate(`/user/${user_id}`)}>{name}</h5>
@@ -107,14 +285,41 @@ function Post({
 
 function MainContent() {
   const { hashtag } = useParams();
+  const token = localStorage.getItem("token");
 
   const [isLoading, setIsLoading] = useState(true);
   const [posts, setPosts] = useState([]);
+  const [postsCurtidos, setPostsCurtidos] = useState([]);
+
+  function buscarPostsCurtidos() {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const promise = axios.get(`http://localhost:6002/like`, config);
+
+    promise
+      .then((response) => {
+        console.log(response.data)
+        setPostsCurtidos(response.data);
+      })
+      .catch((error) => {
+        alert(error.response.data);
+      });
+  }
+
+  useEffect(() => {
+    buscarPostsCurtidos()
+  }, []);
+
 
   useEffect(() => {
     axios
       .get(`${API_URL}/hastag/${hashtag}`)
       .then(({ data }) => {
+        console.log(data)
         setPosts(data);
         setIsLoading(false);
       })
@@ -142,6 +347,9 @@ function MainContent() {
               link_image={post.link_image}
               link_title={post.link_title}
               user_id={post.user_id}
+              post_id={post.post_id}
+              postsCurtidos={postsCurtidos}
+              token={token}
             />
           ))}
         </>
