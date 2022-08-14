@@ -229,7 +229,7 @@ export default function TelaTimeline() {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    };   //
+    };
 
     const promise = axios.get(`${API_URL}/post`, config);
 
