@@ -275,17 +275,35 @@ function MainContent() {
 
 export default function TelaUsuario() {
   const {state} = useLocation();
-  return (
-    <Container>
-      <Title>
-        <h2>{state.user}</h2>
-      </Title>
-      <Content>
-        <MainContent  />
-        <Side />
-      </Content>
-    </Container>
-  );
+  const { id } = useParams();
+  const userId = localStorage.getItem("userId");
+  const name = localStorage.getItem("name");
+  if(userId === id){
+    return (
+      <Container>
+        <Title>
+          <h2>{name}</h2>
+        </Title>
+        <Content>
+          <MainContent  />
+          <Side />
+        </Content>
+      </Container>
+    );
+  }else{
+    return (
+      <Container>
+        <Title>
+          <h2>{state.user}</h2>
+        </Title>
+        <Content>
+          <MainContent  />
+          <Side />
+        </Content>
+      </Container>
+    );
+  }
+
 }
 
 const Container = styled.div`
