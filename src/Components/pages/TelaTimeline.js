@@ -4,8 +4,6 @@ import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
-import { useContext } from "react";
-import userContext from "../../Context/userContext";
 import loading from "../../assets/images/loading.svg";
 
 function PostUnico({ post, token, postsCurtidos, name }) {
@@ -185,6 +183,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
       },
     });
   }
+  
   return (
     <Post>
       <div className="icones">
