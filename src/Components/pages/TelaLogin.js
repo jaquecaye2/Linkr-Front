@@ -23,7 +23,7 @@ export default function TelaLogin() {
       setCorBackgroundInput("#C0D9D9");
 
       const dataLogin = { email, password };
-      const datauser = await axios.post(`${API_URL}/login`, dataLogin);
+      const datauser = await axios.post(`http://localhost:6002/login`, dataLogin);
 
       setDisabled(false);
       setCorBackgroundInput("#1877F2");
@@ -33,10 +33,12 @@ export default function TelaLogin() {
       const token = datauser.data.token;
       const picture = datauser.data.picture;
       const name = datauser.data.name
+      const userId = datauser.data.userId
 
       localStorage.setItem("token", token);
       localStorage.setItem("picture", picture);
       localStorage.setItem("name", name);
+      localStorage.setItem("userId", userId);
 
       navigate("/timeline");
     } catch (error) {
