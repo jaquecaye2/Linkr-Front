@@ -17,7 +17,7 @@ export default function FormsLoginSingin({
         <Form onSubmit={sendFormes}>
             <input placeholder="e-mail" type="email" required value={email} onChange={e=>setEmail(e.target.value)} disabled={disabled}/>
 
-            <input placeholder="password" type="text" required value={password} onChange={e=>setPassword(e.target.value)} disabled={disabled}/>
+            <input placeholder="password" type="password" required value={password} onChange={e=>setPassword(e.target.value)} disabled={disabled}/>
 
         {!type ? 
 

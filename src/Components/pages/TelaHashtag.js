@@ -2,7 +2,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import { ReactTagify } from "react-tagify";
-
 import loading from "../../assets/images/loading.svg";
 import axios from "axios";
 
@@ -23,7 +22,7 @@ function Side() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:6002/hashtags`)
+      .get(`http://localhost:6002/hastags`)
       .then(({ data }) => {
         setHashtags(data);
       })
@@ -70,7 +69,6 @@ function Post({
 
     navigate(`/hashtag/${target}`);
   }
-
   return (
     <PostContainer>
       <div className="icones">
@@ -115,7 +113,7 @@ function MainContent() {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/hashtag/${hashtag}`)
+      .get(`${API_URL}/hastag/${hashtag}`)
       .then(({ data }) => {
         setPosts(data);
         setIsLoading(false);

@@ -1,272 +1,292 @@
+import { useContext } from "react";
+import Context from "../../Context/Context";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { ReactTagify } from "react-tagify";
 import loading from "../../assets/images/loading.svg";
+import userContext from "../../Context/userContext";
 import { useRef } from "react";
 import axios from "axios";
 import DeletarIcon from "./DeleteIcon.js";
 import IconEdit from "./IconEdit.js";
-
+import {useLocation} from 'react-router-dom';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 function Hashtag({ hashtag }) {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    function openHashtag() {
-        navigate(`/hastags/${hashtag.name}`);
-    }
+  function openHashtag() {
+    navigate(`/hastags/${hashtag.name}`);
+  }
 
-    return <p onClick={openHashtag}># {hashtag.name}</p>;
+  return <p onClick={openHashtag}># {hashtag.name}</p>;
 }
 
 function Side() {
-    const [hashtags, setHashtags] = useState([]);
+  const [hashtags, setHashtags] = useState([]);
 
-    useEffect(() => {
-        axios
-            .get(`${API_URL}/hastags`)
-            .then(({ data }) => {
-                setHashtags(data);
-            })
-            .catch((erro) => {
-                console.log(erro);
-            });
-    }, []);
+  useEffect(() => {
+    axios
+      .get(`${API_URL}/hastags`)
+      .then(({ data }) => {
+        setHashtags(data);
+      })
+      .catch((erro) => {
+        console.log(erro);
+      });
+  }, []);
 
-    return (
-        <SideContainer>
-            <h3>trending</h3>
-            <div>
-                {hashtags.map((hashtag, index) => (
-                    <Hashtag key={index} hashtag={hashtag} />
-                ))}
-            </div>
-        </SideContainer>
-    );
+  return (
+    <SideContainer>
+      <h3>trending</h3>
+      <div>
+        {hashtags.map((hashtag, index) => (
+          <Hashtag key={index} hashtag={hashtag} />
+        ))}
+      </div>
+    </SideContainer>
+  );
+  
 }
+
 
 function MainContent() {
-    const { userId } = useParams();
-    const TextoRef = useRef("");
-    const [texto, setTexto] = useState(false);
-    const [ativar, setAtivar] = useState(false);
-    const [cartaoId, setCartaoId] = useState("");
-    const navigate = useNavigate()
-    const id = localStorage.getItem("id");
-    const token = localStorage.getItem("token");
-    const [isLoading, setIsLoading] = useState(true);
-    const [posts, setPosts] = useState([]);
+  const {updateUser, setUpdateUSer} = useContext(Context)
+  const { id } = useParams();
+  setUpdateUSer(id)
+  const TextoRef = useRef("");
+  const [texto, setTexto] = useState(false);
+  const [ativar, setAtivar] = useState(false);
+  const [cartaoId, setCartaoId] = useState("");
+  const navigate = useNavigate();
+  const [render , setRender] = useState(false)
+  const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
+  const [isLoading, setIsLoading] = useState(true);
+  const [posts, setPosts] = useState([]);
 
-    async function editarPost() {
-        const config = {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          };
+  async function editarPost() {
+    setTexto(true);
+    setRender(true)
 
-        setTexto(true);
-        try {
-            await axios.put(`${API_URL}/post/${cartaoId}`, {
-                description: TextoRef.current.value,
-                config
-            });
-    
-            console.log(TextoRef.current.value);
-            setAtivar(false);
-        } catch (e) {
-          console.log(e)
-            alert("Não foi possível salvar as alterações!");
-            setTexto(false);
-        }
-    }
-
-    const handleUserKeyPress = (e) => {
-        if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            editarPost();
-        }
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       };
 
-    const tagStyle = {
-        color: "#ffffff",
-        fontWeight: "700",
+      await axios.put(`${API_URL}/post/${cartaoId}`, {
+        description: TextoRef.current.value,
+      }, config,);
+
+      console.log(TextoRef.current.value);
+      setAtivar(false);
+      renderizarPosts()
+    } catch (e) {
+      console.log(e);
+      alert("Não foi possível salvar as alterações!");
+      setTexto(false);
+    }
+  }
+
+  const handleUserKeyPress = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      editarPost();
+    }
+  };
+
+
+  const tagStyle = {
+    color: "#ffffff",
+    fontWeight: "700",
+  };
+
+  function navigateToHashtag(tag) {
+    const target = tag.replace("#", "");
+    navigate(`/hashtag/${target}`);
+  }
+
+  function renderizarPosts(){
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     };
 
-    function openLink({link}) {
-        window.open(link, "_blank");
-    }
+    axios
+      .get(`${API_URL}/users/${id}`, config)
+      .then(({ data }) => {
+        console.log(data);
+        setPosts(data);
+        setRender(data.length)
+        setIsLoading(false);
+      })
+      .catch((erro) => {
+        console.log(erro);
+      });
+  }
 
-    function navigateToHashtag(tag) {
-        const target = tag.replace("#", "");
+  useEffect(() => {
+    renderizarPosts()
+  }, [updateUser]);
 
-        navigate(`/hashtag/${target}`);
-    }
-
-    useEffect(() => {
-        axios
-            .get(`${API_URL}/users/${userId}`)
-            .then(({ data }) => {
-                console.log(data)
-                setPosts(data);
-                setIsLoading(false);
-            })
-            .catch((erro) => {
-                console.log(erro);
-            });
-    }, []);
-
-    if(id === parseInt(userId)){
-       
-        return (
-            <Main>
-            {isLoading ? (
-                <LoadingSpinner>
-                       <img src={loading} alt="carregando..." />
-                </LoadingSpinner>
-            ) : (
-                <>
-                    {posts.map((post, index) => (
-                        <PostContainer>
-                        <div className="icones">
-                            <img
-                                src={post.picture}
-                                alt="Foto de perfil"
-                            />
-                            <ion-icon name="heart-outline"></ion-icon>
-                            <p>13 likes</p>
-                        </div>
-                     <div className="textos">
-                         <Modificar>
-                             <h5>{post.name}</h5>
-                             <div>
-                             <IconEdit 
-                              ativar={ativar}
-                              setAtivar={setAtivar}
-                              texto={texto}
-                              setTexto={setTexto}
-                              TextoRef={TextoRef}
-                              setCartaoId={setCartaoId}
-                              postId={post.post_id}
-                             />
-                            <DeletarIcon token={token} postId={post.postId}/>
-                             </div>
-                                </Modificar>
-                                {ativar && post.post_id === cartaoId ?
-                                    <Texto
-                                        ativar={ativar}
-                                        type="text"
-                                        style={{ color: '#4C4C4C' }}
-                                        onKeyPress={handleUserKeyPress}
-                                        readOnly={texto}
-                                        ref={TextoRef}
-                                        defaultValue={post.description}>
-                                    </Texto>
-                                    :
-                                    <p>
-                                        <ReactTagify
-                                            tagStyle={tagStyle}
-                                            tagClicked={(tag) => navigateToHashtag(tag)}
-                                        >
-                                            {post.description}
-                                        </ReactTagify>
-                                    </p>
-                         }
-                        
-                            <InfoLink >
-                                <div className="infoLink">
-                                    <h5>{post.link_title}</h5>
-                                    <p>{post.link_description}</p>
-                                    <h6>{post.link}</h6>
-                                </div>
-                                <div className="imagemLink">
-                                    <img src={post.link_image} alt="Imagem referente ao link" />
-                                </div>
-                            </InfoLink>
-                        </div>
-                    </PostContainer>
-                    ))}
-                </>
-            )}
-        </Main>
-        );
-    }
-    if(id !== parseInt(userId)){
-        return(
-        <Main>
+  if (userId === id) {
+ 
+    return (
+      <Main>
         {isLoading ? (
-            <LoadingSpinner>
-               <img src={loading} alt="carregando..." />
-            </LoadingSpinner>
+          <LoadingSpinner>
+            <img src={loading} alt="carregando..." />
+          </LoadingSpinner>
         ) : (
-            <>
-                {posts.map((post, index) => (
-                    <PostContainer>
-                    <div className="icones">
-                        <img
-                            onClick={() => navigate(`/user/${post.user_id}`)}
-                            src={post.picture}
-                            alt="Foto de perfil"
-                        />
-                        <ion-icon name="heart-outline"></ion-icon>
-                        <p>13 likes</p>
+          <>
+            {posts.map((post, index) => (
+              <PostContainer>
+                <div className="icones">
+                  <img src={post.picture} alt="Foto de perfil" />
+                  <ion-icon name="heart-outline"></ion-icon>
+                  <p>13 likes</p>
+                </div>
+                <div className="textos">
+                  <Modificar>
+                    <h5>{post.name}</h5>
+                    <div>
+                      <IconEdit
+                        ativar={ativar}
+                        setAtivar={setAtivar}
+                        texto={texto}
+                        setTexto={setTexto}
+                        TextoRef={TextoRef}
+                        setCartaoId={setCartaoId}
+                        postId={post.post_id}
+                        render={render}
+                      />
+                      <DeletarIcon token={token} postId={post.post_id} renderizarPosts={renderizarPosts} render={render}/>
                     </div>
-                 <div className="textos">
-                     <Modificar>
-                         <h5>{post.name}</h5>
-                         <div>
-                             id
-                             lixo
-                         </div>
-                     </Modificar>
-                     <p>
-                            <ReactTagify
-                                tagStyle={tagStyle}
-                                tagClicked={(tag) => navigateToHashtag(tag)}
-                            >
-                                {post.description}
-                            </ReactTagify>
-                        </p>
-                        <InfoLink onClick={openLink(post.link)}>
-                            <div className="infoLink">
-                                <h5>{post.link_title}</h5>
-                                <p>{post.link_description}</p>
-                                <h6>{post.link}</h6>
-                            </div>
-                            <div className="imagemLink">
-                                <img src={post.link_image} alt="Imagem referente ao link" />
-                            </div>
-                        </InfoLink>
+                  </Modificar>
+                  {ativar && post.post_id === cartaoId ? (
+                    <Texto
+                      ativar={ativar}
+                      type="text"
+                      style={{ color: "#4C4C4C" }}
+                      onKeyPress={handleUserKeyPress}
+                      readOnly={texto}
+                      ref={TextoRef}
+                      defaultValue={post.description}
+                    ></Texto>
+                  ) : (
+                    <p>
+                      <ReactTagify
+                        tagStyle={tagStyle}
+                        tagClicked={(tag) => navigateToHashtag(tag)}
+                      >
+                        {post.description}
+                      </ReactTagify>
+                    </p>
+                  )}
+
+                  <InfoLink>
+                    <div className="infoLink">
+                      <h5>{post.link_title}</h5>
+                      <p>{post.link_description}</p>
+                      <h6>{post.link}</h6>
                     </div>
-                </PostContainer>
-                ))}
-            </>
+                    <div className="imagemLink">
+                      <img
+                        src={post.link_image}
+                        alt="Imagem referente ao link"
+                      />
+                    </div>
+                  </InfoLink>
+                </div>
+              </PostContainer>
+            ))}
+          </>
         )}
-    </Main>
-        )
-   }
-
+      </Main>
+    );
+  }
+  if (userId !== id) {
+    return (
+      <Main>
+        {isLoading ? (
+          <LoadingSpinner>
+            <img src={loading} alt="carregando..." />
+          </LoadingSpinner>
+        ) : (
+          <>
+            {posts.map((post, index) => (
+              <PostContainer>
+                <div className="icones">
+                  <img
+                    onClick={() => navigate(`/user/${post.user_id}`)}
+                    src={post.picture}
+                    alt="Foto de perfil"
+                  />
+                  <ion-icon name="heart-outline"></ion-icon>
+                  <p>13 likes</p>
+                </div>
+                <div className="textos">
+                  <Modificar>
+                    <h5>{post.name}</h5>
+                  </Modificar>
+                  <p>
+                    <ReactTagify
+                      tagStyle={tagStyle}
+                      tagClicked={(tag) => navigateToHashtag(tag)}
+                    >
+                      {post.description}
+                    </ReactTagify>
+                  </p>
+                  <InfoLink>
+                    <div className="infoLink">
+                      <h5>{post.link_title}</h5>
+                      <p>{post.link_description}</p>
+                      <h6>{post.link}</h6>
+                    </div>
+                    <div className="imagemLink">
+                      <img
+                        src={post.link_image}
+                        alt="Imagem referente ao link"
+                      />
+                    </div>
+                  </InfoLink>
+                </div>
+              </PostContainer>
+            ))}
+          </>
+        )}
+      </Main>
+    ); 
+  }
+  if (posts.length === 0) {
+    return (
+      <Aviso>
+        <h1>No Posts Yet</h1>
+      </Aviso>
+    )
+  }
 }
-
 
 export default function TelaUsuario() {
-    const { hashtag } = useParams();
-    return (
-        <Container>
-            <Title>
-                <h2>{hashtag}</h2>
-            </Title>
-            <Content>
-                <MainContent />
-                <Side />
-            </Content>
-        </Container>
-    );
+  const {state} = useLocation();
+  return (
+    <Container>
+      <Title>
+        <h2>{state.user}</h2>
+      </Title>
+      <Content>
+        <MainContent  />
+        <Side />
+      </Content>
+    </Container>
+  );
 }
-
-
 
 const Container = styled.div`
   width: 80%;
@@ -470,24 +490,39 @@ const SideContainer = styled.div`
       }
     }
   }
-`
-const Modificar = styled.div`
-display: flex;
-justify-content: space-between;
- img{
-   width: 15.95px;
-   height: 15.98px;
- }
- div{
-   display: flex;
-   margin-left: 3px;
- }
-`
-const Texto = styled.textarea`
-    width: calc(100% - 108px);
-    height: 44px;
-    border: none;
-    border-radius: 7px;
-    margin-top: 11px;
-    background-color: ${(props) => (props.ativar ? '#FFFFFF' : '#171717')}
 `;
+const Modificar = styled.div`
+  display: flex;
+  justify-content: space-between;
+  img {
+    width: 15.95px;
+    height: 15.98px;
+  }
+  div {
+    display: flex;
+    margin-left: 3px;
+  }
+`;
+const Texto = styled.textarea`
+  width: calc(100% - 108px);
+  height: 44px;
+  border: none;
+  border-radius: 7px;
+  margin-top: 11px;
+  background-color: ${(props) => (props.ativar ? "#FFFFFF" : "#171717")};
+`;
+
+const Aviso = styled.div`
+display: flex;
+justify-content: center;
+align-items: center;
+margin-top: 50%;
+h1{
+  color: #9b9595;
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 15px;
+      margin-bottom: 10px;
+     
+}
+`

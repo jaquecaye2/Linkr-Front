@@ -23,7 +23,7 @@ function  IconEdit({ativar, setAtivar, TextoRef, setCartaoId, postId}) {
             TextoRef.current.focus();
           console.log(TextoRef.current.value);
         }
-    }, [ativar]);
+    }, []);
 
     return (
         <Icon>
