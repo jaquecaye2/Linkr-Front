@@ -5,6 +5,7 @@ import { ThreeDots } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
 import loading from "../../assets/images/loading.svg";
+import { ReactTagify } from "react-tagify";
 
 function PostUnico({ post, token, postsCurtidos, name }) {
   const API_URL = process.env.REACT_APP_API_URL;
@@ -50,7 +51,11 @@ function PostUnico({ post, token, postsCurtidos, name }) {
       };
     }
 
-    const promise = axios.post(`https://linkr-driven-16.herokuapp.com/like`, dadosPost, config);
+    const promise = axios.post(
+      `https://linkr-driven-16.herokuapp.com/like`,
+      dadosPost,
+      config
+    );
 
     promise
       .then((response) => {
@@ -184,6 +189,17 @@ function PostUnico({ post, token, postsCurtidos, name }) {
     });
   }
 
+  const tagStyle = {
+    color: "#ffffff",
+    fontWeight: "700",
+  };
+
+  function navigateToHashtag(tag) {
+    const target = tag.replace("#", "");
+
+    navigate(`/hashtag/${target}`);
+  }
+
   return (
     <Post>
       <div className="icones">
@@ -208,8 +224,15 @@ function PostUnico({ post, token, postsCurtidos, name }) {
         <ReactTooltip id="likes" place="bottom" effect="solid" />
       </div>
       <div className="textos">
-        <h5  onClick={() => navegar(post.name, post.user_id)}>{post.name}</h5>
-        <p>{post.description}</p>
+        <h5 onClick={() => navegar(post.name, post.user_id)}>{post.name}</h5>
+        <p>
+          <ReactTagify
+            tagStyle={tagStyle}
+            tagClicked={(tag) => navigateToHashtag(tag)}
+          >
+            {post.description}
+          </ReactTagify>
+        </p>
         <InfoLink onClick={openLink}>
           <div className="infoLink">
             <h5>{post.link_title}</h5>
@@ -262,7 +285,10 @@ export default function TelaTimeline() {
       },
     };
 
-    const promise = axios.get(`https://linkr-driven-16.herokuapp.com/post`, config);
+    const promise = axios.get(
+      `https://linkr-driven-16.herokuapp.com/post`,
+      config
+    );
 
     promise
       .then((response) => {
@@ -282,7 +308,10 @@ export default function TelaTimeline() {
       },
     };
 
-    const promise = axios.get(`https://linkr-driven-16.herokuapp.com/hastags`, config);
+    const promise = axios.get(
+      `https://linkr-driven-16.herokuapp.com/hastags`,
+      config
+    );
 
     promise
       .then((response) => {
@@ -311,7 +340,11 @@ export default function TelaTimeline() {
       description: descricao,
     };
 
-    const promise = axios.post(`https://linkr-driven-16.herokuapp.com/post`, dadosPost, config);
+    const promise = axios.post(
+      `https://linkr-driven-16.herokuapp.com/post`,
+      dadosPost,
+      config
+    );
 
     promise
       .then((response) => {
@@ -339,7 +372,10 @@ export default function TelaTimeline() {
       },
     };
 
-    const promise = axios.get(`https://linkr-driven-16.herokuapp.com/like`, config);
+    const promise = axios.get(
+      `https://linkr-driven-16.herokuapp.com/like`,
+      config
+    );
 
     promise
       .then((response) => {
@@ -641,10 +677,13 @@ const Post = styled.div`
       margin-bottom: 5px;
     }
     p {
-      color: #b7b7b7;
-      font-size: 17px;
-      line-height: 20px;
       margin-bottom: 15px;
+      span {
+        color: #b7b7b7;
+        font-weight: 400;
+        font-size: 17px;
+        line-height: 20px;
+      }
     }
     span {
       color: #ffffff;

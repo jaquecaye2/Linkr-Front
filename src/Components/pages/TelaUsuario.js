@@ -108,7 +108,11 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
       };
     }
 
-    const promise = axios.post(`https://linkr-driven-16.herokuapp.com/like`, dadosPost, config);
+    const promise = axios.post(
+      `https://linkr-driven-16.herokuapp.com/like`,
+      dadosPost,
+      config
+    );
 
     promise
       .then((response) => {
@@ -395,7 +399,10 @@ function MainContent() {
       },
     };
 
-    const promise = axios.get(`https://linkr-driven-16.herokuapp.com/like`, config);
+    const promise = axios.get(
+      `https://linkr-driven-16.herokuapp.com/like`,
+      config
+    );
 
     promise
       .then((response) => {
@@ -452,7 +459,7 @@ export default function TelaUsuario() {
     return (
       <Container>
         <Title>
-          <h2>{name}</h2>
+          <h2>{name}'s</h2>
         </Title>
         <Content>
           <MainContent />
