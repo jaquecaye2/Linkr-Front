@@ -235,11 +235,21 @@ function Post({
     showQuantLikes();
   }, []);
 
+
+  function navegar(name, userId) {
+    console.log(name, userId);
+    navigate(`/user/${userId}`, {
+      state: {
+        user: name,
+      },
+    });
+  }
+
   return (
     <PostContainer>
       <div className="icones">
         <img
-          onClick={() => navigate(`/user/${user_id}`)}
+         onClick={() => navegar(name, user_id)}
           src={picture}
           alt="Foto de perfil"
         />
@@ -259,7 +269,7 @@ function Post({
         <ReactTooltip id="likes" place="bottom" effect="solid" />
       </div>
       <div className="textos">
-        <h5 onClick={() => navigate(`/user/${user_id}`)}>{name}</h5>
+        <h5  onClick={() => navegar(name, user_id)}>{name}</h5>
         <p>
           <ReactTagify
             tagStyle={tagStyle}

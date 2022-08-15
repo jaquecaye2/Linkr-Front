@@ -320,7 +320,7 @@ function Hashtag({ hashtag }) {
   const navigate = useNavigate();
 
   function openHashtag() {
-    navigate(`/hastags/${hashtag.name}`);
+    navigate(`/hashtag/${hashtag.name}`);
   }
 
   return <p onClick={openHashtag}># {hashtag.name}</p>;
