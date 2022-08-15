@@ -2,10 +2,11 @@ import { useEffect  } from "react";
 import { TiPencil } from "react-icons/ti";
 import styled from "styled-components";
 
-function  IconEdit({ativar, setAtivar, TextoRef, setCartaoId, postId}) {
+function  IconEdit({ativar, setAtivar, TextoRef, setCartaoId, postId, setEnableTextArea}) {
     function getTextArea() {
         setAtivar(!ativar);
         setCartaoId(postId)
+        setEnableTextArea(false)
     }
 
     useEffect(() => {
