@@ -208,7 +208,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
         <ReactTooltip id="likes" place="bottom" effect="solid" />
       </div>
       <div className="textos">
-        <h5 onClick={() => navigate(`/user/${post.user_id}`)}>{post.name}</h5>
+        <h5  onClick={() => navegar(post.name, post.user_id)}>{post.name}</h5>
         <p>{post.description}</p>
         <InfoLink onClick={openLink}>
           <div className="infoLink">
