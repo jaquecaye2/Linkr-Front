@@ -299,6 +299,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
             onKeyPress={handleUserKeyPress}
             ref={TextoRef}
             defaultValue={post.description}
+            autoFocus={true}
           ></Texto>
         ) : (
           <p>
