@@ -459,7 +459,7 @@ export default function TelaUsuario() {
     return (
       <Container>
         <Title>
-          <h2>{name}'s</h2>
+          <h2>{name}'s Posts</h2>
         </Title>
         <Content>
           <MainContent />
@@ -471,7 +471,7 @@ export default function TelaUsuario() {
     return (
       <Container>
         <Title>
-          <h2>{state.user}</h2>
+          <h2>{state.user}'s Posts</h2>
         </Title>
         <Content>
           <MainContent />
