@@ -66,7 +66,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
       console.log(e);
       alert("Não foi possível salvar as alterações!");
       setTexto(false);
-      setEnableTextArea(false);
+      setEnableTextArea(true);
     }
   }
 
