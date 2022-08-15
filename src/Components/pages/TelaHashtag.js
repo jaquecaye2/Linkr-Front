@@ -23,7 +23,7 @@ function Side() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:6002/hastags`)
+      .get(`https://linkr-driven-16.herokuapp.com/hastags`)
       .then(({ data }) => {
         setHashtags(data);
       })
@@ -35,13 +35,15 @@ function Side() {
   return (
     <SideContainer>
       <h3>trending</h3>
-      {hashtags.length === 0 ? (
-        <p>Não há hashtags cadastradas</p>
-      ) : (
-        hashtags.map((hashtag, index) => (
-          <Hashtag key={index} hashtag={hashtag} />
-        ))
-      )}
+      <div>
+        {hashtags.length === 0 ? (
+          <p>Não há hashtags cadastradas</p>
+        ) : (
+          hashtags.map((hashtag, index) => (
+            <Hashtag key={index} hashtag={hashtag} />
+          ))
+        )}
+      </div>
     </SideContainer>
   );
 }
@@ -112,7 +114,11 @@ function Post({
       };
     }
 
-    const promise = axios.post(`http://localhost:6002/like`, dadosPost, config);
+    const promise = axios.post(
+      `https://linkr-driven-16.herokuapp.com/like`,
+      dadosPost,
+      config
+    );
 
     promise
       .then((response) => {
@@ -136,7 +142,7 @@ function Post({
     };
 
     const promise = axios.post(
-      `http://localhost:6002/likes`,
+      `https://linkr-driven-16.herokuapp.com/likes`,
       dadosPost,
       config
     );
@@ -162,7 +168,7 @@ function Post({
     };
 
     const promise = axios.post(
-      `http://localhost:6002/likes`,
+      `https://linkr-driven-16.herokuapp.com/likes`,
       dadosPost,
       config
     );
@@ -250,8 +256,7 @@ function Post({
     <PostContainer>
       <div className="icones">
         <img
-
-         onClick={() => navegar(name, user_id)}
+          onClick={() => navegar(name, user_id)}
           src={picture}
           alt="Foto de perfil"
         />
@@ -271,7 +276,7 @@ function Post({
         <ReactTooltip id="likes" place="bottom" effect="solid" />
       </div>
       <div className="textos">
-        <h5  onClick={() => navegar(name, user_id)}>{name}</h5>
+        <h5 onClick={() => navegar(name, user_id)}>{name}</h5>
         <p>
           <ReactTagify
             tagStyle={tagStyle}
@@ -310,7 +315,10 @@ function MainContent() {
       },
     };
 
-    const promise = axios.get(`http://localhost:6002/like`, config);
+    const promise = axios.get(
+      `https://linkr-driven-16.herokuapp.com/like`,
+      config
+    );
 
     promise
       .then((response) => {
@@ -328,7 +336,7 @@ function MainContent() {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/hastag/${hashtag}`)
+      .get(`https://linkr-driven-16.herokuapp.com/hastag/${hashtag}`)
       .then(({ data }) => {
         console.log(data);
         setPosts(data);

@@ -50,7 +50,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
       };
     }
 
-    const promise = axios.post(`http://localhost:6002/like`, dadosPost, config);
+    const promise = axios.post(`https://linkr-driven-16.herokuapp.com/like`, dadosPost, config);
 
     promise
       .then((response) => {
@@ -74,7 +74,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
     };
 
     const promise = axios.post(
-      `http://localhost:6002/likes`,
+      `https://linkr-driven-16.herokuapp.com/likes`,
       dadosPost,
       config
     );
@@ -100,7 +100,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
     };
 
     const promise = axios.post(
-      `http://localhost:6002/likes`,
+      `https://linkr-driven-16.herokuapp.com/likes`,
       dadosPost,
       config
     );
@@ -262,7 +262,7 @@ export default function TelaTimeline() {
       },
     };
 
-    const promise = axios.get(`http://localhost:6002/post`, config);
+    const promise = axios.get(`https://linkr-driven-16.herokuapp.com/post`, config);
 
     promise
       .then((response) => {
@@ -282,7 +282,7 @@ export default function TelaTimeline() {
       },
     };
 
-    const promise = axios.get(`http://localhost:6002/hastags`, config);
+    const promise = axios.get(`https://linkr-driven-16.herokuapp.com/hastags`, config);
 
     promise
       .then((response) => {
@@ -311,7 +311,7 @@ export default function TelaTimeline() {
       description: descricao,
     };
 
-    const promise = axios.post(`http://localhost:6002/post`, dadosPost, config);
+    const promise = axios.post(`https://linkr-driven-16.herokuapp.com/post`, dadosPost, config);
 
     promise
       .then((response) => {
@@ -339,7 +339,7 @@ export default function TelaTimeline() {
       },
     };
 
-    const promise = axios.get(`http://localhost:6002/like`, config);
+    const promise = axios.get(`https://linkr-driven-16.herokuapp.com/like`, config);
 
     promise
       .then((response) => {

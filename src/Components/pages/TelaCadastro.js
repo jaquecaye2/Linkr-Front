@@ -28,7 +28,7 @@ export default function TelaCadastro() {
 
       console.log(dataSingin);
 
-      await axios.post(`${API_URL}/singin`, dataSingin);
+      await axios.post(`https://linkr-driven-16.herokuapp.com/singin`, dataSingin);
 
       navigate("/");
     } catch (error) {
