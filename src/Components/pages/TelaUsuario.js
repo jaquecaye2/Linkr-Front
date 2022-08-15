@@ -344,9 +344,13 @@ function Side() {
     <SideContainer>
       <h3>trending</h3>
       <div>
-        {hashtags.map((hashtag, index) => (
-          <Hashtag key={index} hashtag={hashtag} />
-        ))}
+        {hashtags.length === 0 ? (
+          <p>Não há hashtags cadastradas</p>
+        ) : (
+          hashtags.map((hashtag, index) => (
+            <Hashtag key={index} hashtag={hashtag} />
+          ))
+        )}
       </div>
     </SideContainer>
   );

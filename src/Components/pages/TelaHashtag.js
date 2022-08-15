@@ -35,11 +35,13 @@ function Side() {
   return (
     <SideContainer>
       <h3>trending</h3>
-      <div>
-        {hashtags.map((hashtag, index) => (
+      {hashtags.length === 0 ? (
+        <p>Não há hashtags cadastradas</p>
+      ) : (
+        hashtags.map((hashtag, index) => (
           <Hashtag key={index} hashtag={hashtag} />
-        ))}
-      </div>
+        ))
+      )}
     </SideContainer>
   );
 }
@@ -55,7 +57,7 @@ function Post({
   link_image,
   post_id,
   token,
-  postsCurtidos
+  postsCurtidos,
 }) {
   const navigate = useNavigate();
 
@@ -311,7 +313,7 @@ function MainContent() {
 
     promise
       .then((response) => {
-        console.log(response.data)
+        console.log(response.data);
         setPostsCurtidos(response.data);
       })
       .catch((error) => {
@@ -319,17 +321,15 @@ function MainContent() {
       });
   }
 
-
   useEffect(() => {
-    buscarPostsCurtidos()
+    buscarPostsCurtidos();
   }, []);
-
 
   useEffect(() => {
     axios
       .get(`${API_URL}/hastag/${hashtag}`)
       .then(({ data }) => {
-        console.log(data)
+        console.log(data);
         setPosts(data);
         setIsLoading(false);
       })

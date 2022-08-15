@@ -183,7 +183,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
       },
     });
   }
-  
+
   return (
     <Post>
       <div className="icones">
@@ -428,9 +428,13 @@ export default function TelaTimeline() {
         <Lateral>
           <h3>trending</h3>
           <div>
-            {hashtags.map((hashtag, index) => (
-              <Hashtag key={index} hashtag={hashtag} />
-            ))}
+            {hashtags.length === 0 ? (
+              <p>Não há hashtags cadastradas</p>
+            ) : (
+              hashtags.map((hashtag, index) => (
+                <Hashtag key={index} hashtag={hashtag} />
+              ))
+            )}
           </div>
         </Lateral>
       </Conteudo>
