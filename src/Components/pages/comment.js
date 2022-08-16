@@ -4,34 +4,57 @@ import testeImg from "../../assets/images/testeImg.png"
 
 export default function Chat() {
     return (
-        <ChatConteudo>
-            <div>
-                <img src={testeImg} alt="Foto" />
-            </div>
-            <Comment>
-                <Status>
-                    <h3>João Avatares</h3>
-                    <p>• following</p>
-                </Status>
-                <Comentario>
-                Adorei esse post, ajuda muito a usar Material UI com React!
-                </Comentario>
-            </Comment>
-        </ChatConteudo>
+        <Main>
+            <ChatConteudo>
+                <div>
+                    <img src={testeImg} alt="Foto" />
+                </div>
+                <Comment>
+                    <Status>
+                        <h3>João Avatares</h3>
+                        <p>• following</p>
+                    </Status>
+                    <Comentario>
+                        Adorei esse post, ajuda muito a usar Material UI com React!
+                    </Comentario>
+                </Comment>
+            </ChatConteudo>
+            <ChatConteudo>
+                <div>
+                    <img src={testeImg} alt="Foto" />
+                </div>
+                <Comment>
+                    <Status>
+                        <h3>João Avatares</h3>
+                        <p>• following</p>
+                    </Status>
+                    <Comentario>
+                        Adorei esse post, ajuda muito a usar Material UI com React!
+                    </Comentario>
+                </Comment>
+            </ChatConteudo>
+        </Main>
     )
 }
 
-const ChatConteudo = styled.div`
+
+
+const Main = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 100%;
   display: flex;
   background-color: #1E1E1E;
   border-radius: 16px;
   padding: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  margin-bottom: 16px;
   @media (max-width: 614px) {
     border-radius: 0;
   }
+`
+
+const ChatConteudo = styled.div`
+display: flex;
   img {
       width: 39px;
       height: 39px;
