@@ -13,6 +13,8 @@ import DeletarIcon from "./DeleteIcon.js";
 import IconEdit from "./IconEdit.js";
 import { useLocation } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
+import CommentsIcon from "./commentIcon";
+
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -24,6 +26,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
   const navigate = useNavigate();
   const [render, setRender] = useState(false);
   const [enableTextArea, setEnableTextArea] = useState(false);
+  const [chat, setChat] = useState(false)
 
   const [tipoCoracao, setTipoCoracao] = useState("heart-outline");
   const [corCoracao, setCorCoracao] = useState("black");
@@ -259,6 +262,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
           {quantLikes} likes
         </p>
         <ReactTooltip id="likes" place="bottom" effect="solid" />
+        <CommentsIcon postId={post.post_id}  callback={() => setChat(!chat)}/>
       </div>
       <div className="textos">
         <Modificar>
@@ -322,8 +326,10 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
             <img src={post.link_image} alt="Imagem referente ao link" />
           </div>
         </InfoLink>
+        {chat ? "OI" : <></> }
       </div>
     </PostContainer>
+    
   );
 }
 
