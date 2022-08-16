@@ -13,7 +13,7 @@ import IconEdit from "./IconEdit.js";
 import { useLocation } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
 import CommentsIcon from "./commentIcon";
-import Chat from "./comment";
+import Chat from "../shared/comment.js"
 
 
 const API_URL = process.env.REACT_APP_API_URL;
