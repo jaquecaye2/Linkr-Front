@@ -5,6 +5,7 @@ import { ThreeDots } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
 import loading from "../../assets/images/loading.svg";
+import InfiniteScroll from "./InfiniteScroll";
 
 function PostUnico({ post, token, postsCurtidos, name }) {
   const API_URL = process.env.REACT_APP_API_URL;
@@ -50,11 +51,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
       };
     }
 
-    const promise = axios.post(
-      `http://localhost:6002/like`,
-      dadosPost,
-      config
-    );
+    const promise = axios.post(`http://localhost:6002/like`, dadosPost, config);
 
     promise
       .then((response) => {
@@ -256,7 +253,7 @@ export default function TelaTimeline() {
 
   const API_URL = process.env.REACT_APP_API_URL;
 
-  const [page, setPage] = React.useState(1)
+  let page = 1
 
   function renderizarPosts() {
     const config = {
@@ -272,7 +269,6 @@ export default function TelaTimeline() {
 
     promise
       .then((response) => {
-        console.log(response.data);
         setPosts(response.data);
         setPromiseCarregada(true);
       })
@@ -281,8 +277,8 @@ export default function TelaTimeline() {
       });
   }
 
-  function loadNextPage(){
-    setPage(page + 1)
+  function loadNextPage() {
+    page ++
 
     const config = {
       headers: {
@@ -303,7 +299,6 @@ export default function TelaTimeline() {
       .catch((error) => {
         alert(error.response.data);
       });
-
   }
 
   function renderizaHashtags() {
@@ -313,10 +308,7 @@ export default function TelaTimeline() {
       },
     };
 
-    const promise = axios.get(
-      `http://localhost:6002/hastags`,
-      config
-    );
+    const promise = axios.get(`http://localhost:6002/hastags`, config);
 
     promise
       .then((response) => {
@@ -345,11 +337,7 @@ export default function TelaTimeline() {
       description: descricao,
     };
 
-    const promise = axios.post(
-      `http://localhost:6002/post`,
-      dadosPost,
-      config
-    );
+    const promise = axios.post(`http://localhost:6002/post`, dadosPost, config);
 
     promise
       .then((response) => {
@@ -377,10 +365,7 @@ export default function TelaTimeline() {
       },
     };
 
-    const promise = axios.get(
-      `http://localhost:6002/like`,
-      config
-    );
+    const promise = axios.get(`http://localhost:6002/like`, config);
 
     promise
       .then((response) => {
@@ -449,22 +434,26 @@ export default function TelaTimeline() {
               <img src={loading} alt="carregando..." />
             </Carregando>
           ) : (
-            <Posts>
-              {posts.length === 0 ? (
-                <p>Não há posts cadastrados</p>
-              ) : (
-                posts.map((post, index) => (
-                  <PostUnico
-                    key={index}
-                    post={post}
-                    token={token}
-                    name={name}
-                    postsCurtidos={postsCurtidos}
-                  />
-                ))
-              )}
-              <button onClick={loadNextPage}>Carregar mais...</button>
-            </Posts>
+            <>
+              <Posts>
+                {posts.length === 0 ? (
+                  <p>Não há posts cadastrados</p>
+                ) : (
+                  posts.map((post, index) => (
+                    <PostUnico
+                      key={index}
+                      post={post}
+                      token={token}
+                      name={name}
+                      postsCurtidos={postsCurtidos}
+                    />
+                  ))
+                )}
+              </Posts>
+              <InfiniteScroll
+                fetchMore={loadNextPage}
+              />
+            </>
           )}
         </Principal>
 
