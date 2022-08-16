@@ -50,11 +50,14 @@ function PostUnico({ post, token, postsCurtidos, name }) {
       };
     }
 
-    const promise = axios.post(`https://linkr-driven-16.herokuapp.com/like`, dadosPost, config);
+    const promise = axios.post(
+      `http://localhost:6002/like`,
+      dadosPost,
+      config
+    );
 
     promise
       .then((response) => {
-        console.log(response.data);
         showQuantLikes();
       })
       .catch((error) => {
@@ -68,13 +71,12 @@ function PostUnico({ post, token, postsCurtidos, name }) {
         Authorization: `Bearer ${token}`,
       },
     };
-    console.log(token);
     const dadosPost = {
       id: post.id,
     };
 
     const promise = axios.post(
-      `https://linkr-driven-16.herokuapp.com/likes`,
+      `http://localhost:6002/likes`,
       dadosPost,
       config
     );
@@ -100,7 +102,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
     };
 
     const promise = axios.post(
-      `https://linkr-driven-16.herokuapp.com/likes`,
+      `http://localhost:6002/likes`,
       dadosPost,
       config
     );
@@ -176,7 +178,6 @@ function PostUnico({ post, token, postsCurtidos, name }) {
   }, []);
 
   function navegar(name, userId) {
-    console.log(name, userId);
     navigate(`/user/${userId}`, {
       state: {
         user: name,
@@ -208,7 +209,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
         <ReactTooltip id="likes" place="bottom" effect="solid" />
       </div>
       <div className="textos">
-        <h5  onClick={() => navegar(post.name, post.user_id)}>{post.name}</h5>
+        <h5 onClick={() => navegar(post.name, post.user_id)}>{post.name}</h5>
         <p>{post.description}</p>
         <InfoLink onClick={openLink}>
           <div className="infoLink">
@@ -255,6 +256,8 @@ export default function TelaTimeline() {
 
   const API_URL = process.env.REACT_APP_API_URL;
 
+  const [page, setPage] = React.useState(1)
+
   function renderizarPosts() {
     const config = {
       headers: {
@@ -262,7 +265,10 @@ export default function TelaTimeline() {
       },
     };
 
-    const promise = axios.get(`https://linkr-driven-16.herokuapp.com/post`, config);
+    const promise = axios.get(
+      `http://localhost:6002/post?page=${page}`,
+      config
+    );
 
     promise
       .then((response) => {
@@ -275,6 +281,31 @@ export default function TelaTimeline() {
       });
   }
 
+  function loadNextPage(){
+    setPage(page + 1)
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const promise = axios.get(
+      `http://localhost:6002/post?page=${page}`,
+      config
+    );
+
+    promise
+      .then((response) => {
+        setPosts(response.data);
+        setPromiseCarregada(true);
+      })
+      .catch((error) => {
+        alert(error.response.data);
+      });
+
+  }
+
   function renderizaHashtags() {
     const config = {
       headers: {
@@ -282,7 +313,10 @@ export default function TelaTimeline() {
       },
     };
 
-    const promise = axios.get(`https://linkr-driven-16.herokuapp.com/hastags`, config);
+    const promise = axios.get(
+      `http://localhost:6002/hastags`,
+      config
+    );
 
     promise
       .then((response) => {
@@ -311,7 +345,11 @@ export default function TelaTimeline() {
       description: descricao,
     };
 
-    const promise = axios.post(`https://linkr-driven-16.herokuapp.com/post`, dadosPost, config);
+    const promise = axios.post(
+      `http://localhost:6002/post`,
+      dadosPost,
+      config
+    );
 
     promise
       .then((response) => {
@@ -339,7 +377,10 @@ export default function TelaTimeline() {
       },
     };
 
-    const promise = axios.get(`https://linkr-driven-16.herokuapp.com/like`, config);
+    const promise = axios.get(
+      `http://localhost:6002/like`,
+      config
+    );
 
     promise
       .then((response) => {
@@ -422,9 +463,11 @@ export default function TelaTimeline() {
                   />
                 ))
               )}
+              <button onClick={loadNextPage}>Carregar mais...</button>
             </Posts>
           )}
         </Principal>
+
         <Lateral>
           <h3>trending</h3>
           <div>

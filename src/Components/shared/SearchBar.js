@@ -56,7 +56,7 @@ export default function SearchBar() {
     }
 
     axios
-      .get(`https://linkr-driven-16.herokuapp.com/users?name=${searchValue}`)
+      .get(`http://localhost:6002/users?name=${searchValue}`)
       .then(({ data }) => setSearchResults(data))
       .catch((error) => {
         if (error.response.status === 404) {
