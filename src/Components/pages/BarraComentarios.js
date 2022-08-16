@@ -31,6 +31,7 @@ export default function BarraComentario({postId}) {
 
 const BarraMain = styled.div`
 display: flex;
+padding-top:3%;
 input{
     width: 100%;
     height: 39px;
@@ -67,6 +68,7 @@ const TextArea = styled.input`
     border: none;
     background: #252525;
     color: #ACACAC;
+    margin-bottom: 2%;
     font-size: 15px;
     ::placeholder {
         font-size: 14px;
