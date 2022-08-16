@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import testeImg from "../../assets/images/testeImg.png"
+import BarraComentario from './BarraComentarios';
 
 
 export default function Chat() {
@@ -61,11 +62,10 @@ export default function Chat() {
                     </Comentario>
                 </Comment>
             </ChatConteudo>
+            <BarraComentario />
         </Main>
     )
 }
-
-
 
 const Main = styled.div`
   display: flex;
