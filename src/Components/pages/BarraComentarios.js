@@ -15,6 +15,7 @@ export default function BarraComentario({postId}) {
             <BarraConteudo>
                 <img src={imagemPerfil} alt="Foto" />
             </BarraConteudo>
+            <SendForm> 
             <TextArea
                     placeholder="write a comment..."
                     type="text"
@@ -22,6 +23,7 @@ export default function BarraComentario({postId}) {
                     onChange={e => setTexto(e.target.value)}
                 />
             <SendComment type="submit" id="submit"><StyledIcon /></SendComment>
+            </SendForm>
         </BarraMain>
     );
 }
@@ -49,6 +51,16 @@ input{
 }
 
 `
+
+const SendForm = styled.div`
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 65px;
+    display: flex;
+    font-family: 'Lato';
+`
+
 const TextArea = styled.input`
     margin-left: 15px;
     width: 90%;
