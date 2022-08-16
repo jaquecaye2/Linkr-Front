@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { ReactTagify } from "react-tagify";
 import loading from "../../assets/images/loading.svg";
-import userContext from "../../Context/userContext";
 import { useRef } from "react";
 import axios from "axios";
 import DeletarIcon from "./DeleteIcon.js";
@@ -14,6 +13,7 @@ import IconEdit from "./IconEdit.js";
 import { useLocation } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
 import CommentsIcon from "./commentIcon";
+import Chat from "./comment";
 
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -219,8 +219,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
         }
       } else if (namesLike.length > 2 && curti === false) {
         setMensagem(
-          `Curtido por ${namesLike[0]}, ${namesLike[1]} e outras ${
-            namesLike.length - 2
+          `Curtido por ${namesLike[0]}, ${namesLike[1]} e outras ${namesLike.length - 2
           } pessoas`
         );
       } else if (namesLike.length > 2 && curti === true) {
@@ -245,91 +244,96 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
   }, []);
 
   return (
-    <PostContainer>
-      <div className="icones">
-        <img src={post.picture} alt="Foto de perfil" />
-        <ion-icon
-          name={tipoCoracao}
-          color={corCoracao}
-          onClick={likePost}
-        ></ion-icon>
-        <p
-          data-tip={mensagem}
-          data-for="likes"
-          onMouseOver={nameLiked}
-          onMouseOut={limparNomes}
-        >
-          {quantLikes} likes
-        </p>
-        <ReactTooltip id="likes" place="bottom" effect="solid" />
-        <CommentsIcon postId={post.post_id}  callback={() => setChat(!chat)}/>
-      </div>
-      <div className="textos">
-        <Modificar>
-          <h5>{post.name}</h5>
-
-          {userId === id ? (
-            <div>
-              <IconEdit
-                ativar={ativar}
-                setAtivar={setAtivar}
-                enableTextArea={enableTextArea}
-                setEnableTextArea={setEnableTextArea}
-                texto={texto}
-                setTexto={setTexto}
-                TextoRef={TextoRef}
-                setCartaoId={setCartaoId}
-                postId={post.post_id}
-                render={render}
-              />
-              <DeletarIcon
-                token={token}
-                postId={post.post_id}
-                renderizarPosts={renderizarPosts}
-                render={render}
-              />
-            </div>
-          ) : (
-            <></>
-          )}
-        </Modificar>
-
-        {ativar && post.post_id === cartaoId ? (
-          <Texto
-            ativar={ativar}
-            readOnly={enableTextArea}
-            type="text"
-            style={{ color: "#4C4C4C" }}
-            onKeyPress={handleUserKeyPress}
-            ref={TextoRef}
-            defaultValue={post.description}
-            autoFocus={true}
-          ></Texto>
-        ) : (
-          <p>
-            <ReactTagify
-              tagStyle={tagStyle}
-              tagClicked={(tag) => navigateToHashtag(tag)}
-            >
-              {post.description}
-            </ReactTagify>
+    <MarginPost>
+      <PostContainer>
+        <div className="icones">
+          <img src={post.picture} alt="Foto de perfil" />
+          <ion-icon
+            name={tipoCoracao}
+            color={corCoracao}
+            onClick={likePost}
+          ></ion-icon>
+          <p
+            data-tip={mensagem}
+            data-for="likes"
+            onMouseOver={nameLiked}
+            onMouseOut={limparNomes}
+          >
+            {quantLikes} likes
           </p>
-        )}
+          <ReactTooltip id="likes" place="bottom" effect="solid" />
+          <CommentsIcon postId={post.post_id} callback={() => setChat(!chat)} />
+        </div>
+        <div className="textos">
+          <Modificar>
+            <h5>{post.name}</h5>
 
-        <InfoLink onClick={() => window.open(`${post.link}`)}>
-          <div className="infoLink">
-            <h5>{post.link_title}</h5>
-            <p>{post.link_description}</p>
-            <h6>{post.link}</h6>
-          </div>
-          <div className="imagemLink">
-            <img src={post.link_image} alt="Imagem referente ao link" />
-          </div>
-        </InfoLink>
-        {chat ? "OI" : <></> }
-      </div>
-    </PostContainer>
-    
+            {userId === id ? (
+              <div>
+                <IconEdit
+                  ativar={ativar}
+                  setAtivar={setAtivar}
+                  enableTextArea={enableTextArea}
+                  setEnableTextArea={setEnableTextArea}
+                  texto={texto}
+                  setTexto={setTexto}
+                  TextoRef={TextoRef}
+                  setCartaoId={setCartaoId}
+                  postId={post.post_id}
+                  render={render}
+                />
+                <DeletarIcon
+                  token={token}
+                  postId={post.post_id}
+                  renderizarPosts={renderizarPosts}
+                  render={render}
+                />
+              </div>
+            ) : (
+              <></>
+            )}
+          </Modificar>
+
+          {ativar && post.post_id === cartaoId ? (
+            <Texto
+              ativar={ativar}
+              readOnly={enableTextArea}
+              type="text"
+              style={{ color: "#4C4C4C" }}
+              onKeyPress={handleUserKeyPress}
+              ref={TextoRef}
+              defaultValue={post.description}
+              autoFocus={true}
+            ></Texto>
+          ) : (
+            <p>
+              <ReactTagify
+                tagStyle={tagStyle}
+                tagClicked={(tag) => navigateToHashtag(tag)}
+              >
+                {post.description}
+              </ReactTagify>
+            </p>
+          )}
+
+          <InfoLink onClick={() => window.open(`${post.link}`)}>
+            <div className="infoLink">
+              <h5>{post.link_title}</h5>
+              <p>{post.link_description}</p>
+              <h6>{post.link}</h6>
+            </div>
+            <div className="imagemLink">
+              <img src={post.link_image} alt="Imagem referente ao link" />
+            </div>
+          </InfoLink>
+        </div>
+      </PostContainer>
+      {chat ?
+        <Chat />
+        :
+        <></>
+      }
+    </MarginPost>
   );
 }
 
@@ -546,6 +550,11 @@ const LoadingSpinner = styled.div`
   justify-content: center;
 `;
 
+
+const MarginPost = styled.div`
+margin-bottom: 16px;
+
+`
 const PostContainer = styled.div`
   width: 100%;
   display: flex;
@@ -553,7 +562,6 @@ const PostContainer = styled.div`
   border-radius: 15px;
   padding: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  margin-bottom: 16px;
   @media (max-width: 614px) {
     border-radius: 0;
   }
