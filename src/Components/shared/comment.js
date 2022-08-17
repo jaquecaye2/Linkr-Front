@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import BarraComentario from './BarraComentarios';
 import loading from "../../assets/images/loading.svg";
 import axios from 'axios';
-import {useEffect, useState }from "react";
+import { useEffect, useState } from "react";
 
 
 export default function Chat({ postId }) {
@@ -11,15 +11,15 @@ export default function Chat({ postId }) {
     const [tamanho, setTamanho] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [users, setUsers] = useState([])
- 
-   async function renderUsersComments() {
+
+    async function renderUsersComments() {
         const promise = axios.get(
             `http://localhost:6002/comments/users/4`
         );
 
         promise
             .then((response) => {
-                console.log(response.data.length)
+                console.log(response.data)
                 setUsers(response.data)
                 setIsLoading(false);
             })
@@ -27,7 +27,7 @@ export default function Chat({ postId }) {
                 console.log(error)
                 alert(error.response.data);
                 setIsLoading(false);
-            });  
+            });
     }
 
     useEffect(() => {
@@ -35,9 +35,9 @@ export default function Chat({ postId }) {
     }, [tamanho]);
 
 
-    function RenderUsers({picture,name,comment}){
-        return(
-            
+    function RenderUsers({ picture, name, comment, owner, userId }) {
+        return (
+
             <ChatConteudo>
                 <div>
                     <img src={picture} alt="Foto" />
@@ -45,7 +45,11 @@ export default function Chat({ postId }) {
                 <Comment>
                     <Status>
                         <h3>{name}</h3>
-                        <p>• following</p>
+                        {owner === userId ?
+                            <p>• post’s author</p>
+                            :
+                            <></>
+                        }
                     </Status>
                     <Comentario>
                         {comment}
@@ -54,7 +58,7 @@ export default function Chat({ postId }) {
             </ChatConteudo>
         )
     }
-    
+
     return (
         <Main>
             <ChatMain>
@@ -70,6 +74,8 @@ export default function Chat({ postId }) {
                                     picture={e.picture}
                                     name={e.name}
                                     comment={e.comment}
+                                    owner={e.ownerpost}
+                                    userId={e.user_id}
                                 />
                             ))
                         ) : (
