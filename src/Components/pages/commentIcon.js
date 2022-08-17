@@ -25,7 +25,7 @@ export default function CommentsIcon({callback,postId, comment}) {
                
             })
             .catch((error) => {
-                alert(error);
+                alert(error.response.data);
               
             });
     }

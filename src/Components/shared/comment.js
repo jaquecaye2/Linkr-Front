@@ -57,7 +57,7 @@ export default function Chat({ postId, setComment }) {
             })
             .catch((error) => {
                 console.log(error)
-                alert(error);
+                alert(error.response.data);
             });
     }
 
