@@ -329,7 +329,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
         </div>
       </PostContainer>
       {chat ?
-        <Chat />
+        <Chat postId={post.post_id}/>
         :
         <></>
       }

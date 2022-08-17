@@ -1,28 +1,61 @@
 import styled from 'styled-components';
 import { FiSend } from "react-icons/fi";
 import { useState } from 'react';
+import axios  from 'axios';
 
 
 export default function BarraComentario({postId}) {
     const imagemPerfil = localStorage.getItem("picture");
+    const token = localStorage.getItem("token");
     const [texto, setTexto] = useState('');
-    const comment = {
+
+    const dados = {
         comment: texto,
-        postId: postId
+        postId: 16
     }
+
+    async function handleCommentSubmit() {
+      
+        console.log("oi")
+        try {
+          const config = {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          };
+    
+          await axios.post(
+            `http://localhost:6002/comment`,dados,config
+          );
+         
+        } catch (e) {
+          console.log(e);
+          alert("Não foi possível salvar as alterações!");
+        }
+      }
+
+
+    document.addEventListener("keypress", function (e) {
+        if (e.key === "enter") {
+            const btn = document.querySelector('#submit');
+
+            btn.click();
+        }
+    })
+
     return (
         <BarraMain>
             <BarraConteudo>
                 <img src={imagemPerfil} alt="Foto" />
             </BarraConteudo>
-            <SendForm> 
+            <SendForm > 
             <TextArea
                     placeholder="write a comment..."
                     type="text"
                     value={texto}
                     onChange={e => setTexto(e.target.value)}
                 />
-            <SendComment type="submit" id="submit"><StyledIcon /></SendComment>
+            <SendComment type="submit" id="submit" onClick={()=> handleCommentSubmit()}><StyledIcon /></SendComment>
             </SendForm>
         </BarraMain>
     );
