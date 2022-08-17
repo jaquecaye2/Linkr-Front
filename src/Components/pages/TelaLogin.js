@@ -80,6 +80,7 @@ const Container = styled.div`
     flex-direction: column;
   }
 `;
+
 const Slogan = styled.div`
   width: 65.68%;
   height: 100vh;

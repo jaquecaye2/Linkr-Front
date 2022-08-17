@@ -7,6 +7,7 @@ import axios from "axios";
 import CommentsIcon from "./commentIcon";
 import Chat from "../shared/comment";
 import ReactTooltip from "react-tooltip";
+import InfiniteScroll from "./InfiniteScroll";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -126,7 +127,6 @@ function Post({
 
     promise
       .then((response) => {
-        console.log(response.data);
         showQuantLikes();
       })
       .catch((error) => {
@@ -248,7 +248,6 @@ function Post({
   }, []);
 
   function navegar(name, userId) {
-    console.log(name, userId);
     navigate(`/user/${userId}`, {
       state: {
         user: name,
@@ -322,8 +321,22 @@ function MainContent() {
   const token = localStorage.getItem("token");
 
   const [isLoading, setIsLoading] = useState(true);
+  const [total, setTotal] = useState([]);
   const [posts, setPosts] = useState([]);
   const [postsCurtidos, setPostsCurtidos] = useState([]);
+
+  function totalPosts() {
+    axios
+      .get(`http://localhost:6002/hastag2/${hashtag}?page=${page}`)
+      .then(({ data }) => {
+        setTotal(data);
+      })
+      .catch((erro) => {
+        console.log(erro);
+      });
+  }
+
+  let page = 1;
 
   function buscarPostsCurtidos() {
     const config = {
@@ -339,11 +352,42 @@ function MainContent() {
 
     promise
       .then((response) => {
-        console.log(response.data);
         setPostsCurtidos(response.data);
       })
       .catch((error) => {
         alert(error.response.data);
+      });
+  }
+
+  function renderizarPosts() {
+    axios
+      .get(`http://localhost:6002/hastag/${hashtag}?page=${page}`)
+      .then(({ data }) => {
+        setPosts(data);
+        setIsLoading(false);
+      })
+      .catch((erro) => {
+        console.log(erro);
+      });
+  }
+
+  function loadNextPage() {
+    page++;
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    axios
+      .get(`http://localhost:6002/hastag/${hashtag}`)
+      .then(({ data }) => {
+        setPosts(data);
+        setIsLoading(false);
+      })
+      .catch((erro) => {
+        console.log(erro);
       });
   }
 
@@ -352,16 +396,8 @@ function MainContent() {
   }, []);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:6002/hastag/${hashtag}`)
-      .then(({ data }) => {
-        console.log(data);
-        setPosts(data);
-        setIsLoading(false);
-      })
-      .catch((erro) => {
-        console.log(erro);
-      });
+    renderizarPosts();
+    totalPosts();
   }, [hashtag]);
 
   return (
@@ -388,6 +424,11 @@ function MainContent() {
               token={token}
             />
           ))}
+          {total.length !== posts.length ? (
+            <InfiniteScroll fetchMore={loadNextPage} />
+          ) : (
+            <></>
+          )}
         </>
       )}
     </Main>
