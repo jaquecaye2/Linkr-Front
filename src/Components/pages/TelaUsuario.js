@@ -42,7 +42,6 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
     setEnableTextArea(false);
     setTexto(true);
     setRender(true);
-   
 
     try {
       const config = {
@@ -370,9 +369,27 @@ function MainContent() {
   const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
   const [isLoading, setIsLoading] = useState(true);
+  const [total, setTotal] = useState([]);
   const [posts, setPosts] = useState([]);
   const [render, setRender] = useState(false);
   const [postsCurtidos, setPostsCurtidos] = useState([]);
+
+  function totalPosts() {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    axios
+      .get(`http://localhost:6002/users2/${id}`, config)
+      .then(({ data }) => {
+        setTotal(data);
+      })
+      .catch((erro) => {
+        console.log(erro);
+      });
+  }
 
   let page = 1;
 
@@ -437,6 +454,7 @@ function MainContent() {
   useEffect(() => {
     renderizarPosts();
     buscarPostsCurtidos();
+    totalPosts();
   }, [updateUser]);
 
   return (
@@ -464,7 +482,11 @@ function MainContent() {
           ) : (
             <>Não há posts cadastrados</>
           )}
-          <InfiniteScroll fetchMore={loadNextPage} />
+          {total.length !== posts.length ? (
+            <InfiniteScroll fetchMore={loadNextPage} />
+          ) : (
+            <></>
+          )}
         </>
       )}
     </Main>

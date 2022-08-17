@@ -54,7 +54,6 @@ function PostUnico({ post, token, postsCurtidos, name }) {
 
     const promise = axios.post(`http://localhost:6002/like`, dadosPost, config);
 
-
     promise
       .then((response) => {
         showQuantLikes();
@@ -261,6 +260,7 @@ export default function TelaTimeline() {
   const [corBackgroundInput, setCorBackgroundInput] = React.useState("#efefef");
   const [carregando, setCarregando] = React.useState(false);
 
+  const [total, setTotal] = React.useState([]);
   const [posts, setPosts] = React.useState([]);
   const [hashtags, setHashtags] = React.useState([]);
   const [postsCurtidos, setPostsCurtidos] = React.useState([]);
@@ -273,7 +273,25 @@ export default function TelaTimeline() {
 
   const API_URL = process.env.REACT_APP_API_URL;
 
-  let page = 1
+  let page = 1;
+
+  function totalPosts() {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const promise = axios.get(`http://localhost:6002/posts`, config);
+
+    promise
+      .then((response) => {
+        setTotal(response.data);
+      })
+      .catch((error) => {
+        alert(error.response.data);
+      });
+  }
 
   function renderizarPosts() {
     const config = {
@@ -298,7 +316,7 @@ export default function TelaTimeline() {
   }
 
   function loadNextPage() {
-    page ++
+    page++;
 
     const config = {
       headers: {
@@ -400,6 +418,7 @@ export default function TelaTimeline() {
     renderizarPosts();
     renderizaHashtags();
     buscarPostsCurtidos();
+    totalPosts();
   }, []);
 
   return (
@@ -470,9 +489,11 @@ export default function TelaTimeline() {
                   ))
                 )}
               </Posts>
-              <InfiniteScroll
-                fetchMore={loadNextPage}
-              />
+              {total.length !== posts.length ? (
+                <InfiniteScroll fetchMore={loadNextPage} />
+              ) : (
+                <></>
+              )}
             </>
           )}
         </Principal>

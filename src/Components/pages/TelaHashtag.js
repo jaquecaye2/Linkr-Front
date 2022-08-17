@@ -119,7 +119,6 @@ function Post({
 
     promise
       .then((response) => {
-        console.log(response.data);
         showQuantLikes();
       })
       .catch((error) => {
@@ -241,7 +240,6 @@ function Post({
   }, []);
 
   function navegar(name, userId) {
-    console.log(name, userId);
     navigate(`/user/${userId}`, {
       state: {
         user: name,
@@ -302,8 +300,20 @@ function MainContent() {
   const token = localStorage.getItem("token");
 
   const [isLoading, setIsLoading] = useState(true);
+  const [total, setTotal] = useState([]);
   const [posts, setPosts] = useState([]);
   const [postsCurtidos, setPostsCurtidos] = useState([]);
+
+  function totalPosts() {
+    axios
+      .get(`http://localhost:6002/hastag2/${hashtag}?page=${page}`)
+      .then(({ data }) => {
+        setTotal(data);
+      })
+      .catch((erro) => {
+        console.log(erro);
+      });
+  }
 
   let page = 1;
 
@@ -318,7 +328,6 @@ function MainContent() {
 
     promise
       .then((response) => {
-        console.log(response.data);
         setPostsCurtidos(response.data);
       })
       .catch((error) => {
@@ -364,6 +373,7 @@ function MainContent() {
 
   useEffect(() => {
     renderizarPosts();
+    totalPosts();
   }, [hashtag]);
 
   return (
@@ -390,7 +400,11 @@ function MainContent() {
               token={token}
             />
           ))}
-          <InfiniteScroll fetchMore={loadNextPage} />
+          {total.length !== posts.length ? (
+            <InfiniteScroll fetchMore={loadNextPage} />
+          ) : (
+            <></>
+          )}
         </>
       )}
     </Main>
