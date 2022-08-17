@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import BarraComentario from './BarraComentarios';
+import loading from "../../assets/images/loading.svg";
 import axios from 'axios';
 import {useEffect, useState }from "react";
 
@@ -8,22 +9,24 @@ export default function Chat({ postId }) {
     const token = localStorage.getItem("token");
     const [enableTextArea, setEnableTextArea] = useState(false);
     const [tamanho, setTamanho] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [users, setUsers] = useState([])
  
    async function renderUsersComments() {
         const promise = axios.get(
-            `http://localhost:6002/comments/users/11`
+            `http://localhost:6002/comments/users/4`
         );
 
         promise
             .then((response) => {
                 console.log(response.data.length)
                 setUsers(response.data)
-              
+                setIsLoading(false);
             })
             .catch((error) => {
                 console.log(error)
                 alert(error.response.data);
+                setIsLoading(false);
             });  
     }
 
@@ -55,15 +58,26 @@ export default function Chat({ postId }) {
     return (
         <Main>
             <ChatMain>
-             {users.map((user,index)=>{
-                 return(
-                     <RenderUsers 
-                     picture={user.picture}
-                     name={user.name}
-                     comment={user.comment}
-                     />
-                 )
-             })}
+                {isLoading ? (
+                    <LoadingSpinner>
+                        <img src={loading} alt="carregando..." />
+                    </LoadingSpinner>
+                ) : (
+                    <>
+                        {users.length > 0 ? (
+                            users.map((e, index) => (
+                                <RenderUsers
+                                    picture={e.picture}
+                                    name={e.name}
+                                    comment={e.comment}
+                                />
+                            ))
+                        ) : (
+                            <>Não há posts cadastrados</>
+                        )}
+                    </>
+
+                )}
             </ChatMain>
             <BarraComentario
                 postId={postId}
@@ -90,9 +104,9 @@ const Main = styled.div`
   }
 
 `
-
-
 const ChatMain = styled.div`
+    width: 100%;
+    height: calc(350px - 20%);
        overflow: scroll;
     border-radius: 0 0 20px 20px;
     
@@ -155,3 +169,9 @@ color: #ACACAC;
 margin-top: 1%;
 
 `
+
+const LoadingSpinner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
