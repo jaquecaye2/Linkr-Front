@@ -4,40 +4,35 @@ import axios from "axios";
 import { useState , useEffect} from "react";
 
 
-export default function CommentsIcon({callback,postId}) {
+export default function CommentsIcon({callback,postId, comment}) {
     const token = localStorage.getItem("token");
     const [qtdComments, setQtdComments] = useState([])
+console.log(comment)
 
-    function showCommentsQtd() {
-     
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
-    
-        const dadosPost = {
-          postId: postId
-        };
-    
-        const promise = axios.post(
-          `http://localhost:6002/comments`,
-          dadosPost,
-          config
+    async function commentsQtd() {
+        console.log(postId)
+        const promise = axios.get(
+            `http://localhost:6002/comments/users/16`
         );
-    
+
         promise
-          .then((response) => {
-            console.log(response.data)
-            setQtdComments(response.data[0].totalcomments)
-          })
-          .catch((error) => {
-            alert(error);
-          });
-      }
-         useEffect(() => {
-            showCommentsQtd()
-    }, []);
+            .then((response) => {
+                console.log(response.data)
+                setQtdComments(response.data.length)
+               
+            })
+            .catch((error) => {
+                console.log(error)
+                alert(error.response.data);
+              
+            });
+    }
+        
+
+    useEffect(() => {
+        commentsQtd()
+    }, [comment]);
+
 
     return (
         <ConteudoComment>

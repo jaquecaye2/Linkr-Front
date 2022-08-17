@@ -27,6 +27,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
   const [render, setRender] = useState(false);
   const [enableTextArea, setEnableTextArea] = useState(false);
   const [chat, setChat] = useState(false)
+  const [comment,setComment] = useState(false)
 
   const [tipoCoracao, setTipoCoracao] = useState("heart-outline");
   const [corCoracao, setCorCoracao] = useState("black");
@@ -262,7 +263,12 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
             {quantLikes} likes
           </p>
           <ReactTooltip id="likes" place="bottom" effect="solid" />
-          <CommentsIcon postId={post.post_id} callback={() => setChat(!chat)} />
+          <CommentsIcon
+            postId={post.post_id}
+            callback={() => setChat(!chat)}
+            setComment={setComment}
+            comment={comment}
+          />
         </div>
         <div className="textos">
           <Modificar>
@@ -329,7 +335,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
         </div>
       </PostContainer>
       {chat ?
-        <Chat postId={post.post_id}/>
+        <Chat postId={post.post_id} setComment={setComment}/>
         :
         <></>
       }

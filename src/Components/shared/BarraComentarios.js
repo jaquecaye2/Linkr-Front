@@ -4,7 +4,7 @@ import { useState } from 'react';
 import axios  from 'axios';
 
 
-export default function BarraComentario({postId, setEnableTextArea, enableTextArea,setTamanho}) {
+export default function BarraComentario({postId,setComment, setEnableTextArea, enableTextArea,setTamanho}) {
     const imagemPerfil = localStorage.getItem("picture");
    
     const token = localStorage.getItem("token");
@@ -12,12 +12,13 @@ export default function BarraComentario({postId, setEnableTextArea, enableTextAr
 console.log(postId)
     const dados = {
         comment: texto,
-        postId: postId
+        postId: 16
     }//postid trocar depois
 
     async function sendComment() {
         setEnableTextArea(true);
         setTamanho(true)
+        setComment(false)
         try {
           
           const config = {
@@ -32,6 +33,7 @@ console.log(postId)
 
          setEnableTextArea(false);
          setTamanho(false)
+         setComment(true)
         } catch (e) {
           console.log(e);
           alert("Não foi possível salvar as alterações!");

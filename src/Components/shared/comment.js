@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useEffect, useState } from "react";
 
 
-export default function Chat({ postId }) {
+export default function Chat({ postId, setComment }) {
     const token = localStorage.getItem("token");
     const [enableTextArea, setEnableTextArea] = useState(false);
     const [tamanho, setTamanho] = useState(false);
@@ -15,7 +15,7 @@ export default function Chat({ postId }) {
     async function renderUsersComments() {
         console.log(postId)
         const promise = axios.get(
-            `http://localhost:6002/comments/users/${postId}`
+            `http://localhost:6002/comments/users/16`
         );
 
         promise
@@ -23,11 +23,13 @@ export default function Chat({ postId }) {
                 console.log(response.data)
                 setUsers(response.data)
                 setIsLoading(false);
+                setComment(true);
             })
             .catch((error) => {
                 console.log(error)
                 alert(error.response.data);
                 setIsLoading(true);
+                setComment(false)
             });
     }
 
@@ -92,6 +94,7 @@ export default function Chat({ postId }) {
                 setEnableTextArea={setEnableTextArea}
                 enableTextArea={enableTextArea}
                 setTamanho={setTamanho}
+                setComment={setComment}
             />
         </Main>
     )
