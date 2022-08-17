@@ -23,6 +23,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
   const [cartaoId, setCartaoId] = useState("");
   const navigate = useNavigate();
   const [render, setRender] = useState(false);
+  const [enableTextArea, setEnableTextArea] = useState(false);
 
   const [tipoCoracao, setTipoCoracao] = useState("heart-outline");
   const [corCoracao, setCorCoracao] = useState("black");
@@ -38,8 +39,10 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
   };
 
   async function editarPost() {
+    setEnableTextArea(false);
     setTexto(true);
     setRender(true);
+   
 
     try {
       const config = {
@@ -63,6 +66,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
       console.log(e);
       alert("Não foi possível salvar as alterações!");
       setTexto(false);
+      setEnableTextArea(true);
     }
   }
 
@@ -260,6 +264,8 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
               <IconEdit
                 ativar={ativar}
                 setAtivar={setAtivar}
+                enableTextArea={enableTextArea}
+                setEnableTextArea={setEnableTextArea}
                 texto={texto}
                 setTexto={setTexto}
                 TextoRef={TextoRef}
@@ -282,12 +288,13 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
         {ativar && post.post_id === cartaoId ? (
           <Texto
             ativar={ativar}
+            readOnly={enableTextArea}
             type="text"
             style={{ color: "#4C4C4C" }}
             onKeyPress={handleUserKeyPress}
-            readOnly={texto}
             ref={TextoRef}
             defaultValue={post.description}
+            autoFocus={true}
           ></Texto>
         ) : (
           <p>
@@ -473,7 +480,7 @@ export default function TelaUsuario() {
     return (
       <Container>
         <Title>
-          <h2>{name}</h2>
+          <h2>{name}'s Posts</h2>
         </Title>
         <Content>
           <MainContent />
@@ -485,7 +492,7 @@ export default function TelaUsuario() {
     return (
       <Container>
         <Title>
-          <h2>{state.user}</h2>
+          <h2>{state.user}'s Posts</h2>
         </Title>
         <Content>
           <MainContent />

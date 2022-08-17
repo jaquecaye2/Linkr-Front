@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
 import loading from "../../assets/images/loading.svg";
 import InfiniteScroll from "./InfiniteScroll";
+import { ReactTagify } from "react-tagify";
 
 function PostUnico({ post, token, postsCurtidos, name }) {
   const API_URL = process.env.REACT_APP_API_URL;
@@ -52,6 +53,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
     }
 
     const promise = axios.post(`http://localhost:6002/like`, dadosPost, config);
+
 
     promise
       .then((response) => {
@@ -182,6 +184,17 @@ function PostUnico({ post, token, postsCurtidos, name }) {
     });
   }
 
+  const tagStyle = {
+    color: "#ffffff",
+    fontWeight: "700",
+  };
+
+  function navigateToHashtag(tag) {
+    const target = tag.replace("#", "");
+
+    navigate(`/hashtag/${target}`);
+  }
+
   return (
     <Post>
       <div className="icones">
@@ -207,7 +220,14 @@ function PostUnico({ post, token, postsCurtidos, name }) {
       </div>
       <div className="textos">
         <h5 onClick={() => navegar(post.name, post.user_id)}>{post.name}</h5>
-        <p>{post.description}</p>
+        <p>
+          <ReactTagify
+            tagStyle={tagStyle}
+            tagClicked={(tag) => navigateToHashtag(tag)}
+          >
+            {post.description}
+          </ReactTagify>
+        </p>
         <InfoLink onClick={openLink}>
           <div className="infoLink">
             <h5>{post.link_title}</h5>
@@ -673,10 +693,13 @@ const Post = styled.div`
       margin-bottom: 5px;
     }
     p {
-      color: #b7b7b7;
-      font-size: 17px;
-      line-height: 20px;
       margin-bottom: 15px;
+      span {
+        color: #b7b7b7;
+        font-weight: 400;
+        font-size: 17px;
+        line-height: 20px;
+      }
     }
     span {
       color: #ffffff;
