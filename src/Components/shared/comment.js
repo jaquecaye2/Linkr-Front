@@ -8,7 +8,6 @@ export default function Chat({ postId }) {
     const token = localStorage.getItem("token");
     const [enableTextArea, setEnableTextArea] = useState(false);
     const [tamanho, setTamanho] = useState(false);
-    const [renderComments, setRenderComments] = useState(false)
     const [users, setUsers] = useState([])
  
    async function renderUsersComments() {
@@ -18,9 +17,8 @@ export default function Chat({ postId }) {
 
         promise
             .then((response) => {
-                console.log(response.data)
+                console.log(response.data.length)
                 setUsers(response.data)
-                setTamanho(response.data)
               
             })
             .catch((error) => {
@@ -69,9 +67,9 @@ export default function Chat({ postId }) {
             </ChatMain>
             <BarraComentario
                 postId={postId}
-                setRenderComments={setRenderComments}
                 setEnableTextArea={setEnableTextArea}
                 enableTextArea={enableTextArea}
+                setTamanho={setTamanho}
             />
         </Main>
     )

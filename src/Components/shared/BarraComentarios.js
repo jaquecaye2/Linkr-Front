@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import { FiSend } from "react-icons/fi";
-import { useState , useEffect} from 'react';
+import { useState } from 'react';
 import axios  from 'axios';
 
 
-export default function BarraComentario({postId, setRenderComments, setEnableTextArea, enableTextArea}) {
+export default function BarraComentario({postId, setEnableTextArea, enableTextArea,setTamanho}) {
     const imagemPerfil = localStorage.getItem("picture");
    
     const token = localStorage.getItem("token");
@@ -17,6 +17,7 @@ export default function BarraComentario({postId, setRenderComments, setEnableTex
 
     async function sendComment() {
         setEnableTextArea(true);
+        setTamanho(true)
         try {
           
           const config = {
@@ -30,14 +31,14 @@ export default function BarraComentario({postId, setRenderComments, setEnableTex
           );
 
          setEnableTextArea(false);
+         setTamanho(false)
         } catch (e) {
           console.log(e);
           alert("Não foi possível salvar as alterações!");
           setEnableTextArea(true);
         }
       }
-
-   
+ 
 
     return (
         <BarraMain>
@@ -46,6 +47,7 @@ export default function BarraComentario({postId, setRenderComments, setEnableTex
             </BarraConteudo>
             <SendForm > 
             <TextArea
+                    readOnly={enableTextArea}
                     placeholder="write a comment..."
                     type="text"
                     value={texto}
