@@ -25,7 +25,7 @@ function Side() {
 
   useEffect(() => {
     axios
-      .get(`https://linkr-driven-16.herokuapp.com/hastags`)
+      .get(`http://localhost:6002/hastags`)
       .then(({ data }) => {
         setHashtags(data);
       })
@@ -119,7 +119,7 @@ function Post({
     }
 
     const promise = axios.post(
-      `https://linkr-driven-16.herokuapp.com/like`,
+      `http://localhost:6002/like`,
       dadosPost,
       config
     );
@@ -146,7 +146,7 @@ function Post({
     };
 
     const promise = axios.post(
-      `https://linkr-driven-16.herokuapp.com/likes`,
+      `http://localhost:6002/likes`,
       dadosPost,
       config
     );
@@ -172,7 +172,7 @@ function Post({
     };
 
     const promise = axios.post(
-      `https://linkr-driven-16.herokuapp.com/likes`,
+      `http://localhost:6002/likes`,
       dadosPost,
       config
     );
@@ -333,7 +333,7 @@ function MainContent() {
     };
 
     const promise = axios.get(
-      `https://linkr-driven-16.herokuapp.com/like`,
+      `http://localhost:6002/like`,
       config
     );
 
@@ -353,7 +353,7 @@ function MainContent() {
 
   useEffect(() => {
     axios
-      .get(`https://linkr-driven-16.herokuapp.com/hastag/${hashtag}`)
+      .get(`http://localhost:6002/hastag/${hashtag}`)
       .then(({ data }) => {
         console.log(data);
         setPosts(data);

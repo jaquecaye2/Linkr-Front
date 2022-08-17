@@ -9,8 +9,6 @@ import { ReactTagify } from "react-tagify";
 import Chat from "../shared/comment";
 import CommentsIcon from "./commentIcon";
 
-
-
 function PostUnico({ post, token, postsCurtidos, name }) {
  
   const API_URL = process.env.REACT_APP_API_URL;
@@ -59,7 +57,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
     }
 
     const promise = axios.post(
-      `https://linkr-driven-16.herokuapp.com/like`,
+      `http://localhost:6002/like`,
       dadosPost,
       config
     );
@@ -86,7 +84,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
     };
 
     const promise = axios.post(
-      `https://linkr-driven-16.herokuapp.com/likes`,
+      `http://localhost:6002/likes`,
       dadosPost,
       config
     );
@@ -112,7 +110,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
     };
 
     const promise = axios.post(
-      `https://linkr-driven-16.herokuapp.com/likes`,
+      `http://localhost:6002/likes`,
       dadosPost,
       config
     );
@@ -307,7 +305,7 @@ export default function TelaTimeline() {
     };
 
     const promise = axios.get(
-      `https://linkr-driven-16.herokuapp.com/post`,
+      `http://localhost:6002/post`,
       config
     );
 
@@ -330,7 +328,7 @@ export default function TelaTimeline() {
     };
 
     const promise = axios.get(
-      `https://linkr-driven-16.herokuapp.com/hastags`,
+      `http://localhost:6002/hastags`,
       config
     );
 
@@ -362,7 +360,7 @@ export default function TelaTimeline() {
     };
 
     const promise = axios.post(
-      `https://linkr-driven-16.herokuapp.com/post`,
+      `http://localhost:6002/post`,
       dadosPost,
       config
     );
@@ -394,7 +392,7 @@ export default function TelaTimeline() {
     };
 
     const promise = axios.get(
-      `https://linkr-driven-16.herokuapp.com/like`,
+      `http://localhost:6002/like`,
       config
     );
 

@@ -56,7 +56,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
       };
 
       await axios.put(
-        `https://linkr-driven-16.herokuapp.com/post/${cartaoId}`,
+        `http://localhost:6002/post/${cartaoId}`,
         {
           description: TextoRef.current.value,
         },
@@ -117,7 +117,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
     }
 
     const promise = axios.post(
-      `https://linkr-driven-16.herokuapp.com/like`,
+      `http://localhost:6002/like`,
       dadosPost,
       config
     );
@@ -144,7 +144,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
     };
 
     const promise = axios.post(
-      `https://linkr-driven-16.herokuapp.com/likes`,
+      `http://localhost:6002/likes`,
       dadosPost,
       config
     );
@@ -170,7 +170,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
     };
 
     const promise = axios.post(
-      `https://linkr-driven-16.herokuapp.com/likes`,
+      `http://localhost:6002/likes`,
       dadosPost,
       config
     );
@@ -358,7 +358,7 @@ function Side() {
 
   useEffect(() => {
     axios
-      .get(`https://linkr-driven-16.herokuapp.com/hastags`)
+      .get(`http://localhost:6002/hastags`)
       .then(({ data }) => {
         setHashtags(data);
       })
@@ -403,7 +403,7 @@ function MainContent() {
     };
 
     axios
-      .get(`https://linkr-driven-16.herokuapp.com/users/${id}`, config)
+      .get(`http://localhost:6002/users/${id}`, config)
       .then(({ data }) => {
         console.log(data);
         setPosts(data);
@@ -423,7 +423,7 @@ function MainContent() {
     };
 
     const promise = axios.get(
-      `https://linkr-driven-16.herokuapp.com/like`,
+      `http://localhost:6002/like`,
       config
     );
 
