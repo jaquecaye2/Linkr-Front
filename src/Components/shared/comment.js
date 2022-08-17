@@ -13,9 +13,14 @@ export default function Chat({ postId, setComment }) {
     const [users, setUsers] = useState([])
 
     async function renderUsersComments() {
-        console.log(postId)
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+
         const promise = axios.get(
-            `http://localhost:6002/comments/users/16`
+            `http://localhost:6002/comments/users/16`, config
         );
 
         promise

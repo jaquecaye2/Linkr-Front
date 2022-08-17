@@ -1,15 +1,15 @@
 import styled from 'styled-components';
 import { FiSend } from "react-icons/fi";
 import { useState } from 'react';
-import axios  from 'axios';
+import axios from 'axios';
 
 
-export default function BarraComentario({postId,setComment, setEnableTextArea, enableTextArea,setTamanho}) {
+export default function BarraComentario({ postId, setComment, setEnableTextArea, enableTextArea, setTamanho }) {
     const imagemPerfil = localStorage.getItem("picture");
-   
+
     const token = localStorage.getItem("token");
     const [texto, setTexto] = useState('');
-console.log(postId)
+    console.log(postId)
     const dados = {
         comment: texto,
         postId: 16
@@ -20,42 +20,42 @@ console.log(postId)
         setTamanho(true)
         setComment(false)
         try {
-          
-          const config = {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          };
-    
-          await axios.post(
-            `http://localhost:6002/comment`,dados,config
-          );
 
-         setEnableTextArea(false);
-         setTamanho(false)
-         setComment(true)
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+
+            await axios.post(
+                `http://localhost:6002/comment`, dados, config
+            );
+
+            setEnableTextArea(false);
+            setTamanho(false)
+            setComment(true)
         } catch (e) {
-          console.log(e);
-          alert("Não foi possível salvar as alterações!");
-          setEnableTextArea(true);
+            console.log(e);
+            alert("Não foi possível salvar as alterações!");
+            setEnableTextArea(true);
         }
-      }
- 
+    }
+
 
     return (
         <BarraMain>
             <BarraConteudo>
                 <img src={imagemPerfil} alt="Foto" />
             </BarraConteudo>
-            <SendForm > 
-            <TextArea
+            <SendForm >
+                <TextArea
                     readOnly={enableTextArea}
                     placeholder="write a comment..."
                     type="text"
                     value={texto}
                     onChange={e => setTexto(e.target.value)}
                 />
-            <SendComment type="submit" id="submit" onClick={()=> sendComment()}><StyledIcon /></SendComment>
+                <SendComment type="submit" id="submit" onClick={() => sendComment()}><StyledIcon /></SendComment>
             </SendForm>
         </BarraMain>
     );

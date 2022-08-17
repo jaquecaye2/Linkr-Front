@@ -10,9 +10,14 @@ export default function CommentsIcon({callback,postId, comment}) {
 console.log(comment)
 
     async function commentsQtd() {
-        console.log(postId)
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+
         const promise = axios.get(
-            `http://localhost:6002/comments/users/16`
+            `http://localhost:6002/comments/users/16`, config
         );
 
         promise
