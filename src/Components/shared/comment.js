@@ -3,6 +3,7 @@ import BarraComentario from './BarraComentarios';
 import loading from "../../assets/images/loading.svg";
 import axios from 'axios';
 import { useEffect, useState } from "react";
+import StatusComment from './statusComment';
 
 
 
@@ -71,28 +72,15 @@ export default function Chat({ postId, setComment }) {
         return (
 
             <ChatConteudo>
-                    <img src={picture} alt="Foto" />
+                <img src={picture} alt="Foto" />
                 <Comment>
                     <Status>
                         <h3>{name}</h3>
-                        {
-                            following.map((e)=>{
-                               if(e.seguindo === userId){
-                                   return(
-                                       <p>• following</p>
-                                   )
-                               }else if(owner === userId){
-                                   return(
-                                    <p>• post’s author</p>
-                                   )
-                               }else{
-                                   return(
-                                       <></>
-                                   )
-                               }
-                            })
-                        }
-                    
+                        <StatusComment
+                            following={following}
+                            owner={owner}
+                            userId={userId}
+                        />
                     </Status>
                     <Comentario>
                         {comment}

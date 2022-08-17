@@ -307,7 +307,7 @@ export default function TelaTimeline() {
     };
 
     const promise = axios.get(
-      `https://linkr-driven-16.herokuapp.com/post`,
+      `http://localhost:6002/post`,
       config
     );
 
@@ -362,7 +362,7 @@ export default function TelaTimeline() {
     };
 
     const promise = axios.post(
-      `https://linkr-driven-16.herokuapp.com/post`,
+      `http://localhost:6002/post`,
       dadosPost,
       config
     );
