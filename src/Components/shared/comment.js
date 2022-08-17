@@ -26,13 +26,11 @@ export default function Chat({ postId, setComment }) {
 
         promise
             .then((response) => {
-                console.log(response.data)
                 setUsers(response.data)
                 setIsLoading(false);
                 setComment(true);
             })
             .catch((error) => {
-                console.log(error)
                 alert(error.response.data);
                 setIsLoading(true);
                 setComment(false)

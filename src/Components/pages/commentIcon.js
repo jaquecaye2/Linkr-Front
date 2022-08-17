@@ -21,12 +21,10 @@ export default function CommentsIcon({callback,postId, comment}) {
 
         promise
             .then((response) => {
-                console.log(response.data)
                 setQtdComments(response.data.length)
                
             })
             .catch((error) => {
-                console.log(error)
                 alert(error.response.data);
               
             });

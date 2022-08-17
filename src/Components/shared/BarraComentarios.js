@@ -35,7 +35,6 @@ export default function BarraComentario({ postId, setComment, setEnableTextArea,
             setTamanho(false)
             setComment(true)
         } catch (e) {
-            console.log(e);
             alert("Não foi possível salvar as alterações!");
             setEnableTextArea(true);
         }
