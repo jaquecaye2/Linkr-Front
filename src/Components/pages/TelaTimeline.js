@@ -9,7 +9,7 @@ import InfiniteScroll from "./InfiniteScroll";
 import { ReactTagify } from "react-tagify";
 import Chat from "../shared/comment";
 import CommentsIcon from "./commentIcon";
-
+import useInterval from 'use-interval'
 
 
 function PostUnico({ post, token, postsCurtidos, name }) {
@@ -287,14 +287,34 @@ export default function TelaTimeline() {
   const [postsCurtidos, setPostsCurtidos] = React.useState([]);
 
   const [promiseCarregada, setPromiseCarregada] = React.useState(false);
+  const [novosPosts, setNovosPosts] = React.useState(false);
 
   const token = localStorage.getItem("token");
   const imagemPerfil = localStorage.getItem("picture");
   const name = localStorage.getItem("name");
 
-  const API_URL = process.env.REACT_APP_API_URL;
+  let [totalNovos, setTotalNovos] = React.useState(0);
 
-  let page = 1;
+  useInterval(() => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const promise = axios.get(`http://localhost:6002/posts`, config);
+
+    promise
+      .then((response) => {
+        if (total.length < response.data.length){
+          setTotalNovos(response.data.length - total.length)
+          setNovosPosts(true)
+        }
+      })
+      .catch((error) => {
+        alert(error.response.data);
+      });
+  }, 15000);
 
   function totalPosts() {
     const config = {
@@ -314,6 +334,8 @@ export default function TelaTimeline() {
       });
   }
 
+  let page = 1;
+
   function renderizarPosts() {
     const config = {
       headers: {
@@ -331,6 +353,7 @@ export default function TelaTimeline() {
       .then((response) => {
         setPosts(response.data);
         setPromiseCarregada(true);
+        totalPosts();
       })
       .catch((error) => {
         alert(error.response.data);
@@ -438,6 +461,12 @@ export default function TelaTimeline() {
       });
   }
 
+  function carregarNovos(){
+    renderizarPosts()
+    totalPosts()
+    setNovosPosts(false)
+  }
+
   React.useEffect(() => {
     renderizarPosts();
     renderizaHashtags();
@@ -491,6 +520,15 @@ export default function TelaTimeline() {
               </form>
             </div>
           </CriarPost>
+
+          {novosPosts ? (
+            <NovosPosts onClick={carregarNovos}>
+              <h2>{totalNovos} new posts, load more!</h2>
+              <ion-icon name="refresh"></ion-icon>
+            </NovosPosts>
+          ) : (
+            <div></div>
+          )}
 
           {!promiseCarregada ? (
             <Carregando>
@@ -681,6 +719,32 @@ const CriarPost = styled.div`
         }
       }
     }
+  }
+`;
+
+const NovosPosts = styled.div`
+  width: 100%;
+  height: 61px;
+  background-color: #1877f2;
+  border-radius: 16px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+  h2{
+    font-size: 16px;
+  }
+
+  ion-icon{
+    margin-left: 15px;
+    font-size: 22px;
+  }
+
+  :hover{
+    filter: brightness(0.9);
+    cursor: pointer;
   }
 `;
 
