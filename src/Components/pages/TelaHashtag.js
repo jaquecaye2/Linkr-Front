@@ -5,6 +5,7 @@ import { ReactTagify } from "react-tagify";
 import loading from "../../assets/images/loading.svg";
 import axios from "axios";
 import ReactTooltip from "react-tooltip";
+import InfiniteScroll from "./InfiniteScroll";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -114,11 +115,7 @@ function Post({
       };
     }
 
-    const promise = axios.post(
-      `http://localhost:6002/like`,
-      dadosPost,
-      config
-    );
+    const promise = axios.post(`http://localhost:6002/like`, dadosPost, config);
 
     promise
       .then((response) => {
@@ -308,6 +305,8 @@ function MainContent() {
   const [posts, setPosts] = useState([]);
   const [postsCurtidos, setPostsCurtidos] = useState([]);
 
+  let page = 1;
+
   function buscarPostsCurtidos() {
     const config = {
       headers: {
@@ -315,10 +314,7 @@ function MainContent() {
       },
     };
 
-    const promise = axios.get(
-      `http://localhost:6002/like`,
-      config
-    );
+    const promise = axios.get(`http://localhost:6002/like`, config);
 
     promise
       .then((response) => {
@@ -330,21 +326,44 @@ function MainContent() {
       });
   }
 
-  useEffect(() => {
-    buscarPostsCurtidos();
-  }, []);
-
-  useEffect(() => {
+  function renderizarPosts() {
     axios
-      .get(`http://localhost:6002/hastag/${hashtag}`)
+      .get(`http://localhost:6002/hastag/${hashtag}?page=${page}`)
       .then(({ data }) => {
-        console.log(data);
         setPosts(data);
         setIsLoading(false);
       })
       .catch((erro) => {
         console.log(erro);
       });
+  }
+
+  function loadNextPage() {
+    page++;
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    axios
+      .get(`http://localhost:6002/hastag/${hashtag}?page=${page}`, config)
+      .then(({ data }) => {
+        setPosts(data);
+        setIsLoading(false);
+      })
+      .catch((erro) => {
+        console.log(erro);
+      });
+  }
+
+  useEffect(() => {
+    buscarPostsCurtidos();
+  }, []);
+
+  useEffect(() => {
+    renderizarPosts();
   }, [hashtag]);
 
   return (
@@ -371,6 +390,7 @@ function MainContent() {
               token={token}
             />
           ))}
+          <InfiniteScroll fetchMore={loadNextPage} />
         </>
       )}
     </Main>

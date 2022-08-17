@@ -6,13 +6,13 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { ReactTagify } from "react-tagify";
 import loading from "../../assets/images/loading.svg";
-import userContext from "../../Context/userContext";
 import { useRef } from "react";
 import axios from "axios";
 import DeletarIcon from "./DeleteIcon.js";
 import IconEdit from "./IconEdit.js";
 import { useLocation } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
+import InfiniteScroll from "./InfiniteScroll";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -112,7 +112,6 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
 
     promise
       .then((response) => {
-        console.log(response.data);
         showQuantLikes();
       })
       .catch((error) => {
@@ -368,6 +367,8 @@ function MainContent() {
   const [render, setRender] = useState(false);
   const [postsCurtidos, setPostsCurtidos] = useState([]);
 
+  let page = 1;
+
   function renderizarPosts() {
     const config = {
       headers: {
@@ -376,9 +377,29 @@ function MainContent() {
     };
 
     axios
-      .get(`http://localhost:6002/users/${id}`, config)
+      .get(`http://localhost:6002/users/${id}?page=${page}`, config)
       .then(({ data }) => {
-        console.log(data);
+        setPosts(data);
+        setRender(data.length);
+        setIsLoading(false);
+      })
+      .catch((erro) => {
+        console.log(erro);
+      });
+  }
+
+  function loadNextPage() {
+    page++;
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    axios
+      .get(`http://localhost:6002/users/${id}?page=${page}`, config)
+      .then(({ data }) => {
         setPosts(data);
         setRender(data.length);
         setIsLoading(false);
@@ -399,7 +420,6 @@ function MainContent() {
 
     promise
       .then((response) => {
-        console.log(response.data);
         setPostsCurtidos(response.data);
       })
       .catch((error) => {
@@ -437,6 +457,7 @@ function MainContent() {
           ) : (
             <>Não há posts cadastrados</>
           )}
+          <InfiniteScroll fetchMore={loadNextPage} />
         </>
       )}
     </Main>
