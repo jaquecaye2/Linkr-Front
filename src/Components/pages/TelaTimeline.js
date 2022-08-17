@@ -332,6 +332,7 @@ export default function TelaTimeline() {
       .then((response) => {
         setPosts(response.data);
         setPromiseCarregada(true);
+        totalPosts();
       })
       .catch((error) => {
         alert(error.response.data);
