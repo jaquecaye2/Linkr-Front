@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useEffect, useState } from "react";
 
 
+
 export default function Chat({ postId, setComment }) {
     const token = localStorage.getItem("token");
     const [enableTextArea, setEnableTextArea] = useState(false);
@@ -19,7 +20,7 @@ export default function Chat({ postId, setComment }) {
                 Authorization: `Bearer ${token}`,
             },
         };
-
+         
         const promise = axios.get(
             `http://localhost:6002/comments/users/${postId}`, config
         );
@@ -56,7 +57,7 @@ export default function Chat({ postId, setComment }) {
             })
             .catch((error) => {
                 console.log(error)
-                alert(error.response.data);
+                alert(error);
             });
     }
 
@@ -121,7 +122,7 @@ export default function Chat({ postId, setComment }) {
                                 />
                             ))
                         ) : (
-                            <>Não há posts cadastrados</>
+                            <>Não há comentários ainda</>
                         )}
                     </>
 

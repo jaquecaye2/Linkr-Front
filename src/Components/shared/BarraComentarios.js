@@ -10,6 +10,7 @@ export default function BarraComentario({ postId, setComment, setEnableTextArea,
     const token = localStorage.getItem("token");
     const [texto, setTexto] = useState('');
     console.log(postId)
+
     const dados = {
         comment: texto,
         postId: postId
@@ -33,6 +34,7 @@ export default function BarraComentario({ postId, setComment, setEnableTextArea,
 
             setEnableTextArea(false);
             setTamanho(false)
+            setTexto('');
             setComment(true)
         } catch (e) {
             alert("Não foi possível salvar as alterações!");

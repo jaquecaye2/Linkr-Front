@@ -7,7 +7,7 @@ import { useState , useEffect} from "react";
 export default function CommentsIcon({callback,postId, comment}) {
     const token = localStorage.getItem("token");
     const [qtdComments, setQtdComments] = useState([])
-
+   
     async function commentsQtd() {
         const config = {
             headers: {
@@ -25,7 +25,7 @@ export default function CommentsIcon({callback,postId, comment}) {
                
             })
             .catch((error) => {
-                alert(error.response.data);
+                alert(error);
               
             });
     }

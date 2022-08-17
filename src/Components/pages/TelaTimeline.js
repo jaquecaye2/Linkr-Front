@@ -12,6 +12,7 @@ import CommentsIcon from "./commentIcon";
 
 
 function PostUnico({ post, token, postsCurtidos, name }) {
+ 
   const API_URL = process.env.REACT_APP_API_URL;
 
   const [tipoCoracao, setTipoCoracao] = React.useState("heart-outline");
@@ -230,10 +231,11 @@ function PostUnico({ post, token, postsCurtidos, name }) {
         </p>
         <ReactTooltip id="likes" place="bottom" effect="solid" />
         <CommentsIcon
-            postId={post.post_id}
+            postId={post.id}
             callback={() => setChat(!chat)}
             setComment={setComment}
             comment={comment}
+
           />
       </div>
       <div className="textos">
@@ -259,7 +261,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
       </div>
     </Post>
     {chat ?
-        <Chat postId={post.post_id} setComment={setComment}/>
+        <Chat postId={post.id} setComment={setComment}/>
         :
         <></>
       }
