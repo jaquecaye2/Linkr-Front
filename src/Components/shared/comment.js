@@ -21,7 +21,7 @@ export default function Chat({ postId, setComment }) {
         };
 
         const promise = axios.get(
-            `http://localhost:6002/comments/users/16`, config
+            `http://localhost:6002/comments/users/${postId}`, config
         );
 
         promise

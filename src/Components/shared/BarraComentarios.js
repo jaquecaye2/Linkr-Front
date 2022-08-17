@@ -12,7 +12,7 @@ export default function BarraComentario({ postId, setComment, setEnableTextArea,
     console.log(postId)
     const dados = {
         comment: texto,
-        postId: 16
+        postId: postId
     }//postid trocar depois
 
     async function sendComment() {
