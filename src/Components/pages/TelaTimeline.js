@@ -6,6 +6,10 @@ import { useNavigate } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
 import loading from "../../assets/images/loading.svg";
 import { ReactTagify } from "react-tagify";
+import Chat from "../shared/comment";
+import CommentsIcon from "./commentIcon";
+
+
 
 function PostUnico({ post, token, postsCurtidos, name }) {
   const API_URL = process.env.REACT_APP_API_URL;
@@ -16,6 +20,8 @@ function PostUnico({ post, token, postsCurtidos, name }) {
   const [quantLikes, setquantLikes] = React.useState(0);
   let namesLike = [];
   const [mensagem, setMensagem] = React.useState("");
+  const [chat, setChat] = React.useState(false)
+  const [comment,setComment] = React.useState(false)
 
   function openLink() {
     window.open(post.link, "_blank");
@@ -201,6 +207,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
   }
 
   return (
+    <ChatPost >
     <Post>
       <div className="icones">
         <img
@@ -222,6 +229,12 @@ function PostUnico({ post, token, postsCurtidos, name }) {
           {quantLikes} likes
         </p>
         <ReactTooltip id="likes" place="bottom" effect="solid" />
+        <CommentsIcon
+            postId={post.post_id}
+            callback={() => setChat(!chat)}
+            setComment={setComment}
+            comment={comment}
+          />
       </div>
       <div className="textos">
         <h5 onClick={() => navegar(post.name, post.user_id)}>{post.name}</h5>
@@ -245,6 +258,12 @@ function PostUnico({ post, token, postsCurtidos, name }) {
         </InfoLink>
       </div>
     </Post>
+    {chat ?
+        <Chat postId={post.post_id} setComment={setComment}/>
+        :
+        <></>
+      }
+    </ChatPost>
   );
 }
 
@@ -639,7 +658,6 @@ const Post = styled.div`
   border-radius: 15px;
   padding: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  margin-bottom: 16px;
   @media (max-width: 614px) {
     border-radius: 0;
   }
@@ -691,6 +709,11 @@ const Post = styled.div`
     }
   }
 `;
+
+const ChatPost = styled.div`
+ margin-bottom: 16px;
+
+`
 
 const InfoLink = styled.div`
   width: 100%;

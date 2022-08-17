@@ -10,6 +10,7 @@ export default function Chat({ postId, setComment }) {
     const [enableTextArea, setEnableTextArea] = useState(false);
     const [tamanho, setTamanho] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [following, setFollowing] = useState([])
     const [users, setUsers] = useState([])
 
     async function renderUsersComments() {
@@ -38,8 +39,32 @@ export default function Chat({ postId, setComment }) {
             });
     }
 
+    async function getUserFollows() {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+
+        const promise = axios.get(
+            `http://localhost:6002/comments`, config
+        );
+
+        promise
+            .then((response) => {
+                console.log(response.data)
+                setFollowing(response.data)
+                
+            })
+            .catch((error) => {
+                console.log(error)
+                alert(error.response.data);
+            });
+    }
+
     useEffect(() => {
         renderUsersComments()
+        getUserFollows()
     }, [tamanho]);
 
 
@@ -47,18 +72,28 @@ export default function Chat({ postId, setComment }) {
         return (
 
             <ChatConteudo>
-                <div>
                     <img src={picture} alt="Foto" />
-                </div>
                 <Comment>
                     <Status>
                         <h3>{name}</h3>
-                        {owner === userId ? (
-                            <p>• post’s author</p>
-                            ) : (
-                                <></>
-                            )
+                        {
+                            following.map((e)=>{
+                               if(e.seguindo === userId){
+                                   return(
+                                       <p>• following</p>
+                                   )
+                               }else if(owner === userId){
+                                   return(
+                                    <p>• post’s author</p>
+                                   )
+                               }else{
+                                   return(
+                                       <></>
+                                   )
+                               }
+                            })
                         }
+                    
                     </Status>
                     <Comentario>
                         {comment}
@@ -143,9 +178,11 @@ display: flex;
         cursor: pointer;
       }
     }
+  
 `
 const Comment = styled.div`
 margin-left: 3%;
+
 
 `
 
