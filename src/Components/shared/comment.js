@@ -13,8 +13,9 @@ export default function Chat({ postId }) {
     const [users, setUsers] = useState([])
 
     async function renderUsersComments() {
+        console.log(postId)
         const promise = axios.get(
-            `http://localhost:6002/comments/users/4`
+            `http://localhost:6002/comments/users/${postId}`
         );
 
         promise
@@ -26,7 +27,7 @@ export default function Chat({ postId }) {
             .catch((error) => {
                 console.log(error)
                 alert(error.response.data);
-                setIsLoading(false);
+                setIsLoading(true);
             });
     }
 
@@ -45,10 +46,11 @@ export default function Chat({ postId }) {
                 <Comment>
                     <Status>
                         <h3>{name}</h3>
-                        {owner === userId ?
+                        {owner === userId ? (
                             <p>• post’s author</p>
-                            :
-                            <></>
+                            ) : (
+                                <></>
+                            )
                         }
                     </Status>
                     <Comentario>

@@ -1,15 +1,49 @@
 import { AiOutlineComment } from "react-icons/ai";
 import styled from 'styled-components';
+import axios from "axios";
+import { useState , useEffect} from "react";
 
 
-export default function CommentsIcon({callback}) {
-  
+export default function CommentsIcon({callback,postId}) {
+    const token = localStorage.getItem("token");
+    const [qtdComments, setQtdComments] = useState([])
+
+    function showCommentsQtd() {
+     
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+    
+        const dadosPost = {
+          postId: postId
+        };
+    
+        const promise = axios.post(
+          `http://localhost:6002/comments`,
+          dadosPost,
+          config
+        );
+    
+        promise
+          .then((response) => {
+            console.log(response.data)
+            setQtdComments(response.data[0].totalcomments)
+          })
+          .catch((error) => {
+            alert(error);
+          });
+      }
+         useEffect(() => {
+            showCommentsQtd()
+    }, []);
 
     return (
         <ConteudoComment>
             <div>
                 <CommentIcon onClick={callback}/>
-                <TotalComments>0 comments</TotalComments>
+                <TotalComments>{qtdComments} comments</TotalComments>
             </div>
         </ConteudoComment>
     );

@@ -9,10 +9,10 @@ export default function BarraComentario({postId, setEnableTextArea, enableTextAr
    
     const token = localStorage.getItem("token");
     const [texto, setTexto] = useState('');
-
+console.log(postId)
     const dados = {
         comment: texto,
-        postId: 4
+        postId: postId
     }//postid trocar depois
 
     async function sendComment() {
