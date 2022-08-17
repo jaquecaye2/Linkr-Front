@@ -23,7 +23,7 @@ export default function TelaLogin() {
       setCorBackgroundInput("#C0D9D9");
 
       const dataLogin = { email, password };
-      const datauser = await axios.post(`https://linkr-driven-16.herokuapp.com/login`, dataLogin);
+      const datauser = await axios.post(`http://localhost:6002/login`, dataLogin);
 
       setDisabled(false);
       setCorBackgroundInput("#1877F2");
@@ -80,6 +80,7 @@ const Container = styled.div`
     flex-direction: column;
   }
 `;
+
 const Slogan = styled.div`
   width: 65.68%;
   height: 100vh;

@@ -6,13 +6,13 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { ReactTagify } from "react-tagify";
 import loading from "../../assets/images/loading.svg";
-import userContext from "../../Context/userContext";
 import { useRef } from "react";
 import axios from "axios";
 import DeletarIcon from "./DeleteIcon.js";
 import IconEdit from "./IconEdit.js";
 import { useLocation } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
+import InfiniteScroll from "./InfiniteScroll";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -42,7 +42,6 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
     setEnableTextArea(false);
     setTexto(true);
     setRender(true);
-   
 
     try {
       const config = {
@@ -52,7 +51,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
       };
 
       await axios.put(
-        `https://linkr-driven-16.herokuapp.com/post/${cartaoId}`,
+        `http://localhost:6002/post/${cartaoId}`,
         {
           description: TextoRef.current.value,
         },
@@ -112,15 +111,10 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
       };
     }
 
-    const promise = axios.post(
-      `https://linkr-driven-16.herokuapp.com/like`,
-      dadosPost,
-      config
-    );
+    const promise = axios.post(`http://localhost:6002/like`, dadosPost, config);
 
     promise
       .then((response) => {
-        console.log(response.data);
         showQuantLikes();
       })
       .catch((error) => {
@@ -140,7 +134,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
     };
 
     const promise = axios.post(
-      `https://linkr-driven-16.herokuapp.com/likes`,
+      `http://localhost:6002/likes`,
       dadosPost,
       config
     );
@@ -166,7 +160,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
     };
 
     const promise = axios.post(
-      `https://linkr-driven-16.herokuapp.com/likes`,
+      `http://localhost:6002/likes`,
       dadosPost,
       config
     );
@@ -342,7 +336,7 @@ function Side() {
 
   useEffect(() => {
     axios
-      .get(`https://linkr-driven-16.herokuapp.com/hastags`)
+      .get(`http://localhost:6002/hastags`)
       .then(({ data }) => {
         setHashtags(data);
       })
@@ -375,9 +369,29 @@ function MainContent() {
   const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
   const [isLoading, setIsLoading] = useState(true);
+  const [total, setTotal] = useState([]);
   const [posts, setPosts] = useState([]);
   const [render, setRender] = useState(false);
   const [postsCurtidos, setPostsCurtidos] = useState([]);
+
+  function totalPosts() {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    axios
+      .get(`http://localhost:6002/users2/${id}`, config)
+      .then(({ data }) => {
+        setTotal(data);
+      })
+      .catch((erro) => {
+        console.log(erro);
+      });
+  }
+
+  let page = 1;
 
   function renderizarPosts() {
     const config = {
@@ -387,9 +401,29 @@ function MainContent() {
     };
 
     axios
-      .get(`https://linkr-driven-16.herokuapp.com/users/${id}`, config)
+      .get(`http://localhost:6002/users/${id}?page=${page}`, config)
       .then(({ data }) => {
-        console.log(data);
+        setPosts(data);
+        setRender(data.length);
+        setIsLoading(false);
+      })
+      .catch((erro) => {
+        console.log(erro);
+      });
+  }
+
+  function loadNextPage() {
+    page++;
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    axios
+      .get(`http://localhost:6002/users/${id}?page=${page}`, config)
+      .then(({ data }) => {
         setPosts(data);
         setRender(data.length);
         setIsLoading(false);
@@ -406,14 +440,10 @@ function MainContent() {
       },
     };
 
-    const promise = axios.get(
-      `https://linkr-driven-16.herokuapp.com/like`,
-      config
-    );
+    const promise = axios.get(`http://localhost:6002/like`, config);
 
     promise
       .then((response) => {
-        console.log(response.data);
         setPostsCurtidos(response.data);
       })
       .catch((error) => {
@@ -424,6 +454,7 @@ function MainContent() {
   useEffect(() => {
     renderizarPosts();
     buscarPostsCurtidos();
+    totalPosts();
   }, [updateUser]);
 
   return (
@@ -450,6 +481,11 @@ function MainContent() {
             ))
           ) : (
             <>Não há posts cadastrados</>
+          )}
+          {total.length !== posts.length ? (
+            <InfiniteScroll fetchMore={loadNextPage} />
+          ) : (
+            <></>
           )}
         </>
       )}

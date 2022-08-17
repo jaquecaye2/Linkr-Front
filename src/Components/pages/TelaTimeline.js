@@ -5,6 +5,7 @@ import { ThreeDots } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
 import loading from "../../assets/images/loading.svg";
+import InfiniteScroll from "./InfiniteScroll";
 import { ReactTagify } from "react-tagify";
 
 function PostUnico({ post, token, postsCurtidos, name }) {
@@ -51,15 +52,10 @@ function PostUnico({ post, token, postsCurtidos, name }) {
       };
     }
 
-    const promise = axios.post(
-      `https://linkr-driven-16.herokuapp.com/like`,
-      dadosPost,
-      config
-    );
+    const promise = axios.post(`http://localhost:6002/like`, dadosPost, config);
 
     promise
       .then((response) => {
-        console.log(response.data);
         showQuantLikes();
       })
       .catch((error) => {
@@ -73,13 +69,12 @@ function PostUnico({ post, token, postsCurtidos, name }) {
         Authorization: `Bearer ${token}`,
       },
     };
-    console.log(token);
     const dadosPost = {
       id: post.id,
     };
 
     const promise = axios.post(
-      `https://linkr-driven-16.herokuapp.com/likes`,
+      `http://localhost:6002/likes`,
       dadosPost,
       config
     );
@@ -105,7 +100,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
     };
 
     const promise = axios.post(
-      `https://linkr-driven-16.herokuapp.com/likes`,
+      `http://localhost:6002/likes`,
       dadosPost,
       config
     );
@@ -181,7 +176,6 @@ function PostUnico({ post, token, postsCurtidos, name }) {
   }, []);
 
   function navegar(name, userId) {
-    console.log(name, userId);
     navigate(`/user/${userId}`, {
       state: {
         user: name,
@@ -266,6 +260,7 @@ export default function TelaTimeline() {
   const [corBackgroundInput, setCorBackgroundInput] = React.useState("#efefef");
   const [carregando, setCarregando] = React.useState(false);
 
+  const [total, setTotal] = React.useState([]);
   const [posts, setPosts] = React.useState([]);
   const [hashtags, setHashtags] = React.useState([]);
   const [postsCurtidos, setPostsCurtidos] = React.useState([]);
@@ -278,6 +273,26 @@ export default function TelaTimeline() {
 
   const API_URL = process.env.REACT_APP_API_URL;
 
+  let page = 1;
+
+  function totalPosts() {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const promise = axios.get(`http://localhost:6002/posts`, config);
+
+    promise
+      .then((response) => {
+        setTotal(response.data);
+      })
+      .catch((error) => {
+        alert(error.response.data);
+      });
+  }
+
   function renderizarPosts() {
     const config = {
       headers: {
@@ -286,13 +301,36 @@ export default function TelaTimeline() {
     };
 
     const promise = axios.get(
-      `https://linkr-driven-16.herokuapp.com/post`,
+      `http://localhost:6002/post?page=${page}`,
       config
     );
 
     promise
       .then((response) => {
-        console.log(response.data);
+        setPosts(response.data);
+        setPromiseCarregada(true);
+      })
+      .catch((error) => {
+        alert(error.response.data);
+      });
+  }
+
+  function loadNextPage() {
+    page++;
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const promise = axios.get(
+      `http://localhost:6002/post?page=${page}`,
+      config
+    );
+
+    promise
+      .then((response) => {
         setPosts(response.data);
         setPromiseCarregada(true);
       })
@@ -308,10 +346,7 @@ export default function TelaTimeline() {
       },
     };
 
-    const promise = axios.get(
-      `https://linkr-driven-16.herokuapp.com/hastags`,
-      config
-    );
+    const promise = axios.get(`http://localhost:6002/hastags`, config);
 
     promise
       .then((response) => {
@@ -340,11 +375,7 @@ export default function TelaTimeline() {
       description: descricao,
     };
 
-    const promise = axios.post(
-      `https://linkr-driven-16.herokuapp.com/post`,
-      dadosPost,
-      config
-    );
+    const promise = axios.post(`http://localhost:6002/post`, dadosPost, config);
 
     promise
       .then((response) => {
@@ -372,10 +403,7 @@ export default function TelaTimeline() {
       },
     };
 
-    const promise = axios.get(
-      `https://linkr-driven-16.herokuapp.com/like`,
-      config
-    );
+    const promise = axios.get(`http://localhost:6002/like`, config);
 
     promise
       .then((response) => {
@@ -390,6 +418,7 @@ export default function TelaTimeline() {
     renderizarPosts();
     renderizaHashtags();
     buscarPostsCurtidos();
+    totalPosts();
   }, []);
 
   return (
@@ -444,23 +473,31 @@ export default function TelaTimeline() {
               <img src={loading} alt="carregando..." />
             </Carregando>
           ) : (
-            <Posts>
-              {posts.length === 0 ? (
-                <p>Não há posts cadastrados</p>
+            <>
+              <Posts>
+                {posts.length === 0 ? (
+                  <p>Não há posts cadastrados</p>
+                ) : (
+                  posts.map((post, index) => (
+                    <PostUnico
+                      key={index}
+                      post={post}
+                      token={token}
+                      name={name}
+                      postsCurtidos={postsCurtidos}
+                    />
+                  ))
+                )}
+              </Posts>
+              {total.length !== posts.length ? (
+                <InfiniteScroll fetchMore={loadNextPage} />
               ) : (
-                posts.map((post, index) => (
-                  <PostUnico
-                    key={index}
-                    post={post}
-                    token={token}
-                    name={name}
-                    postsCurtidos={postsCurtidos}
-                  />
-                ))
+                <></>
               )}
-            </Posts>
+            </>
           )}
         </Principal>
+
         <Lateral>
           <h3>trending</h3>
           <div>
