@@ -1,84 +1,78 @@
 import styled from 'styled-components';
-import testeImg from "../../assets/images/testeImg.png"
 import BarraComentario from './BarraComentarios';
+import axios from 'axios';
+import {useEffect, useState }from "react";
 
 
-export default function Chat({postId}) {
+export default function Chat({ postId }) {
+    const token = localStorage.getItem("token");
+    const [enableTextArea, setEnableTextArea] = useState(false);
+    const [tamanho, setTamanho] = useState(false);
+    const [renderComments, setRenderComments] = useState(false)
+    const [users, setUsers] = useState([])
+ 
+   async function renderUsersComments() {
+        const promise = axios.get(
+            `http://localhost:6002/comments/users/11`
+        );
+
+        promise
+            .then((response) => {
+                console.log(response.data)
+                setUsers(response.data)
+                setTamanho(response.data)
+              
+            })
+            .catch((error) => {
+                console.log(error)
+                alert(error.response.data);
+            });  
+    }
+
+    useEffect(() => {
+        renderUsersComments()
+    }, [tamanho]);
+
+
+    function RenderUsers({picture,name,comment}){
+        return(
+            
+            <ChatConteudo>
+                <div>
+                    <img src={picture} alt="Foto" />
+                </div>
+                <Comment>
+                    <Status>
+                        <h3>{name}</h3>
+                        <p>• following</p>
+                    </Status>
+                    <Comentario>
+                        {comment}
+                    </Comentario>
+                </Comment>
+            </ChatConteudo>
+        )
+    }
+    
     return (
         <Main>
             <ChatMain>
-                <ChatConteudo>
-                    <div>
-                        <img src={testeImg} alt="Foto" />
-                    </div>
-                    <Comment>
-                        <Status>
-                            <h3>João Avatares</h3>
-                            <p>• following</p>
-                        </Status>
-                        <Comentario>
-                            Adorei esse post, ajuda muito a usar Material UI com React!
-                        </Comentario>
-                    </Comment>
-                </ChatConteudo>
-                <ChatConteudo>
-                    <div>
-                        <img src={testeImg} alt="Foto" />
-                    </div>
-                    <Comment>
-                        <Status>
-                            <h3>João Avatares</h3>
-                            <p>• following</p>
-                        </Status>
-                        <Comentario>
-                            Adorei esse post, ajuda muito a usar Material UI com React!
-                        </Comentario>
-                    </Comment>
-                </ChatConteudo>
-                <ChatConteudo>
-                    <div>
-                        <img src={testeImg} alt="Foto" />
-                    </div>
-                    <Comment>
-                        <Status>
-                            <h3>João Avatares</h3>
-                            <p>• following</p>
-                        </Status>
-                        <Comentario>
-                            Adorei esse post, ajuda muito a usar Material UI com React!
-                        </Comentario>
-                    </Comment>
-                </ChatConteudo>
-                <ChatConteudo>
-                    <div>
-                        <img src={testeImg} alt="Foto" />
-                    </div>
-                    <Comment>
-                        <Status>
-                            <h3>João Avatares</h3>
-                            <p>• following</p>
-                        </Status>
-                        <Comentario>
-                            Adorei esse post, ajuda muito a usar Material UI com React!
-                        </Comentario>
-                    </Comment>
-                </ChatConteudo>
-                <ChatConteudo>
-                    <div>
-                        <img src={testeImg} alt="Foto" />
-                    </div>
-                    <Comment>
-                        <Status>
-                            <h3>João Avatares</h3>
-                            <p>• following</p>
-                        </Status>
-                        <Comentario>
-                            Adorei esse post, ajuda muito a usar Material UI com React!
-                        </Comentario>
-                    </Comment>
-                </ChatConteudo>
+             {users.map((user,index)=>{
+                 return(
+                     <RenderUsers 
+                     picture={user.picture}
+                     name={user.name}
+                     comment={user.comment}
+                     />
+                 )
+             })}
             </ChatMain>
-            <BarraComentario postId={postId}/>
+            <BarraComentario
+                postId={postId}
+                setRenderComments={setRenderComments}
+                setEnableTextArea={setEnableTextArea}
+                enableTextArea={enableTextArea}
+            />
         </Main>
     )
 }
@@ -96,6 +90,7 @@ const Main = styled.div`
   @media (max-width: 614px) {
     border-radius: 0;
   }
+
 `
 
 

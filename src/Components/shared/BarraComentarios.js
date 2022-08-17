@@ -1,23 +1,24 @@
 import styled from 'styled-components';
 import { FiSend } from "react-icons/fi";
-import { useState } from 'react';
+import { useState , useEffect} from 'react';
 import axios  from 'axios';
 
 
-export default function BarraComentario({postId}) {
+export default function BarraComentario({postId, setRenderComments, setEnableTextArea, enableTextArea}) {
     const imagemPerfil = localStorage.getItem("picture");
+   
     const token = localStorage.getItem("token");
     const [texto, setTexto] = useState('');
 
     const dados = {
         comment: texto,
-        postId: 16
-    }
+        postId: 11
+    }//postid trocar depois
 
-    async function handleCommentSubmit() {
-      
-        console.log("oi")
+    async function sendComment() {
+        setEnableTextArea(true);
         try {
+          
           const config = {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -27,21 +28,16 @@ export default function BarraComentario({postId}) {
           await axios.post(
             `http://localhost:6002/comment`,dados,config
           );
-         
+
+         setEnableTextArea(false);
         } catch (e) {
           console.log(e);
           alert("Não foi possível salvar as alterações!");
+          setEnableTextArea(true);
         }
       }
 
-
-    document.addEventListener("keypress", function (e) {
-        if (e.key === "enter") {
-            const btn = document.querySelector('#submit');
-
-            btn.click();
-        }
-    })
+   
 
     return (
         <BarraMain>
@@ -55,7 +51,7 @@ export default function BarraComentario({postId}) {
                     value={texto}
                     onChange={e => setTexto(e.target.value)}
                 />
-            <SendComment type="submit" id="submit" onClick={()=> handleCommentSubmit()}><StyledIcon /></SendComment>
+            <SendComment type="submit" id="submit" onClick={()=> sendComment()}><StyledIcon /></SendComment>
             </SendForm>
         </BarraMain>
     );
