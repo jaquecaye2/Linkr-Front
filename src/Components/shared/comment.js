@@ -70,23 +70,25 @@ export default function Chat({ postId, setComment }) {
 
     function RenderUsers({ picture, name, comment, owner, userId }) {
         return (
-
-            <ChatConteudo>
-                <img src={picture} alt="Foto" />
-                <Comment>
-                    <Status>
-                        <h3>{name}</h3>
-                        <StatusComment
-                            following={following}
-                            owner={owner}
-                            userId={userId}
-                        />
-                    </Status>
-                    <Comentario>
-                        {comment}
-                    </Comentario>
-                </Comment>
-            </ChatConteudo>
+            <>
+                <ChatConteudo>
+                    <img src={picture} alt="Foto" />
+                    <Comment>
+                        <Status>
+                            <h3>{name}</h3>
+                            <StatusComment
+                                following={following}
+                                owner={owner}
+                                userId={userId}
+                            />
+                        </Status>
+                        <Comentario>
+                            {comment}
+                        </Comentario>
+                    </Comment>
+                </ChatConteudo>
+                <Barra></Barra>
+            </>
         )
     }
 
@@ -126,6 +128,15 @@ export default function Chat({ postId, setComment }) {
         </Main>
     )
 }
+
+const Barra = styled.div`
+width: 100%;
+display: flex;
+flex-direction: column;
+height: 1px;
+background-color: #353535;
+margin-bottom: 10px;
+`
 
 const Main = styled.div`
   display: flex;
