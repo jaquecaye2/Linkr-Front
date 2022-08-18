@@ -39,8 +39,6 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
 
   const name = localStorage.getItem("name");
 
- 
-
   const tagStyle = {
     color: "#ffffff",
     fontWeight: "700",

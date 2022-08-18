@@ -9,13 +9,18 @@ import InfiniteScroll from "./InfiniteScroll";
 import { ReactTagify } from "react-tagify";
 import Chat from "../shared/comment";
 import CommentsIcon from "./commentIcon";
-import useInterval from 'use-interval'
+import useInterval from "use-interval";
 import SharedIcon from "./Shares";
 import SharesHeaderd from "./SharesHeaderd";
 
-
-function PostUnico({ post, token, postsCurtidos, name, renderizarPosts, setRepost}) {
- 
+function PostUnico({
+  post,
+  token,
+  postsCurtidos,
+  name,
+  renderizarPosts,
+  setRepost,
+}) {
   const API_URL = process.env.REACT_APP_API_URL;
 
   const [tipoCoracao, setTipoCoracao] = React.useState("heart-outline");
@@ -24,10 +29,10 @@ function PostUnico({ post, token, postsCurtidos, name, renderizarPosts, setRepos
   const [quantLikes, setquantLikes] = React.useState(0);
   let namesLike = [];
   const [mensagem, setMensagem] = React.useState("");
-  const [chat, setChat] = React.useState(false)
-  const [comment,setComment] = React.useState(false)
+  const [chat, setChat] = React.useState(false);
+  const [comment, setComment] = React.useState(false);
 
-  const [sharestoggle, setSharestoggle] = React.useState(false)
+  const [sharestoggle, setSharestoggle] = React.useState(false);
 
   function openLink() {
     window.open(post.link, "_blank");
@@ -206,77 +211,68 @@ function PostUnico({ post, token, postsCurtidos, name, renderizarPosts, setRepos
   }
 
   return (
-    <ChatPost >
-      
+    <ChatPost>
       <HeaderShared>
-
-        <SharesHeaderd
-        />
-
+        <SharesHeaderd />
       </HeaderShared>
-    <Post>
-      <div className="icones">
-        <img
-          src={post.picture}
-          alt="Foto de perfil"
-          onClick={() => navegar(post.name, post.user_id)}
-        />
-        <ion-icon
-          name={tipoCoracao}
-          color={corCoracao}
-          onClick={likePost}
-        ></ion-icon>
-        <p
-          data-tip={mensagem}
-          data-for="likes"
-          onMouseOver={nameLiked}
-          onMouseOut={limparNomes}
-        >
-          {quantLikes} likes
-        </p>
-        <ReactTooltip id="likes" place="bottom" effect="solid" />
-        <CommentsIcon
+      <Post>
+        <div className="icones">
+          <img
+            src={post.picture}
+            alt="Foto de perfil"
+            onClick={() => navegar(post.name, post.user_id)}
+          />
+          <ion-icon
+            name={tipoCoracao}
+            color={corCoracao}
+            onClick={likePost}
+          ></ion-icon>
+          <p
+            data-tip={mensagem}
+            data-for="likes"
+            onMouseOver={nameLiked}
+            onMouseOut={limparNomes}
+          >
+            {quantLikes} likes
+          </p>
+          <ReactTooltip id="likes" place="bottom" effect="solid" />
+          <CommentsIcon
             postId={post.id}
             callback={() => setChat(!chat)}
             setComment={setComment}
             comment={comment}
-            />
-            <SharedIcon numberShares={post.countshared} 
-            token={token} 
+          />
+          <SharedIcon
+            numberShares={post.countshared}
+            token={token}
             idPost={post.id}
             renderizarPosts={renderizarPosts}
             setRepost={setRepost}
-           
-            />
-
-      </div>
-      <div className="textos">
-        <h5 onClick={() => navegar(post.name, post.user_id)}>{post.name}</h5>
-        <p>
-          <ReactTagify
-            tagStyle={tagStyle}
-            tagClicked={(tag) => navigateToHashtag(tag)}
-          >
-            {post.description}
-          </ReactTagify>
-        </p>
-        <InfoLink onClick={openLink}>
-          <div className="infoLink">
-            <h5>{post.link_title}</h5>
-            <p>{post.link_description}</p>
-            <h6>{post.link}</h6>
-          </div>
-          <div className="imagemLink">
-            <img src={post.link_image} alt="Imagem referente ao link" />
-          </div>
-        </InfoLink>
-      </div>
-    </Post>
-    {chat ?
-        <Chat postId={post.id} setComment={setComment}/>
-        :
-        <></>
-      }
+          />
+        </div>
+        <div className="textos">
+          <h5 onClick={() => navegar(post.name, post.user_id)}>{post.name}</h5>
+          <p>
+            <ReactTagify
+              tagStyle={tagStyle}
+              tagClicked={(tag) => navigateToHashtag(tag)}
+            >
+              {post.description}
+            </ReactTagify>
+          </p>
+          <InfoLink onClick={openLink}>
+            <div className="infoLink">
+              <h5>{post.link_title}</h5>
+              <p>{post.link_description}</p>
+              <h6>{post.link}</h6>
+            </div>
+            <div className="imagemLink">
+              <img src={post.link_image} alt="Imagem referente ao link" />
+            </div>
+          </InfoLink>
+        </div>
+      </Post>
+      {chat ? <Chat postId={post.id} setComment={setComment} /> : <></>}
     </ChatPost>
   );
 }
@@ -306,13 +302,13 @@ export default function TelaTimeline() {
 
   const [promiseCarregada, setPromiseCarregada] = React.useState(false);
   const [novosPosts, setNovosPosts] = React.useState(false);
+  const [countShared, setCountShared] = React.useState(0);
 
   const token = localStorage.getItem("token");
   const imagemPerfil = localStorage.getItem("picture");
   const name = localStorage.getItem("name");
 
   const [repost, setRepost] = React.useState(false);
-
 
   let [totalNovos, setTotalNovos] = React.useState(0);
 
@@ -327,9 +323,9 @@ export default function TelaTimeline() {
 
     promise
       .then((response) => {
-        if (total.length < response.data.length){
-          setTotalNovos(response.data.length - total.length)
-          setNovosPosts(true)
+        if (total.length < response.data.length) {
+          setTotalNovos(response.data.length - total.length);
+          setNovosPosts(true);
         }
       })
       .catch((error) => {
@@ -358,7 +354,7 @@ export default function TelaTimeline() {
   let page = 1;
 
   function renderizarPosts() {
-    console.log("renderizar....")
+    console.log("renderizar....");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -374,6 +370,8 @@ export default function TelaTimeline() {
     promise
       .then((response) => {
         setPosts(response.data);
+        let primeiro = response.data[0]
+        setCountShared(primeiro.countShared)
         setPromiseCarregada(true);
         totalPosts();
       })
@@ -442,9 +440,7 @@ export default function TelaTimeline() {
       description: descricao,
     };
 
-
     const promise = axios.post(`http://localhost:6002/post`, dadosPost, config);
-
 
     promise
       .then((response) => {
@@ -483,11 +479,15 @@ export default function TelaTimeline() {
       });
   }
 
-  function carregarNovos(){
-    renderizarPosts()
-    totalPosts()
-    setNovosPosts(false)
+  function carregarNovos() {
+    renderizarPosts();
+    totalPosts();
+    setNovosPosts(false);
   }
+
+  React.useEffect(() => {
+    renderizarPosts();
+  }, [repost]);
 
   React.useEffect(() => {
     renderizarPosts();
@@ -495,11 +495,6 @@ export default function TelaTimeline() {
     buscarPostsCurtidos();
     totalPosts();
   }, []);
-
-  React.useEffect(() => {
-    renderizarPosts();
-
-  }, [repost]);
 
   return (
     <TelaTimelineStyle>
@@ -546,8 +541,6 @@ export default function TelaTimeline() {
                 </div>
               </form>
             </div>
-
-
           </CriarPost>
 
           {novosPosts ? (
@@ -578,9 +571,6 @@ export default function TelaTimeline() {
                       postsCurtidos={postsCurtidos}
                       renderizarPosts={renderizarPosts}
                       setRepost={setRepost}
-                      
-                      
-
                     />
                   ))
                 )}
@@ -767,16 +757,16 @@ const NovosPosts = styled.div`
   justify-content: center;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
-  h2{
+  h2 {
     font-size: 16px;
   }
 
-  ion-icon{
+  ion-icon {
     margin-left: 15px;
     font-size: 22px;
   }
 
-  :hover{
+  :hover {
     filter: brightness(0.9);
     cursor: pointer;
   }
@@ -791,9 +781,8 @@ const Carregando = styled.div`
 const Posts = styled.div``;
 
 const Post = styled.div`
-
-position: relative;
-top: -15px;
+  position: relative;
+  top: -15px;
   width: 100%;
   height: 100%;
   display: flex;
@@ -854,15 +843,12 @@ top: -15px;
 `;
 
 const ChatPost = styled.div`
- margin-bottom: 16px;
-
-
-`
+  margin-bottom: 16px;
+`;
 const HeaderShared = styled.div`
-position: relative;
-top: 0px;
-`
-
+  position: relative;
+  top: 0px;
+`;
 
 const InfoLink = styled.div`
   width: 100%;
