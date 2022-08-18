@@ -8,6 +8,7 @@ import CommentsIcon from "./commentIcon";
 import Chat from "../shared/comment";
 import ReactTooltip from "react-tooltip";
 import InfiniteScroll from "./InfiniteScroll";
+import SharedIcon from "./Shares";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -63,6 +64,7 @@ function Post({
   post_id,
   token,
   postsCurtidos,
+  sharedCout
 }) {
   const navigate = useNavigate();
 
@@ -280,6 +282,7 @@ function Post({
             setComment={setComment}
             comment={comment}
           />
+          <SharedIcon numberShares={sharedCout} token={token} idPost={post_id}/>
         </div>
         <div className="textos">
           <h5 onClick={() => navegar(name, user_id)}>{name}</h5>
@@ -415,6 +418,7 @@ function MainContent() {
               post_id={post.post_id}
               postsCurtidos={postsCurtidos}
               token={token}
+              sharedCout = {post.countshared}
             />
           ))}
           {total.length !== posts.length ? (

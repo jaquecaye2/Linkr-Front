@@ -15,6 +15,7 @@ import ReactTooltip from "react-tooltip";
 import CommentsIcon from "./commentIcon";
 import Chat from "../shared/comment.js"
 import InfiniteScroll from "./InfiniteScroll";
+import SharedIcon from "./Shares";
 
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -37,6 +38,8 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
   const [mensagem, setMensagem] = useState("");
 
   const name = localStorage.getItem("name");
+
+ 
 
   const tagStyle = {
     color: "#ffffff",
@@ -264,6 +267,14 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
             setComment={setComment}
             comment={comment}
           />
+          <SharedIcon
+           numberShares={post.countshared}
+           token={token}
+           idPost={post.post_id}
+           renderizarPosts={renderizarPosts}
+          
+          />
+          
         </div>
         <div className="textos">
           <Modificar>
@@ -390,6 +401,8 @@ function MainContent() {
   const [posts, setPosts] = useState([]);
   const [render, setRender] = useState(false);
   const [postsCurtidos, setPostsCurtidos] = useState([]);
+
+  const [sharestoggle, setSharestoggle] = useState(false)
 
   function totalPosts() {
     const config = {

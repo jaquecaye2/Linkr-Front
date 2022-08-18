@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import React from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
@@ -10,9 +10,11 @@ import { ReactTagify } from "react-tagify";
 import Chat from "../shared/comment";
 import CommentsIcon from "./commentIcon";
 import useInterval from 'use-interval'
+import SharedIcon from "./Shares";
+import SharesHeaderd from "./SharesHeaderd";
 
 
-function PostUnico({ post, token, postsCurtidos, name }) {
+function PostUnico({ post, token, postsCurtidos, name, renderizarPosts, setRepost}) {
  
   const API_URL = process.env.REACT_APP_API_URL;
 
@@ -24,6 +26,8 @@ function PostUnico({ post, token, postsCurtidos, name }) {
   const [mensagem, setMensagem] = React.useState("");
   const [chat, setChat] = React.useState(false)
   const [comment,setComment] = React.useState(false)
+
+  const [sharestoggle, setSharestoggle] = React.useState(false)
 
   function openLink() {
     window.open(post.link, "_blank");
@@ -203,6 +207,13 @@ function PostUnico({ post, token, postsCurtidos, name }) {
 
   return (
     <ChatPost >
+      
+      <HeaderShared>
+
+        <SharesHeaderd
+        />
+
+      </HeaderShared>
     <Post>
       <div className="icones">
         <img
@@ -229,8 +240,15 @@ function PostUnico({ post, token, postsCurtidos, name }) {
             callback={() => setChat(!chat)}
             setComment={setComment}
             comment={comment}
+            />
+            <SharedIcon numberShares={post.countshared} 
+            token={token} 
+            idPost={post.id}
+            renderizarPosts={renderizarPosts}
+            setRepost={setRepost}
+           
+            />
 
-          />
       </div>
       <div className="textos">
         <h5 onClick={() => navegar(post.name, post.user_id)}>{post.name}</h5>
@@ -293,6 +311,9 @@ export default function TelaTimeline() {
   const imagemPerfil = localStorage.getItem("picture");
   const name = localStorage.getItem("name");
 
+  const [repost, setRepost] = React.useState(false);
+
+
   let [totalNovos, setTotalNovos] = React.useState(0);
 
   useInterval(() => {
@@ -337,6 +358,7 @@ export default function TelaTimeline() {
   let page = 1;
 
   function renderizarPosts() {
+    console.log("renderizar....")
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -474,6 +496,11 @@ export default function TelaTimeline() {
     totalPosts();
   }, []);
 
+  React.useEffect(() => {
+    renderizarPosts();
+
+  }, [repost]);
+
   return (
     <TelaTimelineStyle>
       <Titulo>
@@ -519,6 +546,8 @@ export default function TelaTimeline() {
                 </div>
               </form>
             </div>
+
+
           </CriarPost>
 
           {novosPosts ? (
@@ -547,6 +576,11 @@ export default function TelaTimeline() {
                       token={token}
                       name={name}
                       postsCurtidos={postsCurtidos}
+                      renderizarPosts={renderizarPosts}
+                      setRepost={setRepost}
+                      
+                      
+
                     />
                   ))
                 )}
@@ -757,6 +791,9 @@ const Carregando = styled.div`
 const Posts = styled.div``;
 
 const Post = styled.div`
+
+position: relative;
+top: -15px;
   width: 100%;
   height: 100%;
   display: flex;
@@ -819,7 +856,13 @@ const Post = styled.div`
 const ChatPost = styled.div`
  margin-bottom: 16px;
 
+
 `
+const HeaderShared = styled.div`
+position: relative;
+top: 0px;
+`
+
 
 const InfoLink = styled.div`
   width: 100%;
