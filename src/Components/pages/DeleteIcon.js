@@ -13,7 +13,7 @@ function DeletarIcon({ postId, token, renderizarPosts, render }) {
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const API_URL = process.env.REACT_APP_API_URL;
-
+  console.log(postId)
     function modalDinamico() {
         setIsOpen(!isOpen);
     }

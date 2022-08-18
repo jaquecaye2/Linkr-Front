@@ -110,12 +110,12 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
 
     if (tipoCoracao === "heart-outline") {
       dadosPost = {
-        id: post.post_id,
+        id: post.id,
         type: "like",
       };
     } else {
       dadosPost = {
-        id: post.post_id,
+        id: post.id,
         type: "deslike",
       };
     }
@@ -139,7 +139,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
     };
 
     const dadosPost = {
-      id: post.post_id,
+      id: post.id,
     };
 
     const promise = axios.post(
@@ -233,7 +233,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
 
   useEffect(() => {
     for (let i = 0; i < postsCurtidos.length; i++) {
-      if (postsCurtidos[i].post_id === post.post_id) {
+      if (postsCurtidos[i].id === post.id) {
         setTipoCoracao("heart");
         setCorCoracao("danger");
       }
@@ -285,12 +285,12 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
                   setTexto={setTexto}
                   TextoRef={TextoRef}
                   setCartaoId={setCartaoId}
-                  postId={post.post_id}
+                  postId={post.id}
                   render={render}
                 />
                 <DeletarIcon
                   token={token}
-                  postId={post.post_id}
+                  postId={post.id}
                   renderizarPosts={renderizarPosts}
                   render={render}
                 />
@@ -300,7 +300,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
             )}
           </Modificar>
 
-          {ativar && post.post_id === cartaoId ? (
+          {ativar && post.id === cartaoId ? (
             <Texto
               ativar={ativar}
               readOnly={enableTextArea}
