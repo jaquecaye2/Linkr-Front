@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { ReactTagify } from "react-tagify";
 import loading from "../../assets/images/loading.svg";
 import axios from "axios";
+import CommentsIcon from "./commentIcon";
+import Chat from "../shared/comment";
 import ReactTooltip from "react-tooltip";
 import InfiniteScroll from "./InfiniteScroll";
 
@@ -68,6 +70,8 @@ function Post({
   const [corCoracao, setCorCoracao] = useState("black");
   const [quantLikes, setquantLikes] = useState(0);
   let namesLike = [];
+  const [comment,setComment] = useState(false)
+  const [chat, setChat] = useState(false)
   const [mensagem, setMensagem] = useState("");
 
   const tagStyle = {
@@ -248,50 +252,63 @@ function Post({
   }
 
   return (
-    <PostContainer>
-      <div className="icones">
-        <img
-          onClick={() => navegar(name, user_id)}
-          src={picture}
-          alt="Foto de perfil"
-        />
-        <ion-icon
-          name={tipoCoracao}
-          color={corCoracao}
-          onClick={likePost}
-        ></ion-icon>
-        <p
-          data-tip={mensagem}
-          data-for="likes"
-          onMouseOver={nameLiked}
-          onMouseOut={limparNomes}
-        >
-          {quantLikes} likes
-        </p>
-        <ReactTooltip id="likes" place="bottom" effect="solid" />
-      </div>
-      <div className="textos">
-        <h5 onClick={() => navegar(name, user_id)}>{name}</h5>
-        <p>
-          <ReactTagify
-            tagStyle={tagStyle}
-            tagClicked={(tag) => navigateToHashtag(tag)}
+    <MarginPost>
+      <PostContainer>
+        <div className="icones">
+          <img
+            onClick={() => navegar(name, user_id)}
+            src={picture}
+            alt="Foto de perfil"
+          />
+          <ion-icon
+            name={tipoCoracao}
+            color={corCoracao}
+            onClick={likePost}
+          ></ion-icon>
+          <p
+            data-tip={mensagem}
+            data-for="likes"
+            onMouseOver={nameLiked}
+            onMouseOut={limparNomes}
           >
-            {description}
-          </ReactTagify>
-        </p>
-        <InfoLink onClick={openLink}>
-          <div className="infoLink">
-            <h5>{link_title}</h5>
-            <p>{link_description}</p>
-            <h6>{link}</h6>
-          </div>
-          <div className="imagemLink">
-            <img src={link_image} alt="Imagem referente ao link" />
-          </div>
-        </InfoLink>
-      </div>
-    </PostContainer>
+            {quantLikes} likes
+          </p>
+          <ReactTooltip id="likes" place="bottom" effect="solid" />
+          <CommentsIcon
+            postId={post_id}
+            callback={() => setChat(!chat)}
+            setComment={setComment}
+            comment={comment}
+          />
+        </div>
+        <div className="textos">
+          <h5 onClick={() => navegar(name, user_id)}>{name}</h5>
+          <p>
+            <ReactTagify
+              tagStyle={tagStyle}
+              tagClicked={(tag) => navigateToHashtag(tag)}
+            >
+              {description}
+            </ReactTagify>
+          </p>
+          <InfoLink onClick={openLink}>
+            <div className="infoLink">
+              <h5>{link_title}</h5>
+              <p>{link_description}</p>
+              <h6>{link}</h6>
+            </div>
+            <div className="imagemLink">
+              <img src={link_image} alt="Imagem referente ao link" />
+            </div>
+          </InfoLink>
+        </div>
+      </PostContainer>
+      {chat ?
+          <Chat postId={post_id} setComment={setComment} />
+          :
+          <></>
+        }
+    </MarginPost>
   );
 }
 
@@ -485,7 +502,6 @@ const PostContainer = styled.div`
   border-radius: 15px;
   padding: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  margin-bottom: 16px;
   @media (max-width: 614px) {
     border-radius: 0;
   }
@@ -630,3 +646,8 @@ const SideContainer = styled.div`
     }
   }
 `;
+
+const MarginPost = styled.div`
+margin-bottom: 16px;
+
+`
