@@ -65,15 +65,17 @@ export default function BarraComentario({ postId, setComment, setEnableTextArea,
 
 const BarraMain = styled.div`
 display: flex;
-padding-top:3%;
+align-items: center;
+width: 100%;
+height: 65px;
+display: flex;
+font-family: 'Lato';
 input{
     width: 100%;
     height: 39px;
-    margin-left: 3%;
     border-radius: 8px;
     background-color: #252525;
     border-style: none;
-    padding-left: 3%;
     ::placeholder{
         font-family: 'Lato';
         font-style: italic;
@@ -89,11 +91,13 @@ input{
 
 const SendForm = styled.div`
     display: flex;
-    align-items: center;
-    width: 100%;
-    height: 65px;
+    width: 82%;
+    height: 45px;
+    background: #252525;
+    border-radius: 8px;
     display: flex;
     font-family: 'Lato';
+
 `
 
 const TextArea = styled.input`
@@ -117,11 +121,11 @@ const TextArea = styled.input`
 const BarraConteudo = styled.div`
 display: flex;
   img {
-      width: 39px;
-      height: 39px;
-      object-fit: cover;
-      border-radius: 60px;
-      margin-bottom: 15px;
+    width: 39px;
+    height: 39px;
+    border-radius: 25px;
+    object-fit: cover;
+    margin-right: 18px;
       :hover {
         cursor: pointer;
       }
@@ -136,6 +140,8 @@ const SendComment = styled.button`
     font-size: 15px;
     background: #252525;
     border: none;
+    margin-top: 3%;
+
 `
 
 
