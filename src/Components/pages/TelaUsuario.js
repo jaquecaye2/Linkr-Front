@@ -264,7 +264,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
           </p>
           <ReactTooltip id="likes" place="bottom" effect="solid" />
           <CommentsIcon
-            postId={post.post_id}
+            postId={post.id}
             callback={() => setChat(!chat)}
             setComment={setComment}
             comment={comment}
@@ -334,7 +334,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
           </InfoLink>
         </div>
       </PostContainer>
-      {chat ? <Chat postId={post.post_id} setComment={setComment} /> : <></>}
+      {chat ? <Chat postId={post.id} setComment={setComment} /> : <></>}
     </MarginPost>
   );
 }
@@ -411,7 +411,7 @@ function MainContent({ total = [] }) {
         console.log(erro);
       });
   }
-
+  console.log(posts)
   function loadNextPage() {
     page++;
 
@@ -466,6 +466,7 @@ function MainContent({ total = [] }) {
         <>
           {posts.length !== 0 ? (
             posts.map((post, index) => (
+              
               <Post
                 key={index}
                 post={post}

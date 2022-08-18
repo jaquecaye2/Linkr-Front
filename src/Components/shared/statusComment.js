@@ -1,5 +1,6 @@
 
 export default function StatusComment({ following, owner, userId }) {
+    console.log(userId)
     let arr = []
      following.map((e)=>{
       arr.push( e.seguindo)
