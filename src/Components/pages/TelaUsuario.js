@@ -379,7 +379,7 @@ function Side() {
   );
 }
 
-function MainContent({ total = [] }) {
+function MainContent({ total = [], updateTotal }) {
   const { updateUser, setUpdateUSer } = useContext(Context);
   const { id } = useParams();
   setUpdateUSer(id);
@@ -411,7 +411,7 @@ function MainContent({ total = [] }) {
         console.log(erro);
       });
   }
-  console.log(posts);
+
   function loadNextPage() {
     page++;
 
@@ -455,6 +455,12 @@ function MainContent({ total = [] }) {
     renderizarPosts();
     buscarPostsCurtidos();
   }, [updateUser]);
+
+  useEffect(() => {
+    updateTotal();
+  }, [posts]);
+
+  console.log(total.length !== posts.length, total.length, posts.length);
 
   return (
     <Main>
@@ -546,7 +552,7 @@ export default function TelaUsuario() {
   const [user, setUser] = useState({});
   const [followUser, setFollowUser] = useState(false);
 
-  useEffect(() => {
+  function getUser() {
     const options = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -560,6 +566,10 @@ export default function TelaUsuario() {
         setFollowUser(data.isFollowed);
       })
       .catch((err) => console.log(err));
+  }
+
+  useEffect(() => {
+    getUser();
   }, [id]);
 
   return (
@@ -581,7 +591,7 @@ export default function TelaUsuario() {
         </RenderIf>
       </Title>
       <Content>
-        <MainContent total={user.posts} />
+        <MainContent total={user.posts} updateTotal={getUser} />
         <Side />
       </Content>
     </Container>
