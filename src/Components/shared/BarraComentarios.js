@@ -42,14 +42,6 @@ export default function BarraComentario({ postId, setComment, setEnableTextArea,
         }
     }
 
- 
-
-    document.addEventListener("keypress", function (e) {
-        if (e.key === "Enter") {
-            const botao = document.querySelector('#submit')
-            botao.click();
-        }
-    })
 
 
     return (
