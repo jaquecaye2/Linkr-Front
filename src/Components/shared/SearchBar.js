@@ -13,11 +13,7 @@ function User({ id, name, picture, isFollowed }) {
   const navigate = useNavigate();
 
   function navegar() {
-    navigate(`/user/${id}`, {
-      state: {
-        user: name,
-      },
-    });
+    navigate(`/user/${id}`);
   }
 
   return (

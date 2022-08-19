@@ -9,21 +9,17 @@ import InfiniteScroll from "./InfiniteScroll";
 import { ReactTagify } from "react-tagify";
 import Chat from "../shared/comment";
 import CommentsIcon from "./commentIcon";
-import useInterval from 'use-interval'
-
+import useInterval from "use-interval";
 
 function PostUnico({ post, token, postsCurtidos, name }) {
- 
-  const API_URL = process.env.REACT_APP_API_URL;
-
   const [tipoCoracao, setTipoCoracao] = React.useState("heart-outline");
   const [corCoracao, setCorCoracao] = React.useState("black");
   const navigate = useNavigate();
   const [quantLikes, setquantLikes] = React.useState(0);
   let namesLike = [];
   const [mensagem, setMensagem] = React.useState("");
-  const [chat, setChat] = React.useState(false)
-  const [comment,setComment] = React.useState(false)
+  const [chat, setChat] = React.useState(false);
+  const [comment, setComment] = React.useState(false);
 
   function openLink() {
     window.open(post.link, "_blank");
@@ -202,63 +198,58 @@ function PostUnico({ post, token, postsCurtidos, name }) {
   }
 
   return (
-    <ChatPost >
-    <Post>
-      <div className="icones">
-        <img
-          src={post.picture}
-          alt="Foto de perfil"
-          onClick={() => navegar(post.name, post.user_id)}
-        />
-        <ion-icon
-          name={tipoCoracao}
-          color={corCoracao}
-          onClick={likePost}
-        ></ion-icon>
-        <p
-          data-tip={mensagem}
-          data-for="likes"
-          onMouseOver={nameLiked}
-          onMouseOut={limparNomes}
-        >
-          {quantLikes} likes
-        </p>
-        <ReactTooltip id="likes" place="bottom" effect="solid" />
-        <CommentsIcon
+    <ChatPost>
+      <Post>
+        <div className="icones">
+          <img
+            src={post.picture}
+            alt="Foto de perfil"
+            onClick={() => navegar(post.name, post.user_id)}
+          />
+          <ion-icon
+            name={tipoCoracao}
+            color={corCoracao}
+            onClick={likePost}
+          ></ion-icon>
+          <p
+            data-tip={mensagem}
+            data-for="likes"
+            onMouseOver={nameLiked}
+            onMouseOut={limparNomes}
+          >
+            {quantLikes} likes
+          </p>
+          <ReactTooltip id="likes" place="bottom" effect="solid" />
+          <CommentsIcon
             postId={post.id}
             callback={() => setChat(!chat)}
             setComment={setComment}
             comment={comment}
-
           />
-      </div>
-      <div className="textos">
-        <h5 onClick={() => navegar(post.name, post.user_id)}>{post.name}</h5>
-        <p>
-          <ReactTagify
-            tagStyle={tagStyle}
-            tagClicked={(tag) => navigateToHashtag(tag)}
-          >
-            {post.description}
-          </ReactTagify>
-        </p>
-        <InfoLink onClick={openLink}>
-          <div className="infoLink">
-            <h5>{post.link_title}</h5>
-            <p>{post.link_description}</p>
-            <h6>{post.link}</h6>
-          </div>
-          <div className="imagemLink">
-            <img src={post.link_image} alt="Imagem referente ao link" />
-          </div>
-        </InfoLink>
-      </div>
-    </Post>
-    {chat ?
-        <Chat postId={post.id} setComment={setComment}/>
-        :
-        <></>
-      }
+        </div>
+        <div className="textos">
+          <h5 onClick={() => navegar(post.name, post.user_id)}>{post.name}</h5>
+          <p>
+            <ReactTagify
+              tagStyle={tagStyle}
+              tagClicked={(tag) => navigateToHashtag(tag)}
+            >
+              {post.description}
+            </ReactTagify>
+          </p>
+          <InfoLink onClick={openLink}>
+            <div className="infoLink">
+              <h5>{post.link_title}</h5>
+              <p>{post.link_description}</p>
+              <h6>{post.link}</h6>
+            </div>
+            <div className="imagemLink">
+              <img src={post.link_image} alt="Imagem referente ao link" />
+            </div>
+          </InfoLink>
+        </div>
+      </Post>
+      {chat ? <Chat postId={post.id} setComment={setComment} /> : <></>}
     </ChatPost>
   );
 }
@@ -289,6 +280,8 @@ export default function TelaTimeline() {
   const [promiseCarregada, setPromiseCarregada] = React.useState(false);
   const [novosPosts, setNovosPosts] = React.useState(false);
 
+  const [noPostsFoundMessage, setNoPostsFoundMessage] = React.useState("");
+
   const token = localStorage.getItem("token");
   const imagemPerfil = localStorage.getItem("picture");
   const name = localStorage.getItem("name");
@@ -306,13 +299,15 @@ export default function TelaTimeline() {
 
     promise
       .then((response) => {
-        if (total.length < response.data.length){
-          setTotalNovos(response.data.length - total.length)
-          setNovosPosts(true)
+        if (total.length < response.data.length) {
+          setTotalNovos(response.data.length - total.length);
+          setNovosPosts(true);
         }
       })
       .catch((error) => {
-        alert(error.response.data);
+        if (error.response.status !== 404) {
+          alert(error.response.data);
+        }
       });
   }, 15000);
 
@@ -330,7 +325,9 @@ export default function TelaTimeline() {
         setTotal(response.data);
       })
       .catch((error) => {
-        alert(error.response.data);
+        if (error.response.status !== 404) {
+          alert(error.response.data);
+        }
       });
   }
 
@@ -344,8 +341,7 @@ export default function TelaTimeline() {
     };
 
     const promise = axios.get(
-      `http://localhost:6002/post?page=${page}`,
-
+      `http://localhost:6002/posts?page=${page}&limit=10`,
       config
     );
 
@@ -356,6 +352,12 @@ export default function TelaTimeline() {
         totalPosts();
       })
       .catch((error) => {
+        if (error.response.status === 404) {
+          setNoPostsFoundMessage(error.response.data);
+          setPromiseCarregada(true);
+          return;
+        }
+
         alert(error.response.data);
       });
   }
@@ -370,7 +372,7 @@ export default function TelaTimeline() {
     };
 
     const promise = axios.get(
-      `http://localhost:6002/post?page=${page}`,
+      `http://localhost:6002/posts?page=${page}&limit=10`,
       config
     );
 
@@ -380,7 +382,9 @@ export default function TelaTimeline() {
         setPromiseCarregada(true);
       })
       .catch((error) => {
-        alert(error.response.data);
+        if (error.response.status !== 404) {
+          alert(error.response.data);
+        }
       });
   }
 
@@ -420,9 +424,7 @@ export default function TelaTimeline() {
       description: descricao,
     };
 
-
     const promise = axios.post(`http://localhost:6002/post`, dadosPost, config);
-
 
     promise
       .then((response) => {
@@ -461,10 +463,10 @@ export default function TelaTimeline() {
       });
   }
 
-  function carregarNovos(){
-    renderizarPosts()
-    totalPosts()
-    setNovosPosts(false)
+  function carregarNovos() {
+    renderizarPosts();
+    totalPosts();
+    setNovosPosts(false);
   }
 
   React.useEffect(() => {
@@ -537,8 +539,8 @@ export default function TelaTimeline() {
           ) : (
             <>
               <Posts>
-                {posts.length === 0 ? (
-                  <p>Não há posts cadastrados</p>
+                {posts.length === 0 && noPostsFoundMessage !== "" ? (
+                  <p>{noPostsFoundMessage}</p>
                 ) : (
                   posts.map((post, index) => (
                     <PostUnico
@@ -551,6 +553,7 @@ export default function TelaTimeline() {
                   ))
                 )}
               </Posts>
+
               {total.length !== posts.length ? (
                 <InfiniteScroll fetchMore={loadNextPage} />
               ) : (
@@ -733,16 +736,16 @@ const NovosPosts = styled.div`
   justify-content: center;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
-  h2{
+  h2 {
     font-size: 16px;
   }
 
-  ion-icon{
+  ion-icon {
     margin-left: 15px;
     font-size: 22px;
   }
 
-  :hover{
+  :hover {
     filter: brightness(0.9);
     cursor: pointer;
   }
@@ -754,7 +757,13 @@ const Carregando = styled.div`
   justify-content: center;
 `;
 
-const Posts = styled.div``;
+const Posts = styled.div`
+  @media (max-width: 614px) {
+    p {
+      margin: 30px 0;
+    }
+  }
+`;
 
 const Post = styled.div`
   width: 100%;
@@ -817,9 +826,8 @@ const Post = styled.div`
 `;
 
 const ChatPost = styled.div`
- margin-bottom: 16px;
-
-`
+  margin-bottom: 16px;
+`;
 
 const InfoLink = styled.div`
   width: 100%;

@@ -379,7 +379,7 @@ function Side() {
   );
 }
 
-function MainContent({ total = [] }) {
+function MainContent({ total = [], updateTotal }) {
   const { updateUser, setUpdateUSer } = useContext(Context);
   const { id } = useParams();
   setUpdateUSer(id);
@@ -411,7 +411,7 @@ function MainContent({ total = [] }) {
         console.log(erro);
       });
   }
-  console.log(posts)
+
   function loadNextPage() {
     page++;
 
@@ -456,6 +456,10 @@ function MainContent({ total = [] }) {
     buscarPostsCurtidos();
   }, [updateUser]);
 
+  useEffect(() => {
+    updateTotal();
+  }, [posts]);
+
   return (
     <Main>
       {isLoading ? (
@@ -466,7 +470,6 @@ function MainContent({ total = [] }) {
         <>
           {posts.length !== 0 ? (
             posts.map((post, index) => (
-              
               <Post
                 key={index}
                 post={post}
@@ -547,7 +550,7 @@ export default function TelaUsuario() {
   const [user, setUser] = useState({});
   const [followUser, setFollowUser] = useState(false);
 
-  useEffect(() => {
+  function getUser() {
     const options = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -561,7 +564,11 @@ export default function TelaUsuario() {
         setFollowUser(data.isFollowed);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }
+
+  useEffect(() => {
+    getUser();
+  }, [id]);
 
   return (
     <Container>
@@ -582,7 +589,7 @@ export default function TelaUsuario() {
         </RenderIf>
       </Title>
       <Content>
-        <MainContent total={user.posts} />
+        <MainContent total={user.posts} updateTotal={getUser} />
         <Side />
       </Content>
     </Container>
