@@ -1,5 +1,3 @@
-
-
 import { useContext } from "react";
 import Context from "../../Context/Context";
 import styled from "styled-components";
@@ -22,7 +20,6 @@ export default function Logout({ setShowLogout, setArrow, FiChevronDown }) {
   }
 
   function myLinks() {
-    console.log("myLinks");
     const id = localStorage.getItem("userId");
     navigate(`/user/${id}`);
   }

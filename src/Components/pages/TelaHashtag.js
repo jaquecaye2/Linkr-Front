@@ -8,6 +8,7 @@ import CommentsIcon from "./commentIcon";
 import Chat from "../shared/comment";
 import ReactTooltip from "react-tooltip";
 import InfiniteScroll from "./InfiniteScroll";
+import SharedIcon from "./Shares";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -26,7 +27,7 @@ function Side() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:6002/hastags`)
+      .get(`https://linkr-driven-16.herokuapp.com/hastags`)
       .then(({ data }) => {
         setHashtags(data);
       })
@@ -63,6 +64,8 @@ function Post({
   post_id,
   token,
   postsCurtidos,
+  sharedCout,
+  renderizarPosts,
 }) {
   const navigate = useNavigate();
 
@@ -70,8 +73,8 @@ function Post({
   const [corCoracao, setCorCoracao] = useState("black");
   const [quantLikes, setquantLikes] = useState(0);
   let namesLike = [];
-  const [comment,setComment] = useState(false)
-  const [chat, setChat] = useState(false)
+  const [comment, setComment] = useState(false);
+  const [chat, setChat] = useState(false);
   const [mensagem, setMensagem] = useState("");
 
   const tagStyle = {
@@ -119,7 +122,7 @@ function Post({
       };
     }
 
-    const promise = axios.post(`http://localhost:6002/like`, dadosPost, config);
+    const promise = axios.post(`https://linkr-driven-16.herokuapp.com/like`, dadosPost, config);
 
     promise
       .then((response) => {
@@ -142,7 +145,7 @@ function Post({
     };
 
     const promise = axios.post(
-      `http://localhost:6002/likes`,
+      `https://linkr-driven-16.herokuapp.com/likes`,
       dadosPost,
       config
     );
@@ -168,7 +171,7 @@ function Post({
     };
 
     const promise = axios.post(
-      `http://localhost:6002/likes`,
+      `https://linkr-driven-16.herokuapp.com/likes`,
       dadosPost,
       config
     );
@@ -280,6 +283,12 @@ function Post({
             setComment={setComment}
             comment={comment}
           />
+          <SharedIcon
+            numberShares={sharedCout}
+            token={token}
+            idPost={post_id}
+            renderizarPosts={renderizarPosts}
+          />
         </div>
         <div className="textos">
           <h5 onClick={() => navegar(name, user_id)}>{name}</h5>
@@ -303,11 +312,7 @@ function Post({
           </InfoLink>
         </div>
       </PostContainer>
-      {chat ?
-          <Chat postId={post_id} setComment={setComment} />
-          :
-          <></>
-        }
+      {chat ? <Chat postId={post_id} setComment={setComment} /> : <></>}
     </MarginPost>
   );
 }
@@ -320,12 +325,15 @@ function MainContent() {
   const [total, setTotal] = useState([]);
   const [posts, setPosts] = useState([]);
   const [postsCurtidos, setPostsCurtidos] = useState([]);
+  const [countShared, setCountShared] = useState(0);
 
   function totalPosts() {
     axios
-      .get(`http://localhost:6002/hastag2/${hashtag}?page=${page}`)
+      .get(`https://linkr-driven-16.herokuapp.com/hastag2/${hashtag}?page=${page}`)
       .then(({ data }) => {
         setTotal(data);
+        let primeiro = data[0];
+        setCountShared(primeiro.countShared);
       })
       .catch((erro) => {
         console.log(erro);
@@ -341,7 +349,7 @@ function MainContent() {
       },
     };
 
-    const promise = axios.get(`http://localhost:6002/like`, config);
+    const promise = axios.get(`https://linkr-driven-16.herokuapp.com/like`, config);
 
     promise
       .then((response) => {
@@ -354,7 +362,7 @@ function MainContent() {
 
   function renderizarPosts() {
     axios
-      .get(`http://localhost:6002/hastag/${hashtag}?page=${page}`)
+      .get(`https://linkr-driven-16.herokuapp.com/hastag/${hashtag}?page=${page}`)
       .then(({ data }) => {
         setPosts(data);
         setIsLoading(false);
@@ -374,7 +382,7 @@ function MainContent() {
     };
 
     axios
-      .get(`http://localhost:6002/hastag/${hashtag}?page=${page}`, config)
+      .get(`https://linkr-driven-16.herokuapp.com/hastag/${hashtag}?page=${page}`, config)
       .then(({ data }) => {
         setPosts(data);
         setIsLoading(false);
@@ -415,6 +423,8 @@ function MainContent() {
               post_id={post.post_id}
               postsCurtidos={postsCurtidos}
               token={token}
+              sharedCout={post.countshared}
+              renderizarPosts={renderizarPosts}
             />
           ))}
           {total.length !== posts.length ? (
@@ -648,6 +658,5 @@ const SideContainer = styled.div`
 `;
 
 const MarginPost = styled.div`
-margin-bottom: 16px;
-
-`
+  margin-bottom: 16px;
+`;

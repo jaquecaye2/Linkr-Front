@@ -1,21 +1,32 @@
+import { BiRepost } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Modal from "react-modal";
-import { useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { CgTrashEmpty } from "react-icons/cg";
 import { ThreeDots } from "react-loader-spinner";
 
-Modal.setAppElement(".root");
-
-function DeletarIcon({ postId, token, renderizarPosts, render }) {
+export default function SharedIcon({
+  idPost,
+  token,
+  numberShares,
+  renderizarPosts,
+}) {
+  Modal.setAppElement(".root");
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const API_URL = process.env.REACT_APP_API_URL;
 
   function modalDinamico() {
     setIsOpen(!isOpen);
   }
 
-  async function deletePost() {
+  function navegar(name, userId) {
+    navigate(`/timeline`);
+  }
+
+  async function sheredPost() {
     setLoading(true);
     try {
       const config = {
@@ -24,55 +35,82 @@ function DeletarIcon({ postId, token, renderizarPosts, render }) {
         },
       };
 
-      await axios.delete(`https://linkr-driven-16.herokuapp.com/post/${postId}`, config);
+      const dadosPost = {
+        idPost,
+      };
+
+      await axios.post(`https://linkr-driven-16.herokuapp.com/shared`, dadosPost, config);
+
       setLoading(false);
       modalDinamico();
       renderizarPosts();
     } catch (e) {
       console.log(e);
       modalDinamico();
-      alert("Não foi possível excluir o post");
+      alert("Não foi possível compartilhar o post");
       setLoading(false);
     }
   }
 
   return (
-    <Conteudo>
-      <CgTrashEmpty onClick={() => modalDinamico()} />
-      <Modal
-        isOpen={isOpen}
-        className="_"
-        overlayClassName="_"
-        contentElement={(props, children) => (
-          <ModalStyle {...props}>{children}</ModalStyle>
-        )}
-        overlayElement={(props, contentElement) => (
-          <OverlayStyle {...props}>{contentElement}</OverlayStyle>
-        )}
-      >
-        <div className="pergunta">
-          Are you sure you want to delete this post?
-        </div>
-        <div className="opcao">
-          <button className="voltar" onClick={modalDinamico} disabled={loading}>
-            No, go back
-          </button>
-          {loading ? (
-            <Carregando>
-              <ThreeDots color="#FFFFFF" width={50} />
-            </Carregando>
-          ) : (
-            <button className="deletar" onClick={deletePost}>
-              Yes, delete it
-            </button>
+    <>
+      {" "}
+      <Icon onClick={() => modalDinamico()}>
+        <BiRepost />
+      </Icon>
+      <p> {numberShares} re-posts </p>
+      <Conteudo>
+        <Modal
+          isOpen={isOpen}
+          className="_"
+          overlayClassName="_"
+          contentElement={(props, children) => (
+            <ModalStyle {...props}>{children}</ModalStyle>
           )}
-        </div>
-      </Modal>
-    </Conteudo>
+          overlayElement={(props, contentElement) => (
+            <OverlayStyle {...props}>{contentElement}</OverlayStyle>
+          )}
+        >
+          <div className="pergunta">Do you want to re-post this link?</div>
+          <div className="opcao">
+            <button
+              className="voltar"
+              onClick={modalDinamico}
+              disabled={loading}
+            >
+              No, cancel
+            </button>
+            {loading ? (
+              <Carregando>
+                <ThreeDots color="#FFFFFF" width={50} />
+              </Carregando>
+            ) : (
+              <button className="deletar" onClick={sheredPost}>
+                Yes, share!
+              </button>
+            )}
+          </div>
+        </Modal>
+      </Conteudo>
+    </>
   );
 }
 
-export default DeletarIcon;
+const Repost = styled.div`
+  p {
+    margin-top: 3px;
+    text-align: center;
+    font-size: 11px;
+  }
+`;
+
+const Icon = styled.div`
+  font-size: 28px;
+  margin-top: 10px;
+  :hover {
+    cursor: pointer;
+  }
+`;
 
 const Conteudo = styled.div`
   svg {

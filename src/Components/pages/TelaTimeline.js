@@ -10,8 +10,17 @@ import { ReactTagify } from "react-tagify";
 import Chat from "../shared/comment";
 import CommentsIcon from "./commentIcon";
 import useInterval from "use-interval";
+import SharedIcon from "./Shares";
+import SharesHeaderd from "./SharesHeaderd";
 
-function PostUnico({ post, token, postsCurtidos, name }) {
+function PostUnico({
+  post,
+  token,
+  postsCurtidos,
+  name,
+  renderizarPosts,
+  setRepost,
+}) {
   const [tipoCoracao, setTipoCoracao] = React.useState("heart-outline");
   const [corCoracao, setCorCoracao] = React.useState("black");
   const navigate = useNavigate();
@@ -55,7 +64,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
       };
     }
 
-    const promise = axios.post(`http://localhost:6002/like`, dadosPost, config);
+    const promise = axios.post(`https://linkr-driven-16.herokuapp.com/like`, dadosPost, config);
 
     promise
       .then((response) => {
@@ -77,7 +86,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
     };
 
     const promise = axios.post(
-      `http://localhost:6002/likes`,
+      `https://linkr-driven-16.herokuapp.com/likes`,
       dadosPost,
       config
     );
@@ -103,7 +112,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
     };
 
     const promise = axios.post(
-      `http://localhost:6002/likes`,
+      `https://linkr-driven-16.herokuapp.com/likes`,
       dadosPost,
       config
     );
@@ -176,7 +185,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
 
   React.useEffect(() => {
     showQuantLikes();
-  }, []);
+  }, [post]);
 
   function navegar(name, userId) {
     navigate(`/user/${userId}`, {
@@ -199,6 +208,13 @@ function PostUnico({ post, token, postsCurtidos, name }) {
 
   return (
     <ChatPost>
+      {post.nameshared ? (
+        <HeaderShared>
+          <SharesHeaderd nameshared={post.nameshared} />
+        </HeaderShared>
+      ) : (
+        <></>
+      )}
       <Post>
         <div className="icones">
           <img
@@ -225,6 +241,12 @@ function PostUnico({ post, token, postsCurtidos, name }) {
             callback={() => setChat(!chat)}
             setComment={setComment}
             comment={comment}
+          />
+          <SharedIcon
+            numberShares={post.countshared}
+            token={token}
+            idPost={post.id}
+            renderizarPosts={renderizarPosts}
           />
         </div>
         <div className="textos">
@@ -279,12 +301,15 @@ export default function TelaTimeline() {
 
   const [promiseCarregada, setPromiseCarregada] = React.useState(false);
   const [novosPosts, setNovosPosts] = React.useState(false);
+  const [countShared, setCountShared] = React.useState(0);
 
   const [noPostsFoundMessage, setNoPostsFoundMessage] = React.useState("");
 
   const token = localStorage.getItem("token");
   const imagemPerfil = localStorage.getItem("picture");
   const name = localStorage.getItem("name");
+
+  const [repost, setRepost] = React.useState(false);
 
   let [totalNovos, setTotalNovos] = React.useState(0);
 
@@ -295,7 +320,7 @@ export default function TelaTimeline() {
       },
     };
 
-    const promise = axios.get(`http://localhost:6002/posts`, config);
+    const promise = axios.get(`https://linkr-driven-16.herokuapp.com/posts`, config);
 
     promise
       .then((response) => {
@@ -318,7 +343,7 @@ export default function TelaTimeline() {
       },
     };
 
-    const promise = axios.get(`http://localhost:6002/posts`, config);
+    const promise = axios.get(`https://linkr-driven-16.herokuapp.com/posts`, config);
 
     promise
       .then((response) => {
@@ -341,13 +366,15 @@ export default function TelaTimeline() {
     };
 
     const promise = axios.get(
-      `http://localhost:6002/posts?page=${page}&limit=10`,
+      `https://linkr-driven-16.herokuapp.com/posts?page=${page}&limit=10`,
       config
     );
 
     promise
       .then((response) => {
         setPosts(response.data);
+        let primeiro = response.data[0];
+        setCountShared(primeiro.countShared);
         setPromiseCarregada(true);
         totalPosts();
       })
@@ -372,13 +399,13 @@ export default function TelaTimeline() {
     };
 
     const promise = axios.get(
-      `http://localhost:6002/posts?page=${page}&limit=10`,
+      `https://linkr-driven-16.herokuapp.com/posts?page=${page}&limit=10`,
       config
     );
 
     promise
       .then((response) => {
-        setPosts(response.data);
+        setPosts([...posts, ...response.data]);
         setPromiseCarregada(true);
       })
       .catch((error) => {
@@ -395,7 +422,7 @@ export default function TelaTimeline() {
       },
     };
 
-    const promise = axios.get(`http://localhost:6002/hastags`, config);
+    const promise = axios.get(`https://linkr-driven-16.herokuapp.com/hastags`, config);
 
     promise
       .then((response) => {
@@ -424,7 +451,7 @@ export default function TelaTimeline() {
       description: descricao,
     };
 
-    const promise = axios.post(`http://localhost:6002/post`, dadosPost, config);
+    const promise = axios.post(`https://linkr-driven-16.herokuapp.com/post`, dadosPost, config);
 
     promise
       .then((response) => {
@@ -452,7 +479,7 @@ export default function TelaTimeline() {
       },
     };
 
-    const promise = axios.get(`http://localhost:6002/like`, config);
+    const promise = axios.get(`https://linkr-driven-16.herokuapp.com/like`, config);
 
     promise
       .then((response) => {
@@ -468,6 +495,10 @@ export default function TelaTimeline() {
     totalPosts();
     setNovosPosts(false);
   }
+
+  React.useEffect(() => {
+    renderizarPosts();
+  }, [repost]);
 
   React.useEffect(() => {
     renderizarPosts();
@@ -549,6 +580,8 @@ export default function TelaTimeline() {
                       token={token}
                       name={name}
                       postsCurtidos={postsCurtidos}
+                      renderizarPosts={renderizarPosts}
+                      setRepost={setRepost}
                     />
                   ))
                 )}
@@ -766,6 +799,8 @@ const Posts = styled.div`
 `;
 
 const Post = styled.div`
+  position: relative;
+  top: -15px;
   width: 100%;
   height: 100%;
   display: flex;
@@ -827,6 +862,11 @@ const Post = styled.div`
 
 const ChatPost = styled.div`
   margin-bottom: 16px;
+`;
+
+const HeaderShared = styled.div`
+  position: relative;
+  top: 0px;
 `;
 
 const InfoLink = styled.div`

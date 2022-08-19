@@ -15,6 +15,8 @@ import ReactTooltip from "react-tooltip";
 import CommentsIcon from "./commentIcon";
 import Chat from "../shared/comment.js";
 import InfiniteScroll from "./InfiniteScroll";
+import SharedIcon from "./Shares";
+
 import { ThreeDots } from "react-loader-spinner";
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -33,6 +35,8 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
   const [enableTextArea, setEnableTextArea] = useState(false);
   const [chat, setChat] = useState(false);
   const [comment, setComment] = useState(false);
+
+  console.log(post);
 
   const [tipoCoracao, setTipoCoracao] = useState("heart-outline");
   const [corCoracao, setCorCoracao] = useState("black");
@@ -60,14 +64,13 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
       };
 
       await axios.put(
-        `http://localhost:6002/post/${cartaoId}`,
+        `https://linkr-driven-16.herokuapp.com/post/${cartaoId}`,
         {
           description: TextoRef.current.value,
         },
         config
       );
 
-      console.log(TextoRef.current.value);
       setAtivar(false);
       renderizarPosts();
     } catch (e) {
@@ -120,7 +123,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
       };
     }
 
-    const promise = axios.post(`http://localhost:6002/like`, dadosPost, config);
+    const promise = axios.post(`https://linkr-driven-16.herokuapp.com/like`, dadosPost, config);
 
     promise
       .then((response) => {
@@ -143,7 +146,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
     };
 
     const promise = axios.post(
-      `http://localhost:6002/likes`,
+      `https://linkr-driven-16.herokuapp.com/likes`,
       dadosPost,
       config
     );
@@ -169,7 +172,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
     };
 
     const promise = axios.post(
-      `http://localhost:6002/likes`,
+      `https://linkr-driven-16.herokuapp.com/likes`,
       dadosPost,
       config
     );
@@ -269,6 +272,12 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
             setComment={setComment}
             comment={comment}
           />
+          <SharedIcon
+            numberShares={post.countshared}
+            token={token}
+            idPost={post.id}
+            renderizarPosts={renderizarPosts}
+          />
         </div>
         <div className="textos">
           <Modificar>
@@ -354,7 +363,7 @@ function Side() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:6002/hastags`)
+      .get(`https://linkr-driven-16.herokuapp.com/hastags`)
       .then(({ data }) => {
         setHashtags(data);
       })
@@ -391,6 +400,10 @@ function MainContent({ total = [], updateTotal }) {
   const [render, setRender] = useState(false);
   const [postsCurtidos, setPostsCurtidos] = useState([]);
 
+  const [sharestoggle, setSharestoggle] = useState(false);
+
+  const [countShared, setCountShared] = useState(0);
+
   let page = 1;
 
   function renderizarPosts() {
@@ -401,10 +414,12 @@ function MainContent({ total = [], updateTotal }) {
     };
 
     axios
-      .get(`http://localhost:6002/users/${id}?page=${page}`, config)
+      .get(`https://linkr-driven-16.herokuapp.com/users/${id}?page=${page}`, config)
       .then(({ data }) => {
         setPosts(data.posts);
         setRender(data.posts.length);
+        let primeiro = data.posts[0];
+        setCountShared(primeiro.countShared);
         setIsLoading(false);
       })
       .catch((erro) => {
@@ -422,7 +437,7 @@ function MainContent({ total = [], updateTotal }) {
     };
 
     axios
-      .get(`http://localhost:6002/users/${id}?page=${page}`, config)
+      .get(`https://linkr-driven-16.herokuapp.com/users/${id}?page=${page}`, config)
       .then(({ data }) => {
         setPosts(data.posts);
         setRender(data.length);
@@ -440,7 +455,7 @@ function MainContent({ total = [], updateTotal }) {
       },
     };
 
-    const promise = axios.get(`http://localhost:6002/like`, config);
+    const promise = axios.get(`https://linkr-driven-16.herokuapp.com/like`, config);
 
     promise
       .then((response) => {
@@ -513,7 +528,7 @@ function ButtonFollow({ isToFollow = true, whoFollowId, setFollowUser }) {
     };
 
     axios
-      .post(`http://localhost:6002/users/${whoFollowId}/${action}`, {}, options)
+      .post(`https://linkr-driven-16.herokuapp.com/users/${whoFollowId}/${action}`, {}, options)
       .then(() => {
         setFollowUser(isToFollow);
       })
@@ -558,7 +573,7 @@ export default function TelaUsuario() {
     };
 
     axios
-      .get(`http://localhost:6002/users2/${id}`, options)
+      .get(`https://linkr-driven-16.herokuapp.com/users2/${id}`, options)
       .then(({ data }) => {
         setUser(data);
         setFollowUser(data.isFollowed);

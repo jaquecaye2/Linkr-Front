@@ -16,7 +16,7 @@ export default function CommentsIcon({callback,postId, comment}) {
         };
 
         const promise = axios.get(
-            `http://localhost:6002/comments/users/${postId}`, config
+            `https://linkr-driven-16.herokuapp.com/comments/users/${postId}`, config
         );
 
         promise

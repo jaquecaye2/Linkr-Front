@@ -24,14 +24,12 @@ export default function TelaLogin() {
 
       const dataLogin = { email, password };
       const datauser = await axios.post(
-        `http://localhost:6002/login`,
+        `https://linkr-driven-16.herokuapp.com/login`,
         dataLogin
       );
 
       setDisabled(false);
       setCorBackgroundInput("#1877F2");
-
-      console.log(datauser.data);
 
       const token = datauser.data.token;
       const picture = datauser.data.picture;
