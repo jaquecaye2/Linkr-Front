@@ -165,7 +165,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
     };
 
     const dadosPost = {
-      id: post.post_id,
+      id: post.id,
     };
 
     const promise = axios.post(
@@ -233,7 +233,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
 
   useEffect(() => {
     for (let i = 0; i < postsCurtidos.length; i++) {
-      if (postsCurtidos[i].id === post.id) {
+      if (postsCurtidos[i].post_id === post.id) {
         setTipoCoracao("heart");
         setCorCoracao("danger");
       }
