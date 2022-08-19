@@ -1,5 +1,5 @@
 import { BiRepost } from "react-icons/bi";
-
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Modal from "react-modal";
 import React, { useState } from "react";
@@ -13,13 +13,17 @@ export default function SharedIcon({
   renderizarPosts,
 }) {
   Modal.setAppElement(".root");
-
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const API_URL = process.env.REACT_APP_API_URL;
 
   function modalDinamico() {
     setIsOpen(!isOpen);
+  }
+
+  function navegar(name, userId) {
+    navigate(`/timeline`);
   }
 
   async function sheredPost() {

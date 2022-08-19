@@ -185,7 +185,7 @@ function PostUnico({
 
   React.useEffect(() => {
     showQuantLikes();
-  }, []);
+  }, [post]);
 
   function navegar(name, userId) {
     navigate(`/user/${userId}`, {
