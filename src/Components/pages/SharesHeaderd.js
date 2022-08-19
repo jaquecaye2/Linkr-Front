@@ -1,15 +1,21 @@
 import styled from "styled-components";
 import { BiRepost } from 'react-icons/bi';
+import { useState } from "react";
 
 
-export default function SharesHeaderd(){
+export default function SharesHeaderd({nameshared}){
 
+    const [name, seName]= useState(nameshared)
+
+    console.log(nameshared)
+
+    console.log(name)
     return(
         <Container>
             <Icon>
                 <BiRepost />
             </Icon>
-        <h1>Re-posted by João Amongus</h1>
+        <h1>Re-posted by {name}</h1>
         </Container>
     )
 }

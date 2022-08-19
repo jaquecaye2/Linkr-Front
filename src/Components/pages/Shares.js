@@ -10,7 +10,7 @@ export default function SharedIcon({
   idPost,
   token,
   numberShares,
-
+  
   
   renderizarPosts,
   

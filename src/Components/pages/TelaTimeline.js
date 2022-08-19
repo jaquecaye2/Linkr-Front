@@ -212,9 +212,13 @@ function PostUnico({
 
   return (
     <ChatPost>
-      <HeaderShared>
-        <SharesHeaderd />
-      </HeaderShared>
+      {post.nameshared?
+        <HeaderShared>
+        <SharesHeaderd nameshared={post.nameshared} />
+      </HeaderShared >
+      :
+      <></>
+      }
       <Post>
         <div className="icones">
           <img
@@ -495,6 +499,8 @@ export default function TelaTimeline() {
     buscarPostsCurtidos();
     totalPosts();
   }, []);
+
+  console.log(posts)
 
   return (
     <TelaTimelineStyle>
