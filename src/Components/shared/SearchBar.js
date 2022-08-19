@@ -12,15 +12,11 @@ function RenderIf({ children, isTrue }) {
 function User({ id, name, picture }) {
   const navigate = useNavigate();
 
-  console.log(id)
-  console.log(name)
+  console.log(id);
+  console.log(name);
 
   function navegar() {
-    navigate(`/user/${id}`, {
-      state: {
-        user: name,
-      },
-    });
+    navigate(`/user/${id}`);
   }
 
   return (
@@ -139,7 +135,6 @@ const SearchResultsContainer = styled.div`
   padding: 14px 18px;
   background-color: #e7e7e7;
   border-radius: 0 0 8px 8px;
-
 `;
 
 const UserContainer = styled.div`
@@ -148,7 +143,7 @@ const UserContainer = styled.div`
   justify-content: flex-start;
   gap: 12px;
 
-  :hover{
+  :hover {
     cursor: pointer;
     filter: brightness(0.9);
   }
