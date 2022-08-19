@@ -42,6 +42,15 @@ export default function BarraComentario({ postId, setComment, setEnableTextArea,
         }
     }
 
+ 
+
+    document.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+            const botao = document.querySelector('#submit')
+            botao.click();
+        }
+    })
+
 
     return (
         <BarraMain>
@@ -56,7 +65,7 @@ export default function BarraComentario({ postId, setComment, setEnableTextArea,
                     value={texto}
                     onChange={e => setTexto(e.target.value)}
                 />
-                <SendComment type="submit" id="submit" onClick={() => sendComment()}><StyledIcon /></SendComment>
+                <SendComment className="submit" type="submit" id="submit" onClick={() => sendComment()}><StyledIcon /></SendComment>
             </SendForm>
         </BarraMain>
     );
