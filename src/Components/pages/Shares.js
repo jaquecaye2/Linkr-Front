@@ -10,11 +10,10 @@ export default function SharedIcon({
   idPost,
   token,
   numberShares,
-  setPosts,
-  setRepost,
+
+  
   renderizarPosts,
-  sharestoggle,
-  setSharestoggle,
+  
 }) {
   Modal.setAppElement(".root");
 
@@ -40,7 +39,7 @@ export default function SharedIcon({
       };
 
       await axios.post(`http://localhost:6002/shared`, dadosPost, config);
-      setRepost(true);
+      
       setLoading(false);
       modalDinamico();
       renderizarPosts();

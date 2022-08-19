@@ -402,6 +402,8 @@ function MainContent() {
 
   const [sharestoggle, setSharestoggle] = useState(false)
 
+  const [countShared, setCountShared] = useState(0);
+
   function totalPosts() {
     const config = {
       headers: {
@@ -433,6 +435,8 @@ function MainContent() {
       .then(({ data }) => {
         setPosts(data);
         setRender(data.length);
+        let primeiro = data[0]
+        setCountShared(primeiro.countShared)
         setIsLoading(false);
       })
       .catch((erro) => {
@@ -483,6 +487,7 @@ function MainContent() {
     renderizarPosts();
     buscarPostsCurtidos();
     totalPosts();
+    
   }, [updateUser]);
 
   return (
@@ -526,6 +531,9 @@ export default function TelaUsuario() {
   const { id } = useParams();
   const userId = localStorage.getItem("userId");
   const name = localStorage.getItem("name");
+
+
+
   if (userId === id) {
     return (
       <Container>
