@@ -460,8 +460,6 @@ function MainContent({ total = [], updateTotal }) {
     updateTotal();
   }, [posts]);
 
-  console.log(total.length !== posts.length, total.length, posts.length);
-
   return (
     <Main>
       {isLoading ? (
