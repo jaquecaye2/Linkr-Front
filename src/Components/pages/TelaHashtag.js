@@ -64,8 +64,11 @@ function Post({
   post_id,
   token,
   postsCurtidos,
-  sharedCout
+  sharedCout,
+  renderizarPosts
 }) {
+
+  console.log(sharedCout)
   const navigate = useNavigate();
 
   const [tipoCoracao, setTipoCoracao] = useState("heart-outline");
@@ -282,7 +285,12 @@ function Post({
             setComment={setComment}
             comment={comment}
           />
-          <SharedIcon numberShares={sharedCout} token={token} idPost={post_id}/>
+          <SharedIcon 
+          numberShares={sharedCout} 
+          token={token} 
+          idPost={post_id}
+          renderizarPosts={renderizarPosts}
+          />
         </div>
         <div className="textos">
           <h5 onClick={() => navegar(name, user_id)}>{name}</h5>
@@ -323,12 +331,15 @@ function MainContent() {
   const [total, setTotal] = useState([]);
   const [posts, setPosts] = useState([]);
   const [postsCurtidos, setPostsCurtidos] = useState([]);
+  const [countShared, setCountShared] = useState(0);
 
   function totalPosts() {
     axios
       .get(`http://localhost:6002/hastag2/${hashtag}?page=${page}`)
       .then(({ data }) => {
         setTotal(data);
+        let primeiro = data[0]
+        setCountShared(primeiro.countShared)
       })
       .catch((erro) => {
         console.log(erro);
@@ -419,6 +430,7 @@ function MainContent() {
               postsCurtidos={postsCurtidos}
               token={token}
               sharedCout = {post.countshared}
+              renderizarPosts={renderizarPosts}
             />
           ))}
           {total.length !== posts.length ? (

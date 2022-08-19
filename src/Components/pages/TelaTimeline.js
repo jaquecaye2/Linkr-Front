@@ -247,7 +247,7 @@ function PostUnico({
             token={token}
             idPost={post.id}
             renderizarPosts={renderizarPosts}
-            setRepost={setRepost}
+           
           />
         </div>
         <div className="textos">
