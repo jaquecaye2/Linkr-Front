@@ -411,7 +411,7 @@ function MainContent({ total = [] }) {
         console.log(erro);
       });
   }
-  console.log(posts)
+  console.log(posts);
   function loadNextPage() {
     page++;
 
@@ -466,7 +466,6 @@ function MainContent({ total = [] }) {
         <>
           {posts.length !== 0 ? (
             posts.map((post, index) => (
-              
               <Post
                 key={index}
                 post={post}
@@ -561,7 +560,7 @@ export default function TelaUsuario() {
         setFollowUser(data.isFollowed);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [id]);
 
   return (
     <Container>
