@@ -26,8 +26,6 @@ export default function TelaCadastro() {
 
       const dataSingin = { name, email, password, pictureUrl };
 
-      console.log(dataSingin);
-
       await axios.post(`http://localhost:6002/singin`, dataSingin);
 
       navigate("/");

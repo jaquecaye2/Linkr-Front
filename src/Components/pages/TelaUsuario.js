@@ -13,12 +13,17 @@ import IconEdit from "./IconEdit.js";
 import { useLocation } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
 import CommentsIcon from "./commentIcon";
-import Chat from "../shared/comment.js"
+import Chat from "../shared/comment.js";
 import InfiniteScroll from "./InfiniteScroll";
 import SharedIcon from "./Shares";
 
+import { ThreeDots } from "react-loader-spinner";
 
 const API_URL = process.env.REACT_APP_API_URL;
+
+function RenderIf({ isTrue, children }) {
+  return <>{isTrue ? children : null}</>;
+}
 
 function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
   const [texto, setTexto] = useState(false);
@@ -28,8 +33,10 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
   const navigate = useNavigate();
   const [render, setRender] = useState(false);
   const [enableTextArea, setEnableTextArea] = useState(false);
-  const [chat, setChat] = useState(false)
-  const [comment,setComment] = useState(false)
+  const [chat, setChat] = useState(false);
+  const [comment, setComment] = useState(false);
+
+  console.log(post);
 
   const [tipoCoracao, setTipoCoracao] = useState("heart-outline");
   const [corCoracao, setCorCoracao] = useState("black");
@@ -64,7 +71,6 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
         config
       );
 
-      console.log(TextoRef.current.value);
       setAtivar(false);
       renderizarPosts();
     } catch (e) {
@@ -107,12 +113,12 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
 
     if (tipoCoracao === "heart-outline") {
       dadosPost = {
-        id: post.post_id,
+        id: post.id,
         type: "like",
       };
     } else {
       dadosPost = {
-        id: post.post_id,
+        id: post.id,
         type: "deslike",
       };
     }
@@ -136,7 +142,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
     };
 
     const dadosPost = {
-      id: post.post_id,
+      id: post.id,
     };
 
     const promise = axios.post(
@@ -162,7 +168,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
     };
 
     const dadosPost = {
-      id: post.post_id,
+      id: post.id,
     };
 
     const promise = axios.post(
@@ -216,7 +222,8 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
         }
       } else if (namesLike.length > 2 && curti === false) {
         setMensagem(
-          `Curtido por ${namesLike[0]}, ${namesLike[1]} e outras ${namesLike.length - 2
+          `Curtido por ${namesLike[0]}, ${namesLike[1]} e outras ${
+            namesLike.length - 2
           } pessoas`
         );
       } else if (namesLike.length > 2 && curti === true) {
@@ -229,7 +236,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
 
   useEffect(() => {
     for (let i = 0; i < postsCurtidos.length; i++) {
-      if (postsCurtidos[i].post_id === post.post_id) {
+      if (postsCurtidos[i].post_id === post.id) {
         setTipoCoracao("heart");
         setCorCoracao("danger");
       }
@@ -244,7 +251,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
     <MarginPost>
       <PostContainer>
         <div className="icones">
-          <img src={post.picture} alt="Foto de perfil" />
+          <UserPicture src={post.picture} alt="Foto de perfil" />
           <ion-icon
             name={tipoCoracao}
             color={corCoracao}
@@ -260,19 +267,17 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
           </p>
           <ReactTooltip id="likes" place="bottom" effect="solid" />
           <CommentsIcon
-            postId={post.post_id}
+            postId={post.id}
             callback={() => setChat(!chat)}
             setComment={setComment}
             comment={comment}
           />
           <SharedIcon
-           numberShares={post.countshared}
-           token={token}
-           idPost={post.post_id}
-           renderizarPosts={renderizarPosts}
-          
+            numberShares={post.countshared}
+            token={token}
+            idPost={post.id}
+            renderizarPosts={renderizarPosts}
           />
-          
         </div>
         <div className="textos">
           <Modificar>
@@ -289,12 +294,12 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
                   setTexto={setTexto}
                   TextoRef={TextoRef}
                   setCartaoId={setCartaoId}
-                  postId={post.post_id}
+                  postId={post.id}
                   render={render}
                 />
                 <DeletarIcon
                   token={token}
-                  postId={post.post_id}
+                  postId={post.id}
                   renderizarPosts={renderizarPosts}
                   render={render}
                 />
@@ -304,7 +309,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
             )}
           </Modificar>
 
-          {ativar && post.post_id === cartaoId ? (
+          {ativar && post.id === cartaoId ? (
             <Texto
               ativar={ativar}
               readOnly={enableTextArea}
@@ -338,11 +343,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
           </InfoLink>
         </div>
       </PostContainer>
-      {chat ?
-        <Chat postId={post.post_id} setComment={setComment}/>
-        :
-        <></>
-      }
+      {chat ? <Chat postId={post.id} setComment={setComment} /> : <></>}
     </MarginPost>
   );
 }
@@ -387,7 +388,7 @@ function Side() {
   );
 }
 
-function MainContent() {
+function MainContent({ total = [], updateTotal }) {
   const { updateUser, setUpdateUSer } = useContext(Context);
   const { id } = useParams();
   setUpdateUSer(id);
@@ -395,31 +396,13 @@ function MainContent() {
   const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
   const [isLoading, setIsLoading] = useState(true);
-  const [total, setTotal] = useState([]);
   const [posts, setPosts] = useState([]);
   const [render, setRender] = useState(false);
   const [postsCurtidos, setPostsCurtidos] = useState([]);
 
-  const [sharestoggle, setSharestoggle] = useState(false)
+  const [sharestoggle, setSharestoggle] = useState(false);
 
   const [countShared, setCountShared] = useState(0);
-
-  function totalPosts() {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
-    axios
-      .get(`http://localhost:6002/users2/${id}`, config)
-      .then(({ data }) => {
-        setTotal(data);
-      })
-      .catch((erro) => {
-        console.log(erro);
-      });
-  }
 
   let page = 1;
 
@@ -433,10 +416,10 @@ function MainContent() {
     axios
       .get(`http://localhost:6002/users/${id}?page=${page}`, config)
       .then(({ data }) => {
-        setPosts(data);
-        setRender(data.length);
-        let primeiro = data[0]
-        setCountShared(primeiro.countShared)
+        setPosts(data.posts);
+        setRender(data.posts.length);
+        let primeiro = data.posts[0];
+        setCountShared(primeiro.countShared);
         setIsLoading(false);
       })
       .catch((erro) => {
@@ -456,7 +439,7 @@ function MainContent() {
     axios
       .get(`http://localhost:6002/users/${id}?page=${page}`, config)
       .then(({ data }) => {
-        setPosts(data);
+        setPosts(data.posts);
         setRender(data.length);
         setIsLoading(false);
       })
@@ -486,9 +469,11 @@ function MainContent() {
   useEffect(() => {
     renderizarPosts();
     buscarPostsCurtidos();
-    totalPosts();
-    
   }, [updateUser]);
+
+  useEffect(() => {
+    updateTotal();
+  }, [posts]);
 
   return (
     <Main>
@@ -526,40 +511,144 @@ function MainContent() {
   );
 }
 
+function ButtonFollow({ isToFollow = true, whoFollowId, setFollowUser }) {
+  const token = localStorage.getItem("token");
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  function handleClick() {
+    setIsLoading(true);
+
+    const action = isToFollow ? "follow" : "unfollow";
+
+    const options = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    axios
+      .post(`http://localhost:6002/users/${whoFollowId}/${action}`, {}, options)
+      .then(() => {
+        setFollowUser(isToFollow);
+      })
+      .catch(() => {
+        alert(`Could not ${action} this user`);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
+
+  return (
+    <FollowButton
+      onClick={handleClick}
+      isToFollow={isToFollow}
+      disabled={isLoading}
+    >
+      <RenderIf isTrue={isLoading}>
+        <ThreeDots color="#ccc" height={55} width={55} />
+      </RenderIf>
+
+      <RenderIf isTrue={!isLoading}>
+        {isToFollow ? "Follow" : "Unfollow"}
+      </RenderIf>
+    </FollowButton>
+  );
+}
+
 export default function TelaUsuario() {
-  const { state } = useLocation();
   const { id } = useParams();
   const userId = localStorage.getItem("userId");
-  const name = localStorage.getItem("name");
+  const token = localStorage.getItem("token");
 
+  const [user, setUser] = useState({});
+  const [followUser, setFollowUser] = useState(false);
 
+  function getUser() {
+    const options = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
 
-  if (userId === id) {
-    return (
-      <Container>
-        <Title>
-          <h2>{name}'s Posts</h2>
-        </Title>
-        <Content>
-          <MainContent />
-          <Side />
-        </Content>
-      </Container>
-    );
-  } else {
-    return (
-      <Container>
-        <Title>
-          <h2>{state.user}'s Posts</h2>
-        </Title>
-        <Content>
-          <MainContent />
-          <Side />
-        </Content>
-      </Container>
-    );
+    axios
+      .get(`http://localhost:6002/users2/${id}`, options)
+      .then(({ data }) => {
+        setUser(data);
+        setFollowUser(data.isFollowed);
+      })
+      .catch((err) => console.log(err));
   }
+
+  useEffect(() => {
+    getUser();
+  }, [id]);
+
+  return (
+    <Container>
+      <Title>
+        <h2>
+          <UserPicture src={user.picture} alt="Foto de perfil" />
+          {user.name}'s Posts
+        </h2>
+
+        <RenderIf
+          isTrue={user.id && userId && parseInt(user.id) !== parseInt(userId)}
+        >
+          <ButtonFollow
+            isToFollow={!followUser}
+            setFollowUser={setFollowUser}
+            whoFollowId={user.id}
+          />
+        </RenderIf>
+      </Title>
+      <Content>
+        <MainContent total={user.posts} updateTotal={getUser} />
+        <Side />
+      </Content>
+    </Container>
+  );
 }
+
+const FollowButton = styled.button`
+  width: 112px;
+  height: 30px;
+  border-radius: 5px;
+  border: none;
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: ${(props) => (props.isToFollow ? "#1877f2" : "#ffffff")};
+  color: ${(props) => (props.isToFollow ? "#ffffff" : "#1877f2")};
+
+  :hover {
+    cursor: pointer;
+  }
+
+  :disabled {
+    filter: brightness(1.15);
+  }
+
+  :disabled:hover {
+    cursor: default;
+  }
+`;
+
+const UserPicture = styled.img`
+  width: 53px;
+  height: 53px;
+  object-fit: cover;
+  border-radius: 60px;
+  margin-bottom: 15px;
+
+  :hover {
+    cursor: pointer;
+  }
+`;
 
 const Container = styled.div`
   width: 80%;
@@ -577,13 +666,23 @@ const Title = styled.div`
   height: 140px;
   display: flex;
   align-items: center;
-  justify-content: left;
+  justify-content: space-between;
+
+  ${UserPicture} {
+    margin-bottom: 0;
+  }
+
   @media (max-width: 614px) {
     height: 100px;
   }
+
   h2 {
     font-size: 43px;
     font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+
     @media (max-width: 614px) {
       font-size: 33px;
       padding: 0 20px;
@@ -612,11 +711,9 @@ const LoadingSpinner = styled.div`
   justify-content: center;
 `;
 
-
 const MarginPost = styled.div`
-margin-bottom: 16px;
-
-`
+  margin-bottom: 16px;
+`;
 const PostContainer = styled.div`
   width: 100%;
   display: flex;

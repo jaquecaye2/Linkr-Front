@@ -10,17 +10,14 @@ export default function SharedIcon({
   idPost,
   token,
   numberShares,
-  
-  
   renderizarPosts,
-  
 }) {
   Modal.setAppElement(".root");
 
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const API_URL = process.env.REACT_APP_API_URL;
-  
+
   function modalDinamico() {
     setIsOpen(!isOpen);
   }
@@ -39,7 +36,7 @@ export default function SharedIcon({
       };
 
       await axios.post(`http://localhost:6002/shared`, dadosPost, config);
-      
+
       setLoading(false);
       modalDinamico();
       renderizarPosts();

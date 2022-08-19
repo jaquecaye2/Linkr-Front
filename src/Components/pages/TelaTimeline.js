@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import React, { useEffect } from "react";
+import React from "react";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
@@ -21,8 +21,6 @@ function PostUnico({
   renderizarPosts,
   setRepost,
 }) {
-  const API_URL = process.env.REACT_APP_API_URL;
-
   const [tipoCoracao, setTipoCoracao] = React.useState("heart-outline");
   const [corCoracao, setCorCoracao] = React.useState("black");
   const navigate = useNavigate();
@@ -31,8 +29,6 @@ function PostUnico({
   const [mensagem, setMensagem] = React.useState("");
   const [chat, setChat] = React.useState(false);
   const [comment, setComment] = React.useState(false);
-
-  const [sharestoggle, setSharestoggle] = React.useState(false);
 
   function openLink() {
     window.open(post.link, "_blank");
@@ -212,13 +208,13 @@ function PostUnico({
 
   return (
     <ChatPost>
-      {post.nameshared?
+      {post.nameshared ? (
         <HeaderShared>
-        <SharesHeaderd nameshared={post.nameshared} />
-      </HeaderShared >
-      :
-      <></>
-      }
+          <SharesHeaderd nameshared={post.nameshared} />
+        </HeaderShared>
+      ) : (
+        <></>
+      )}
       <Post>
         <div className="icones">
           <img
@@ -251,7 +247,6 @@ function PostUnico({
             token={token}
             idPost={post.id}
             renderizarPosts={renderizarPosts}
-           
           />
         </div>
         <div className="textos">
@@ -308,6 +303,8 @@ export default function TelaTimeline() {
   const [novosPosts, setNovosPosts] = React.useState(false);
   const [countShared, setCountShared] = React.useState(0);
 
+  const [noPostsFoundMessage, setNoPostsFoundMessage] = React.useState("");
+
   const token = localStorage.getItem("token");
   const imagemPerfil = localStorage.getItem("picture");
   const name = localStorage.getItem("name");
@@ -333,7 +330,9 @@ export default function TelaTimeline() {
         }
       })
       .catch((error) => {
-        alert(error.response.data);
+        if (error.response.status !== 404) {
+          alert(error.response.data);
+        }
       });
   }, 15000);
 
@@ -351,14 +350,15 @@ export default function TelaTimeline() {
         setTotal(response.data);
       })
       .catch((error) => {
-        alert(error.response.data);
+        if (error.response.status !== 404) {
+          alert(error.response.data);
+        }
       });
   }
 
   let page = 1;
 
   function renderizarPosts() {
-    console.log("renderizar....");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -366,20 +366,25 @@ export default function TelaTimeline() {
     };
 
     const promise = axios.get(
-      `http://localhost:6002/post?page=${page}`,
-
+      `http://localhost:6002/posts?page=${page}&limit=10`,
       config
     );
 
     promise
       .then((response) => {
         setPosts(response.data);
-        let primeiro = response.data[0]
-        setCountShared(primeiro.countShared)
+        let primeiro = response.data[0];
+        setCountShared(primeiro.countShared);
         setPromiseCarregada(true);
         totalPosts();
       })
       .catch((error) => {
+        if (error.response.status === 404) {
+          setNoPostsFoundMessage(error.response.data);
+          setPromiseCarregada(true);
+          return;
+        }
+
         alert(error.response.data);
       });
   }
@@ -394,17 +399,19 @@ export default function TelaTimeline() {
     };
 
     const promise = axios.get(
-      `http://localhost:6002/post?page=${page}`,
+      `http://localhost:6002/posts?page=${page}&limit=10`,
       config
     );
 
     promise
       .then((response) => {
-        setPosts(response.data);
+        setPosts([...posts, ...response.data]);
         setPromiseCarregada(true);
       })
       .catch((error) => {
-        alert(error.response.data);
+        if (error.response.status !== 404) {
+          alert(error.response.data);
+        }
       });
   }
 
@@ -500,8 +507,6 @@ export default function TelaTimeline() {
     totalPosts();
   }, []);
 
-  console.log(posts)
-
   return (
     <TelaTimelineStyle>
       <Titulo>
@@ -565,8 +570,8 @@ export default function TelaTimeline() {
           ) : (
             <>
               <Posts>
-                {posts.length === 0 ? (
-                  <p>Não há posts cadastrados</p>
+                {posts.length === 0 && noPostsFoundMessage !== "" ? (
+                  <p>{noPostsFoundMessage}</p>
                 ) : (
                   posts.map((post, index) => (
                     <PostUnico
@@ -581,6 +586,7 @@ export default function TelaTimeline() {
                   ))
                 )}
               </Posts>
+
               {total.length !== posts.length ? (
                 <InfiniteScroll fetchMore={loadNextPage} />
               ) : (
@@ -784,7 +790,13 @@ const Carregando = styled.div`
   justify-content: center;
 `;
 
-const Posts = styled.div``;
+const Posts = styled.div`
+  @media (max-width: 614px) {
+    p {
+      margin: 30px 0;
+    }
+  }
+`;
 
 const Post = styled.div`
   position: relative;
@@ -851,6 +863,7 @@ const Post = styled.div`
 const ChatPost = styled.div`
   margin-bottom: 16px;
 `;
+
 const HeaderShared = styled.div`
   position: relative;
   top: 0px;

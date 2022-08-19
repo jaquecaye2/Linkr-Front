@@ -65,18 +65,16 @@ function Post({
   token,
   postsCurtidos,
   sharedCout,
-  renderizarPosts
+  renderizarPosts,
 }) {
-
-  console.log(sharedCout)
   const navigate = useNavigate();
 
   const [tipoCoracao, setTipoCoracao] = useState("heart-outline");
   const [corCoracao, setCorCoracao] = useState("black");
   const [quantLikes, setquantLikes] = useState(0);
   let namesLike = [];
-  const [comment,setComment] = useState(false)
-  const [chat, setChat] = useState(false)
+  const [comment, setComment] = useState(false);
+  const [chat, setChat] = useState(false);
   const [mensagem, setMensagem] = useState("");
 
   const tagStyle = {
@@ -285,11 +283,11 @@ function Post({
             setComment={setComment}
             comment={comment}
           />
-          <SharedIcon 
-          numberShares={sharedCout} 
-          token={token} 
-          idPost={post_id}
-          renderizarPosts={renderizarPosts}
+          <SharedIcon
+            numberShares={sharedCout}
+            token={token}
+            idPost={post_id}
+            renderizarPosts={renderizarPosts}
           />
         </div>
         <div className="textos">
@@ -314,11 +312,7 @@ function Post({
           </InfoLink>
         </div>
       </PostContainer>
-      {chat ?
-          <Chat postId={post_id} setComment={setComment} />
-          :
-          <></>
-        }
+      {chat ? <Chat postId={post_id} setComment={setComment} /> : <></>}
     </MarginPost>
   );
 }
@@ -338,8 +332,8 @@ function MainContent() {
       .get(`http://localhost:6002/hastag2/${hashtag}?page=${page}`)
       .then(({ data }) => {
         setTotal(data);
-        let primeiro = data[0]
-        setCountShared(primeiro.countShared)
+        let primeiro = data[0];
+        setCountShared(primeiro.countShared);
       })
       .catch((erro) => {
         console.log(erro);
@@ -429,7 +423,7 @@ function MainContent() {
               post_id={post.post_id}
               postsCurtidos={postsCurtidos}
               token={token}
-              sharedCout = {post.countshared}
+              sharedCout={post.countshared}
               renderizarPosts={renderizarPosts}
             />
           ))}
@@ -664,6 +658,5 @@ const SideContainer = styled.div`
 `;
 
 const MarginPost = styled.div`
-margin-bottom: 16px;
-
-`
+  margin-bottom: 16px;
+`;

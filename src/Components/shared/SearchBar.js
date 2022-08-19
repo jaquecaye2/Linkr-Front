@@ -9,31 +9,29 @@ function RenderIf({ children, isTrue }) {
   return <>{isTrue ? children : null}</>;
 }
 
-function User({ id, name, picture }) {
+function User({ id, name, picture, isFollowed }) {
   const navigate = useNavigate();
 
-  console.log(id)
-  console.log(name)
-
   function navegar() {
-    navigate(`/user/${id}`, {
-      state: {
-        user: name,
-      },
-    });
+    navigate(`/user/${id}`);
   }
 
   return (
     <UserContainer onClick={navegar}>
       <UserPicture src={picture} alt={`${name} picture`} />
       <UserName>{name}</UserName>
+
+      <RenderIf isTrue={isFollowed}>
+        <UserFollowing>• following</UserFollowing>
+      </RenderIf>
     </UserContainer>
   );
 }
 
 export default function SearchBar() {
-  const API_URL = process.env.REACT_APP_API_URL;
   const ZERO = 0;
+
+  const token = localStorage.getItem("token");
 
   const [searchValue, setSearchValue] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -45,6 +43,7 @@ export default function SearchBar() {
         id={result.id}
         name={result.name}
         picture={result.picture}
+        isFollowed={result.isFollowed}
       />
     ));
   }
@@ -55,8 +54,14 @@ export default function SearchBar() {
       return;
     }
 
+    const options = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
     axios
-      .get(`http://localhost:6002/users?name=${searchValue}`)
+      .get(`http://localhost:6002/users?name=${searchValue}`, options)
       .then(({ data }) => setSearchResults(data))
       .catch((error) => {
         if (error.response.status === 404) {
@@ -92,6 +97,11 @@ export default function SearchBar() {
     </SearchBarContainer>
   );
 }
+
+const UserFollowing = styled.span`
+  color: #c5c5c5;
+  font-size: 16px;
+`;
 
 const SearchBarContainer = styled.div`
   max-width: 563px;
@@ -139,7 +149,6 @@ const SearchResultsContainer = styled.div`
   padding: 14px 18px;
   background-color: #e7e7e7;
   border-radius: 0 0 8px 8px;
-
 `;
 
 const UserContainer = styled.div`
@@ -148,7 +157,7 @@ const UserContainer = styled.div`
   justify-content: flex-start;
   gap: 12px;
 
-  :hover{
+  :hover {
     cursor: pointer;
     filter: brightness(0.9);
   }
