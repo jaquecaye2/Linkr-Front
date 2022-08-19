@@ -24,7 +24,7 @@ export default function TelaLogin() {
 
       const dataLogin = { email, password };
       const datauser = await axios.post(
-        `http://localhost:6002/login`,
+        `https://linkr-driven-16.herokuapp.com/login`,
         dataLogin
       );
 

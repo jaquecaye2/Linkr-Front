@@ -27,7 +27,7 @@ function Side() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:6002/hastags`)
+      .get(`https://linkr-driven-16.herokuapp.com/hastags`)
       .then(({ data }) => {
         setHashtags(data);
       })
@@ -122,7 +122,7 @@ function Post({
       };
     }
 
-    const promise = axios.post(`http://localhost:6002/like`, dadosPost, config);
+    const promise = axios.post(`https://linkr-driven-16.herokuapp.com/like`, dadosPost, config);
 
     promise
       .then((response) => {
@@ -145,7 +145,7 @@ function Post({
     };
 
     const promise = axios.post(
-      `http://localhost:6002/likes`,
+      `https://linkr-driven-16.herokuapp.com/likes`,
       dadosPost,
       config
     );
@@ -171,7 +171,7 @@ function Post({
     };
 
     const promise = axios.post(
-      `http://localhost:6002/likes`,
+      `https://linkr-driven-16.herokuapp.com/likes`,
       dadosPost,
       config
     );
@@ -329,7 +329,7 @@ function MainContent() {
 
   function totalPosts() {
     axios
-      .get(`http://localhost:6002/hastag2/${hashtag}?page=${page}`)
+      .get(`https://linkr-driven-16.herokuapp.com/hastag2/${hashtag}?page=${page}`)
       .then(({ data }) => {
         setTotal(data);
         let primeiro = data[0];
@@ -349,7 +349,7 @@ function MainContent() {
       },
     };
 
-    const promise = axios.get(`http://localhost:6002/like`, config);
+    const promise = axios.get(`https://linkr-driven-16.herokuapp.com/like`, config);
 
     promise
       .then((response) => {
@@ -362,7 +362,7 @@ function MainContent() {
 
   function renderizarPosts() {
     axios
-      .get(`http://localhost:6002/hastag/${hashtag}?page=${page}`)
+      .get(`https://linkr-driven-16.herokuapp.com/hastag/${hashtag}?page=${page}`)
       .then(({ data }) => {
         setPosts(data);
         setIsLoading(false);
@@ -382,7 +382,7 @@ function MainContent() {
     };
 
     axios
-      .get(`http://localhost:6002/hastag/${hashtag}?page=${page}`, config)
+      .get(`https://linkr-driven-16.herokuapp.com/hastag/${hashtag}?page=${page}`, config)
       .then(({ data }) => {
         setPosts(data);
         setIsLoading(false);

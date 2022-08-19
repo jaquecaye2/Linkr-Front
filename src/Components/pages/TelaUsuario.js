@@ -64,7 +64,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
       };
 
       await axios.put(
-        `http://localhost:6002/post/${cartaoId}`,
+        `https://linkr-driven-16.herokuapp.com/post/${cartaoId}`,
         {
           description: TextoRef.current.value,
         },
@@ -123,7 +123,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
       };
     }
 
-    const promise = axios.post(`http://localhost:6002/like`, dadosPost, config);
+    const promise = axios.post(`https://linkr-driven-16.herokuapp.com/like`, dadosPost, config);
 
     promise
       .then((response) => {
@@ -146,7 +146,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
     };
 
     const promise = axios.post(
-      `http://localhost:6002/likes`,
+      `https://linkr-driven-16.herokuapp.com/likes`,
       dadosPost,
       config
     );
@@ -172,7 +172,7 @@ function Post({ post, token, renderizarPosts, userId, id, postsCurtidos }) {
     };
 
     const promise = axios.post(
-      `http://localhost:6002/likes`,
+      `https://linkr-driven-16.herokuapp.com/likes`,
       dadosPost,
       config
     );
@@ -363,7 +363,7 @@ function Side() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:6002/hastags`)
+      .get(`https://linkr-driven-16.herokuapp.com/hastags`)
       .then(({ data }) => {
         setHashtags(data);
       })
@@ -414,7 +414,7 @@ function MainContent({ total = [], updateTotal }) {
     };
 
     axios
-      .get(`http://localhost:6002/users/${id}?page=${page}`, config)
+      .get(`https://linkr-driven-16.herokuapp.com/users/${id}?page=${page}`, config)
       .then(({ data }) => {
         setPosts(data.posts);
         setRender(data.posts.length);
@@ -437,7 +437,7 @@ function MainContent({ total = [], updateTotal }) {
     };
 
     axios
-      .get(`http://localhost:6002/users/${id}?page=${page}`, config)
+      .get(`https://linkr-driven-16.herokuapp.com/users/${id}?page=${page}`, config)
       .then(({ data }) => {
         setPosts(data.posts);
         setRender(data.length);
@@ -455,7 +455,7 @@ function MainContent({ total = [], updateTotal }) {
       },
     };
 
-    const promise = axios.get(`http://localhost:6002/like`, config);
+    const promise = axios.get(`https://linkr-driven-16.herokuapp.com/like`, config);
 
     promise
       .then((response) => {
@@ -528,7 +528,7 @@ function ButtonFollow({ isToFollow = true, whoFollowId, setFollowUser }) {
     };
 
     axios
-      .post(`http://localhost:6002/users/${whoFollowId}/${action}`, {}, options)
+      .post(`https://linkr-driven-16.herokuapp.com/users/${whoFollowId}/${action}`, {}, options)
       .then(() => {
         setFollowUser(isToFollow);
       })
@@ -573,7 +573,7 @@ export default function TelaUsuario() {
     };
 
     axios
-      .get(`http://localhost:6002/users2/${id}`, options)
+      .get(`https://linkr-driven-16.herokuapp.com/users2/${id}`, options)
       .then(({ data }) => {
         setUser(data);
         setFollowUser(data.isFollowed);

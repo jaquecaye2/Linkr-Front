@@ -31,7 +31,7 @@ export default function BarraComentario({
         },
       };
 
-      await axios.post(`http://localhost:6002/comment`, dados, config);
+      await axios.post(`https://linkr-driven-16.herokuapp.com/comment`, dados, config);
 
       setEnableTextArea(false);
       setTamanho(false);

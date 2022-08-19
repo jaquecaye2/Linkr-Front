@@ -39,7 +39,7 @@ export default function SharedIcon({
         idPost,
       };
 
-      await axios.post(`http://localhost:6002/shared`, dadosPost, config);
+      await axios.post(`https://linkr-driven-16.herokuapp.com/shared`, dadosPost, config);
 
       setLoading(false);
       modalDinamico();

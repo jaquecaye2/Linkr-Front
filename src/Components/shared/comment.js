@@ -21,7 +21,7 @@ export default function Chat({ postId, setComment }) {
     };
 
     const promise = axios.get(
-      `http://localhost:6002/comments/users/${postId}`,
+      `https://linkr-driven-16.herokuapp.com/comments/users/${postId}`,
       config
     );
 
@@ -45,7 +45,7 @@ export default function Chat({ postId, setComment }) {
       },
     };
 
-    const promise = axios.get(`http://localhost:6002/comments`, config);
+    const promise = axios.get(`https://linkr-driven-16.herokuapp.com/comments`, config);
 
     promise
       .then((response) => {

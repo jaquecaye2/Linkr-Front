@@ -24,7 +24,7 @@ function DeletarIcon({ postId, token, renderizarPosts, render }) {
         },
       };
 
-      await axios.delete(`http://localhost:6002/post/${postId}`, config);
+      await axios.delete(`https://linkr-driven-16.herokuapp.com/post/${postId}`, config);
       setLoading(false);
       modalDinamico();
       renderizarPosts();
