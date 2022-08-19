@@ -76,6 +76,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
         Authorization: `Bearer ${token}`,
       },
     };
+    
     const dadosPost = {
       id: post.id,
     };
@@ -88,6 +89,7 @@ function PostUnico({ post, token, postsCurtidos, name }) {
 
     promise
       .then((response) => {
+        console.log(response.data.length)
         setquantLikes(response.data.length);
       })
       .catch((error) => {
